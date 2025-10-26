@@ -31,16 +31,17 @@ Optional:
 /summarize
 ```
 
-## All Commands (15)
+## All Commands (16)
 
 ### Essential Workflow
 - `/new-project` - Initialize project
 - `/import` - Import existing drafts
+- `/session` - Track writing time & word count
 - `/new-scene` - Write scenes (auto-detects new codex elements!)
 - `/edit-scene` - AI-assisted editing (polish, refine, expand)
 - `/brainstorm` - Develop story (auto-offers codex saves!)
 - `/summarize` - Reverse outline (Gemini)
-- `/status` - Check progress
+- `/status` - Check progress & session stats
 
 ### Scene Management (Discovery Writing Power Tools)
 - `/cycle` - Plant setups backward
@@ -58,7 +59,37 @@ Optional:
 
 ## Common Workflows
 
-### Auto-Codex Magic ✨ NEW!
+### Session Tracking ✨ NEW!
+
+```
+# Start your writing session
+/session start
+> Goal: Write 2 scenes
+✓ Session started at 2:30 PM
+
+# Write...
+/new-scene
+/new-scene
+
+# Check progress
+/session status
+> 1h 15m elapsed, +2,234 words, goal reached!
+
+# End session
+/session end
+
+📊 Session Summary
+Duration: 1h 15min
+Words: +2,234
+Pace: 1,787 words/hour
+🔥 Streak: 7 days
+
+# View history
+/session log
+> Last 7 days, statistics, streaks
+```
+
+### Auto-Codex Magic ✨
 
 ```
 # During brainstorming

@@ -70,8 +70,19 @@ project-name/
 **`/status`**
 - View project statistics
 - Scene count, word count, progress
+- Active session status (if writing)
+- Session statistics and streaks
 - Health check and next steps
 - Recent activity summary
+
+**`/session`**
+- Track writing sessions (time and word count)
+- `/session start` - Begin session with optional goal
+- `/session end` - Log session stats
+- `/session status` - Check current session progress
+- `/session log` - View history, streaks, statistics
+- Export data to CSV for analysis
+- Builds consistent writing habits with streak tracking
 
 ### Writing Workflow
 
@@ -202,6 +213,18 @@ The system includes a `@gemini-summarizer` subagent that:
 
 ### 1. Initialize Your First Project
 
+**Choose your writing directory first:**
+```bash
+# Navigate to where you want to keep your writing projects
+cd ~/writing
+# or
+mkdir -p ~/writing && cd ~/writing
+
+# Start Claude Code
+claude
+```
+
+**Create your project:**
 ```bash
 /new-project
 ```
@@ -211,6 +234,10 @@ Provide:
 - Genre (e.g., "noir thriller")
 - Format (e.g., "novella")
 - Premise (e.g., "A burned-out detective finds a cryptic message that reopens his biggest failure")
+
+**Project folder created in current directory:**
+- If you ran `/new-project` from `~/writing`, creates `~/writing/midnight-noir/`
+- Full folder structure scaffolded and ready
 
 ### 2. Start with Brainstorming
 

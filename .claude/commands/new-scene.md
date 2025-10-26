@@ -16,8 +16,44 @@ Create a new scene file and optionally generate scene content.
 
 3. **Ask user**:
    - Do they want to write the scene themselves or have AI generate it?
-   - If AI: What should happen in this scene? (brief description)
+   - If AI: What should happen in this scene? (description + instructions)
    - Any specific codex elements to reference? (characters, locations)
+
+   **Natural Language Scene Instructions**:
+
+   User can mix plot description with writing instructions naturally:
+
+   ```
+   Joe meets the weapons dealer at the Park. Add description
+   in 5 senses from Joe's PoV of the Park.
+
+   Joe and the dealer have a sour argument about supply chain
+   and logistics. More dialogue, make it tense.
+
+   End with cliffhanger, don't resolve, don't hint Joe's intentions.
+   ```
+
+   **No special syntax required** - just write naturally. The AI distinguishes:
+   - **Plot/what happens**: "Joe meets the dealer"
+   - **Writing directives**: "Add 5 senses", "More dialogue", "End with cliffhanger"
+
+   **Common instruction patterns**:
+   - "Add description of..." / "Describe the..."
+   - "More dialogue" / "Expand the conversation"
+   - "Show don't tell" / "Action not exposition"
+   - "From [character's] POV" / "[Character's] internal thoughts"
+   - "Make it tense/ominous/romantic"
+   - "End with cliffhanger" / "Leave it unresolved"
+   - "Foreshadow..." / "Plant hints about..."
+   - "Skip to..." / "Time jump to..."
+   - "5 senses" / "Sensory details"
+   - "Don't reveal..." / "Keep [X] mysterious"
+
+   The AI:
+   1. Parses plot description (what happens)
+   2. Identifies writing directives (how to write it)
+   3. Generates scene following both
+   4. Returns only prose (no meta-instructions in output)
 
 4. **Create scene file**: `scenes/scene-XXX.md`
 

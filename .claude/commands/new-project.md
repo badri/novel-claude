@@ -12,6 +12,16 @@ Ask the user for:
 - **Story format** (short story, novella, novel - for reference only, can change)
 - **Working premise/logline** (1-2 sentences: character + problem + stakes)
 
+**Important**: The project folder will be created in the **current working directory** where Claude Code was started.
+
+If user is in `/Users/lakshminp/writing` and runs `/new-project` with name "midnight-noir":
+- Creates: `/Users/lakshminp/writing/midnight-noir/`
+
+After creation, tell user:
+- **Project location**: `/full/path/to/midnight-noir`
+- **To enter project**: `cd midnight-noir`
+- **To work on it**: `cd midnight-noir && claude`
+
 ## 2. Create Folder Structure
 
 ```

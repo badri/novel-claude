@@ -10,6 +10,8 @@ Display current status and statistics for the writing project.
    - Count files in summaries/ folder
    - Count files in brainstorms/ folder
    - Calculate total word count from all scenes
+   - Check for active writing session (notes/current-session.json)
+   - Load session log (notes/session-log.json) if exists
 
 2. **Display comprehensive status**:
 
@@ -19,6 +21,18 @@ Display current status and statistics for the writing project.
 **Genre**: [genre]
 **Format**: [short story/novella/novel]
 **Status**: [in-progress/first-draft-complete/revision/ready]
+
+## Active Session (if session running)
+
+📝 **Writing Session Active**
+- Started: [time] ([duration] ago)
+- Goal: [session goal]
+- Progress: +[words written this session] words
+- Scenes this session: +[scenes created]
+
+Use `/session status` for details or `/session end` to finish.
+
+---
 
 ## Writing Progress
 
@@ -54,9 +68,26 @@ Display current status and statistics for the writing project.
 - **Last Compilation**: [date if exists]
 - **Formats Available**: [MD/DOCX/EPUB]
 
+## Session Statistics (if session log exists)
+
+📊 **Writing Sessions**
+- Total sessions: [count]
+- Total time: [hours]h [minutes]m
+- Total words: [count]
+- Average: [words/session] words/session
+- Current streak: [days] 🔥
+
+**This Week**: [sessions] sessions, [words] words
+**Last session**: [date] ([words] words, [duration])
+
+Use `/session log` for detailed history.
+
+---
+
 ## Next Steps
 
 [Suggest what to do next based on status]:
+- [ ] Start writing session (/session start)
 - [ ] Write next scene (/new-scene)
 - [ ] Summarize recent scenes (/summarize)
 - [ ] Brainstorm what comes next (/brainstorm)

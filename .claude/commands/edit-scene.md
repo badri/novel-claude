@@ -16,32 +16,60 @@ Edit an existing scene with AI assistance or manual editing.
 
 3. **Determine edit type** (ask user):
 
-   **A) AI Edit - Specific changes**:
+   User provides natural language editing instructions. No special syntax required.
+
+   **Natural Language Edit Instructions**:
+
+   User can give simple commands or detailed multi-part instructions:
+
+   ```
+   Make the dialogue more tense. Add 5 senses description of the park.
+   End with a cliffhanger instead of resolution.
+   ```
+
+   Or:
+   ```
+   The opening paragraph needs work - make it more ominous and add
+   foreshadowing about the vault. The dialogue in the middle section
+   should be shorter and snappier. End it without revealing Joe's
+   intentions to the reader.
+   ```
+
+   **Common edit instruction patterns**:
+
+   **Specific changes**:
    - "Make the dialogue more tense"
-   - "Add more sensory details"
-   - "Shorten this by 20%"
+   - "Add sensory details (5 senses)"
+   - "Shorten by 20%" / "Make it more concise"
    - "Change POV from third to first person"
-   - "Add foreshadowing about the vault"
+   - "Add foreshadowing about X"
+   - "Remove filter words (felt, saw, heard)"
+   - "Show don't tell in the opening"
 
-   **B) AI Edit - Rewrite section**:
-   - "Rewrite the opening paragraph"
-   - "Rewrite the confrontation between Marcus and Elena"
-   - User selects text portion or paragraph numbers
+   **Section rewrites**:
+   - "Rewrite the opening paragraph as more ominous"
+   - "Rewrite the confrontation - make it physical not verbal"
+   - "Redo the ending as a cliffhanger"
 
-   **C) AI Edit - Polish**:
+   **Polish**:
    - "Improve prose quality"
    - "Fix pacing issues"
    - "Strengthen character voice"
-   - "Remove filter words (felt, saw, heard)"
+   - "Tighten the prose"
 
-   **D) AI Edit - Expand**:
-   - "Add a paragraph about the setting"
+   **Expand**:
+   - "Add a paragraph describing the setting"
    - "Expand the dialogue exchange"
-   - "Add Martha's internal thoughts here"
+   - "Add [character's] internal thoughts"
+   - "More description of the park from Joe's POV"
 
-   **E) Manual Edit**:
-   - User edits directly
-   - System shows scene, user provides edited version
+   **Combine multiple**:
+   - "Add sensory details to the park scene AND make the dialogue
+      more tense AND end with a cliffhanger"
+
+   **Manual Edit**:
+   - User edits directly in their text editor
+   - Or provides full replacement text
 
 4. **For AI edits**:
 
