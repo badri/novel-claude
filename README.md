@@ -59,6 +59,14 @@ project-name/
 - Sets up codex templates
 - Initializes tracking
 
+**`/import`**
+- Import existing partial drafts or manuscripts
+- Context-economical: processes in chunks, uses Gemini for summaries
+- Minimal codex setup (user provides brief character/location info)
+- Auto-splits into scenes intelligently
+- Supports MD, TXT, DOCX formats
+- Continue writing from where you left off
+
 **`/status`**
 - View project statistics
 - Scene count, word count, progress
@@ -72,7 +80,16 @@ project-name/
 - Option to write yourself or AI-generate
 - Multiple options/alternatives generation
 - Auto-context from previous scenes
+- Auto-detects new codex elements (characters, locations, skills)
 - Updates project.json tracking
+
+**`/edit-scene`**
+- AI-assisted scene editing (or manual)
+- Modes: specific changes, rewrite section, polish, expand
+- Before/after preview with accept/edit/revert
+- Auto-backup and edit history
+- Detects new elements added in edits
+- Preserves scene voice and structure
 
 **`/brainstorm`**
 - Interactive brainstorming sessions
@@ -126,11 +143,20 @@ project-name/
 ### Worldbuilding
 
 **`/codex`**
-- Add/update/search codex entries
-- Characters, locations, timeline, lore
+- Add/update/delete/search codex entries
+- Natural language support: `/codex add character Devika from our discussion`
+- Pulls details from recent conversation context
 - Extract from scenes automatically
+- Review TODO list from brainstorm/scene detections
 - Copyable for series continuity
 - Cross-reference with scenes
+
+**Automatic Codex Integration:**
+- `/brainstorm` detects new characters/locations and offers to save
+- `/new-scene` auto-detects new elements (characters, locations, skills, worldbuilding)
+- Inline during work: just say "add to codex" and it happens
+- Choose: add now, skip, or save to TODO for later
+- Seamless workflow - never breaks creative flow
 
 ### Publication
 

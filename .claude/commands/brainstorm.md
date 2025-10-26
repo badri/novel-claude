@@ -65,7 +65,63 @@ After Scene: [number or "N/A"]
 [What to do with these ideas]
 ```
 
-6. **Actionable output**:
+6. **Detect codex-worthy elements**:
+
+   During and after brainstorming, watch for:
+   - **New characters** mentioned (names, roles, traits)
+   - **New locations** developed (places, settings)
+   - **Worldbuilding** details (rules, systems, organizations)
+   - **Timeline events** (backstory, history)
+   - **Lore** (myths, legends, world history)
+
+7. **Inline codex creation**:
+
+   If user says during brainstorm:
+   - "Add to codex"
+   - "Save this to codex"
+   - "Put this in the codex"
+
+   Immediately:
+   - Identify what to add (from recent discussion)
+   - Determine type (character/location/etc.)
+   - Create entry
+   - Continue brainstorming
+
+   **Example**:
+   ```
+   [Discussing the Forbidden Vault]
+
+   User: This vault is crucial. Add to codex.
+
+   System: ✓ Adding Forbidden Vault to codex/locations.md
+
+           [Creates entry from discussion]
+
+           Done! Continuing brainstorm...
+   ```
+
+8. **End-of-session codex review**:
+
+   After brainstorm session ends, before saving:
+
+   ```
+   Session complete!
+
+   I noticed we developed:
+   👤 Devika Menon (character - red herring suspect)
+   📍 Forbidden Vault near Kings Valley (location)
+   🌍 "The Order" - secret organization (worldbuilding)
+
+   Add to codex?
+   [Select: all / pick individually / skip / later]
+   ```
+
+   - **All**: Add all detected elements
+   - **Pick individually**: Go through one by one
+   - **Skip**: Don't add any
+   - **Later**: Save to `notes/codex-todo.md`
+
+9. **Actionable output**:
    - If user picks a direction: offer to create scene or update codex
    - Suggest `/new-scene` with the chosen direction
    - Offer to generate multiple scene openings based on brainstorm
@@ -81,8 +137,56 @@ Following Dean Wesley Smith's approach:
 - Avoid: "The hero must...", "Three-act structure requires...", "The plot needs..."
 - Embrace: "What if...", "The character might...", "This could go several ways..."
 
+## Codex Integration Details
+
+### Auto-Detection Logic
+
+Watch for patterns like:
+- "Let's call this character [Name]"
+- "The [Location] is where..."
+- "In this world, [rule/system]..."
+- "What if there's an organization called [Name]?"
+- "Backstory: [event] happened [when]"
+
+### Extraction Process
+
+When codex element detected:
+1. Extract name/title
+2. Scan conversation for related details
+3. Determine appropriate codex file
+4. Generate structured entry
+5. Offer to user (inline or end-of-session)
+
+### Natural Language During Brainstorm
+
+User can say:
+- "Add Devika to codex" → Creates character entry
+- "Save the Forbidden Vault" → Creates location entry
+- "Codex this" → Adds last discussed element
+- "Put this in worldbuilding" → Adds to worldbuilding.md
+
+System responds immediately without breaking flow.
+
+### Codex TODO for "Later"
+
+When user chooses "later", append to `notes/codex-todo.md`:
+
+```markdown
+## From Brainstorm: [Topic] ([Date])
+- [ ] **Character**: Devika Menon
+      Red herring suspect, works at law firm
+      Session: brainstorms/brainstorm-2025-10-26-suspects.md
+
+- [ ] **Location**: Forbidden Vault
+      Near Kings Valley, ancient, dangerous
+      Session: brainstorms/brainstorm-2025-10-26-vault.md
+```
+
+User can later run `/codex review-todo` to process these.
+
 ## Integration
 
 - Pull from codex automatically for relevant characters/locations
-- Update codex if new elements emerge
+- Detect and offer to save new elements (inline or end-of-session)
+- Link brainstorm sessions to codex entries
 - Link to related scenes or previous brainstorm sessions

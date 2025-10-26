@@ -31,12 +31,14 @@ Optional:
 /summarize
 ```
 
-## All Commands (13)
+## All Commands (15)
 
 ### Essential Workflow
 - `/new-project` - Initialize project
-- `/new-scene` - Write scenes
-- `/brainstorm` - Develop story
+- `/import` - Import existing drafts
+- `/new-scene` - Write scenes (auto-detects new codex elements!)
+- `/edit-scene` - AI-assisted editing (polish, refine, expand)
+- `/brainstorm` - Develop story (auto-offers codex saves!)
 - `/summarize` - Reverse outline (Gemini)
 - `/status` - Check progress
 
@@ -46,7 +48,7 @@ Optional:
 - `/reorder` - Reorganize sequence
 
 ### Worldbuilding
-- `/codex` - Track characters, locations, lore
+- `/codex` - Track characters, locations, lore (natural language + auto-detection!)
 - `/chat` - Discuss your story
 
 ### Publication
@@ -55,6 +57,45 @@ Optional:
 - `/cover` - Cover concepts
 
 ## Common Workflows
+
+### Auto-Codex Magic ✨ NEW!
+
+```
+# During brainstorming
+/brainstorm
+[Discuss new character Devika Menon...]
+> "Add to codex"
+✓ Immediately creates codex entry!
+
+# Or after brainstorm
+Session complete!
+Detected: Devika Menon (character), Forbidden Vault (location)
+Add to codex? [all/pick/skip/later]
+> all
+✓ Both added!
+
+# Or natural language
+/codex add character Devika from our discussion
+✓ Extracts from conversation and creates entry!
+```
+
+### Auto-Detection in Scenes ✨ NEW!
+
+```
+/new-scene
+> Marcus meets informant Yuki at Jade Dragon restaurant
+
+✓ Scene created!
+
+New elements detected:
+👤 Yuki - Add to codex? [y/n/later]
+📍 Jade Dragon restaurant - Add? [y/n/later]
+
+> y, y
+
+✓ Codex auto-updated!
+Zero context overhead - seamless flow!
+```
 
 ### The Cycling Workflow
 ```
@@ -93,9 +134,10 @@ Optional:
 - ✅ Write forward, follow the character
 - ✅ Cycle back to plant discovered elements
 - ✅ Summarize every 3-5 scenes
-- ✅ Update codex as story emerges
+- ✅ Let auto-codex capture elements (just say "add to codex"!)
 - ✅ Reorder if structure reveals itself
 - ✅ Generate multiple options, pick best
+- ✅ Use "later" for codex items, process with `/codex review-todo`
 
 ### Don't:
 - ❌ Plan the ending beforehand
