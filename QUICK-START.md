@@ -2,12 +2,27 @@
 
 ## Installation
 
-You already have:
-- ✅ Claude Code CLI
-- ✅ Gemini CLI (for summarization)
+### Required (One-Time Setup)
 
-Optional:
-- `pandoc` for DOCX/EPUB export
+1. **Install claude-mem plugin** (for persistent context):
+   ```bash
+   /plugin marketplace add thedotmack/claude-mem
+   /plugin install claude-mem
+   # Restart Claude Code
+   ```
+
+2. You already have:
+   - ✅ Claude Code CLI
+   - ✅ Gemini CLI (for summarization)
+
+3. Optional:
+   - `pandoc` for DOCX/EPUB export
+
+**Why claude-mem?**
+- Context survives conversation compactions
+- No more "cold starts" when resuming writing
+- Claude remembers past sessions automatically
+- Search your entire project history
 
 ## First Project (5 minutes)
 
@@ -193,7 +208,48 @@ your-project/
 
 - **Claude** writes and brainstorms with you
 - **Gemini** summarizes efficiently (saves Claude tokens)
+- **claude-mem** preserves context across sessions
 - Invoke with `/summarize` - automatic!
+
+### Context Persistence in Action
+
+```bash
+# Session 1 (Oct 27)
+/new-scene
+# Write scene about villain's backstory
+# [Session ends, conversation compacted]
+
+# Session 2 (Oct 28) - NEW SESSION
+# claude-mem auto-injects:
+📊 Previous session context:
+  - Wrote scene 24: villain's tragic backstory
+  - Decision: Made villain sympathetic, not evil
+  - File: scenes/scene-024.md
+
+You: "Continue the story"
+Claude: "Great! Now that we've established the villain's
+         motivation, let's write the confrontation scene..."
+# ✅ NO COLD START - Claude remembers!
+```
+
+### For Existing Projects
+
+If you already have a writing project:
+
+1. Install claude-mem (instructions above)
+2. Navigate to your project: `cd ~/writing/your-project`
+3. Do a "seeding session" to prime the memory:
+   ```bash
+   /status          # Capture current state
+   /scenes list     # Index all scenes
+   /codex search .  # Index worldbuilding
+
+   # Then briefly mention:
+   # - Key plot decisions
+   # - Main character arcs
+   # - Unresolved threads
+   ```
+4. From this point forward, all context is preserved!
 
 ## Series Workflow
 

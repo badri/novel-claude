@@ -198,6 +198,7 @@ The system uses different AI models for different tasks:
 
 - **Claude** (this): Creative writing, brainstorming, character development
 - **Gemini** (via CLI): Scene summarizing, reverse outlining, continuity checking
+- **claude-mem**: Persistent context compression (uses Claude Sonnet 4.5 by default)
 
 ### Gemini Summarizer Subagent
 
@@ -209,7 +210,72 @@ The system includes a `@gemini-summarizer` subagent that:
 
 **Requirement**: `gemini-cli` must be installed and configured
 
+### Context Persistence via claude-mem
+
+The `claude-mem` plugin provides:
+- Automatic session observation capture
+- AI-powered context compression
+- Persistent memory across conversation compactions
+- 7 MCP search tools for querying project history:
+  - `search_observations` - Full-text search across captured context
+  - `search_sessions` - Search session summaries
+  - `search_user_prompts` - Find what you asked for
+  - `find_by_concept` - Search by concept tags
+  - `find_by_file` - Find work related to specific files
+  - `find_by_type` - Filter by decision, bugfix, feature, etc.
+  - `get_recent_context` - Get recent session context
+
+**Requirement**: `claude-mem` plugin must be installed (see setup above)
+
 ## Getting Started
+
+### 0. One-Time Setup: Install claude-mem
+
+**For persistent context across sessions, install the claude-mem plugin once:**
+
+```bash
+# Start Claude Code
+claude
+
+# Add the marketplace and install
+/plugin marketplace add thedotmack/claude-mem
+/plugin install claude-mem
+
+# Restart Claude Code
+# Context will now persist across sessions automatically
+```
+
+**What claude-mem does:**
+- Captures everything Claude does during sessions (tool use, decisions, file changes)
+- Compresses context with AI and stores in local SQLite database
+- Auto-injects relevant context when you start new sessions
+- Survives conversation compaction - no more "cold starts"
+- Provides 7 search tools to query your project history
+
+**Configuration (optional):**
+```bash
+# If you want to change the AI model used for compression
+~/.claude-mem/claude-mem-settings.sh
+```
+
+**For existing projects:**
+
+If you already have writing projects in progress and want to add claude-mem:
+
+1. Install claude-mem (instructions above)
+2. Restart Claude Code
+3. Navigate to your existing project: `cd ~/writing/your-project`
+4. Start a new session - claude-mem begins capturing from this point forward
+5. Your past work won't be automatically indexed, but:
+   - All future sessions will be captured
+   - You can reference files and scenes normally
+   - Context builds up over subsequent sessions
+
+**Tip:** After installing claude-mem, do a quick session where you:
+- Run `/status` to capture current project state
+- Run `/scenes list` to index all scenes
+- Mention key plot decisions or character details
+- This seeds the memory system with current context
 
 ### 1. Initialize Your First Project
 
@@ -357,6 +423,7 @@ For a series:
 ### Required
 - Claude Code CLI
 - Gemini CLI (for `/summarize`)
+- **claude-mem plugin** (for persistent context across sessions)
 
 ### Optional
 - `pandoc` (for DOCX/EPUB export)
@@ -377,6 +444,56 @@ This system is inspired by:
 - **Discovery writing**: Trust the muse, follow the story
 - **Modern tools**: Leverage AI without losing creative control
 
+## Troubleshooting
+
+### claude-mem Not Working?
+
+**Check if claude-mem is running:**
+```bash
+# View installed plugins
+/plugin list
+
+# Check worker service status
+npm run worker:logs --prefix ~/.claude-mem
+```
+
+**Common issues:**
+
+1. **No context appearing in new sessions:**
+   ```bash
+   # Restart the worker
+   cd ~/.claude-mem
+   npm run worker:restart
+   ```
+
+2. **Worker not starting:**
+   ```bash
+   # Check logs for errors
+   npm run worker:logs --prefix ~/.claude-mem
+
+   # Reinstall if needed
+   /plugin uninstall claude-mem
+   /plugin install claude-mem
+   ```
+
+3. **Search tools not available:**
+   - Ensure you've restarted Claude Code after installation
+   - Check that MCP is enabled (it should be by default)
+
+4. **Context seems incomplete:**
+   - claude-mem captures from installation forward, not retroactively
+   - Do a "seeding session" (run `/status`, `/scenes list`, mention key details)
+   - Wait for a few sessions to build up context
+
+**Database location:**
+- Context database: `~/.claude-mem/claude-mem.db`
+- Logs: `~/.claude-mem/logs/`
+- Configuration: `~/.claude-mem/.env`
+
+**For more help:**
+- [claude-mem documentation](https://github.com/thedotmack/claude-mem/tree/main/docs)
+- [Troubleshooting guide](https://github.com/thedotmack/claude-mem/blob/main/docs/troubleshooting.mdx)
+
 ## Support
 
 All commands include detailed help. Each slash command explains:
@@ -385,8 +502,16 @@ All commands include detailed help. Each slash command explains:
 - How it integrates with the system
 - Next steps after completion
 
+## Additional Documentation
+
+- **[CONTEXT-MANAGEMENT.md](CONTEXT-MANAGEMENT.md)** - Deep dive into how context persists across sessions, claude-mem usage, and best practices
+- **[QUICK-START.md](QUICK-START.md)** - Condensed guide with all commands and workflows
+- **[IMPORTING-GUIDE.md](IMPORTING-GUIDE.md)** - How to import existing manuscripts
+
 ## Next Steps
 
+- **First time?** Read [QUICK-START.md](QUICK-START.md) for installation
+- **Existing project?** See [CONTEXT-MANAGEMENT.md](CONTEXT-MANAGEMENT.md) for claude-mem setup
 - Run `/new-project` to create your first story
 - Read the command files in `.claude/commands/` for detailed usage
 - Experiment with the workflow
