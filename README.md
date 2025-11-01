@@ -2,6 +2,87 @@
 
 A complete discovery writing system inspired by Dean Wesley Smith's "Writing Into the Dark" philosophy, designed for writing short stories, novellas, and novels in any genre.
 
+## Installation
+
+### Prerequisites
+
+1. **Claude Code CLI** - Install from [claude.ai/code](https://claude.com/code)
+2. **Gemini CLI** (for summarization) - Install from [Google AI Studio](https://aistudio.google.com/)
+3. **DevRag** (for semantic search) - See setup instructions below
+
+### Install This Plugin
+
+#### Option 1: Install from GitHub (Recommended)
+
+```bash
+# Clone into your Claude Code plugins directory
+cd ~/.claude/plugins
+git clone https://github.com/badri/novel-claude.git fiction-writer
+
+# Restart Claude Code or reload plugins
+```
+
+#### Option 2: Manual Installation
+
+```bash
+# Create plugins directory if it doesn't exist
+mkdir -p ~/.claude/plugins
+
+# Download and extract
+cd ~/.claude/plugins
+curl -L https://github.com/badri/novel-claude/archive/main.zip -o fiction-writer.zip
+unzip fiction-writer.zip
+mv novel-claude-main fiction-writer
+rm fiction-writer.zip
+```
+
+### DevRag Setup (Required for Semantic Search)
+
+DevRag enables semantic search across your scenes, codex, and session transcripts.
+
+1. **Download DevRag** from [DevRag releases](https://github.com/tomohiro-owada/devrag/releases)
+
+   ```bash
+   # macOS Apple Silicon example:
+   curl -L https://github.com/tomohiro-owada/devrag/releases/latest/download/devrag-macos-apple-silicon.tar.gz -o devrag.tar.gz
+   tar -xzf devrag.tar.gz
+   sudo mv devrag-macos-apple-silicon /usr/local/bin/devrag
+   chmod +x /usr/local/bin/devrag
+   ```
+
+2. **Configure MCP** in `~/.claude.json`:
+
+   ```json
+   {
+     "mcpServers": {
+       "devrag": {
+         "type": "stdio",
+         "command": "/usr/local/bin/devrag",
+         "args": ["--config", ".devrag-config.json"]
+       }
+     }
+   }
+   ```
+
+3. **Verify installation**:
+   ```bash
+   devrag --version
+   ```
+
+### Verify Plugin Installation
+
+```bash
+# Start Claude Code in a writing project directory
+cd ~/writing
+claude
+
+# You should see the fiction writing commands available:
+/new-project
+/new-scene
+/brainstorm
+# etc.
+```
+
 ## Philosophy
 
 This system supports **clean first draft writing** with:

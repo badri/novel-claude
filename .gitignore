@@ -1,0 +1,17 @@
+# Beads issue tracker (project-specific, can be tracked or ignored based on preference)
+# Uncomment if you want to gitignore beads:
+# .beads/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local Claude settings (user-specific overrides)
+.claude/settings.local.json

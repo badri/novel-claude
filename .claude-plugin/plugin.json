@@ -1,0 +1,23 @@
+{
+  "name": "fiction-writer",
+  "version": "1.0.0",
+  "description": "A complete discovery writing system for fiction authors. Write scenes, track worldbuilding, brainstorm with AI, and compile manuscripts—all following the 'Writing Into the Dark' philosophy.",
+  "author": {
+    "name": "Lakshminarayanan Periasamy",
+    "url": "https://github.com/badri"
+  },
+  "homepage": "https://github.com/badri/novel-claude",
+  "repository": "https://github.com/badri/novel-claude",
+  "license": "MIT",
+  "keywords": [
+    "fiction",
+    "writing",
+    "novel",
+    "discovery-writing",
+    "worldbuilding",
+    "manuscript",
+    "pulp-fiction",
+    "creative-writing",
+    "authoring"
+  ]
+}

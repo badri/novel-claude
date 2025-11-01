@@ -1,0 +1,1 @@
+- Commit to git after completing a bead with a detailed commit message.

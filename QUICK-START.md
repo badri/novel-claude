@@ -2,9 +2,20 @@
 
 ## Installation
 
-### Required (One-Time Setup)
+### 1. Install the Plugin
 
-1. **Install DevRag** (for semantic search):
+```bash
+# Clone into your Claude Code plugins directory
+cd ~/.claude/plugins
+git clone https://github.com/badri/novel-claude.git fiction-writer
+```
+
+### 2. Install Prerequisites
+
+**Required:**
+1. **Claude Code CLI** - Install from [claude.ai/code](https://claude.com/code)
+2. **Gemini CLI** (for summarization) - Install from [Google AI Studio](https://aistudio.google.com/)
+3. **DevRag** (for semantic search):
    ```bash
    # Download from https://github.com/tomohiro-owada/devrag/releases
    # macOS example:
@@ -23,19 +34,20 @@
    }
    ```
 
-2. You already have:
-   - ✅ Claude Code CLI
-   - ✅ Gemini CLI (for summarization)
+**Optional:**
+- `pandoc` for DOCX/EPUB export
 
-3. Optional:
-   - `pandoc` for DOCX/EPUB export
+### 3. Verify Installation
 
-**Why DevRag?**
-- Semantic search across all your writing
-- 40x fewer tokens than reading entire files
-- 260x faster than traditional file reading
-- Auto-indexes scenes, codex, and notes
-- Claude can search without knowing filenames
+```bash
+cd ~/writing
+claude
+
+# You should see fiction writing commands:
+/new-project
+/new-scene
+/brainstorm
+```
 
 ## First Project (5 minutes)
 
