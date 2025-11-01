@@ -4,11 +4,23 @@
 
 ### Required (One-Time Setup)
 
-1. **Install claude-mem plugin** (for persistent context):
+1. **Install DevRag** (for semantic search):
    ```bash
-   /plugin marketplace add thedotmack/claude-mem
-   /plugin install claude-mem
-   # Restart Claude Code
+   # Download from https://github.com/tomohiro-owada/devrag/releases
+   # macOS example:
+   tar -xzf devrag-macos-apple-silicon.tar.gz
+   sudo mv devrag-macos-apple-silicon /usr/local/bin/devrag
+
+   # Configure MCP in ~/.claude.json:
+   {
+     "mcpServers": {
+       "devrag": {
+         "type": "stdio",
+         "command": "/usr/local/bin/devrag",
+         "args": ["--config", ".devrag-config.json"]
+       }
+     }
+   }
    ```
 
 2. You already have:
@@ -18,11 +30,12 @@
 3. Optional:
    - `pandoc` for DOCX/EPUB export
 
-**Why claude-mem?**
-- Context survives conversation compactions
-- No more "cold starts" when resuming writing
-- Claude remembers past sessions automatically
-- Search your entire project history
+**Why DevRag?**
+- Semantic search across all your writing
+- 40x fewer tokens than reading entire files
+- 260x faster than traditional file reading
+- Auto-indexes scenes, codex, and notes
+- Claude can search without knowing filenames
 
 ## First Project (5 minutes)
 
@@ -208,48 +221,50 @@ your-project/
 
 - **Claude** writes and brainstorms with you
 - **Gemini** summarizes efficiently (saves Claude tokens)
-- **claude-mem** preserves context across sessions
+- **DevRag** provides semantic search across all your writing
 - Invoke with `/summarize` - automatic!
 
-### Context Persistence in Action
+### Semantic Search in Action
 
 ```bash
-# Session 1 (Oct 27)
-/new-scene
-# Write scene about villain's backstory
-# [Session ends, conversation compacted]
+# You write 50 scenes across multiple sessions
 
-# Session 2 (Oct 28) - NEW SESSION
-# claude-mem auto-injects:
-📊 Previous session context:
-  - Wrote scene 24: villain's tragic backstory
-  - Decision: Made villain sympathetic, not evil
-  - File: scenes/scene-024.md
+You: "Where did I mention the villain's tragic backstory?"
 
-You: "Continue the story"
-Claude: "Great! Now that we've established the villain's
-         motivation, let's write the confrontation scene..."
-# ✅ NO COLD START - Claude remembers!
+Claude: [Uses DevRag search internally]
+"Found in scene 24. Let me read that scene..."
+[Reads only scene 24, not all 50 scenes]
+Claude: "In scene 24, the villain reveals..."
+
+# ✅ 40x fewer tokens, instant results!
 ```
 
 ### For Existing Projects
 
 If you already have a writing project:
 
-1. Install claude-mem (instructions above)
+1. Install DevRag (instructions above)
 2. Navigate to your project: `cd ~/writing/your-project`
-3. Do a "seeding session" to prime the memory:
-   ```bash
-   /status          # Capture current state
-   /scenes list     # Index all scenes
-   /codex search .  # Index worldbuilding
-
-   # Then briefly mention:
-   # - Key plot decisions
-   # - Main character arcs
-   # - Unresolved threads
+3. Create `.devrag-config.json`:
+   ```json
+   {
+     "documents_dir": "./",
+     "db_path": "./.devrag/vectors.db",
+     "chunk_size": 500,
+     "search_top_k": 5,
+     "include_patterns": [
+       "scenes/*.md",
+       "codex/*.md",
+       "notes/*.md"
+     ]
+   }
    ```
-4. From this point forward, all context is preserved!
+4. Add `.devrag/` to `.gitignore`
+5. Run DevRag once to index:
+   ```bash
+   devrag --config .devrag-config.json
+   ```
+6. Done! Claude can now search your entire project semantically.
 
 ## Series Workflow
 

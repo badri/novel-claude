@@ -194,11 +194,11 @@ project-name/
 
 ## Multi-Model Support
 
-The system uses different AI models for different tasks:
+The system uses different AI models and tools for different tasks:
 
 - **Claude** (this): Creative writing, brainstorming, character development
 - **Gemini** (via CLI): Scene summarizing, reverse outlining, continuity checking
-- **claude-mem**: Persistent context compression (uses Claude Sonnet 4.5 by default)
+- **DevRag**: Semantic search and vector-based context retrieval
 
 ### Gemini Summarizer Subagent
 
@@ -210,72 +210,105 @@ The system includes a `@gemini-summarizer` subagent that:
 
 **Requirement**: `gemini-cli` must be installed and configured
 
-### Context Persistence via claude-mem
+### Vector Search via DevRag
 
-The `claude-mem` plugin provides:
-- Automatic session observation capture
-- AI-powered context compression
-- Persistent memory across conversation compactions
-- 7 MCP search tools for querying project history:
-  - `search_observations` - Full-text search across captured context
-  - `search_sessions` - Search session summaries
-  - `search_user_prompts` - Find what you asked for
-  - `find_by_concept` - Search by concept tags
-  - `find_by_file` - Find work related to specific files
-  - `find_by_type` - Filter by decision, bugfix, feature, etc.
-  - `get_recent_context` - Get recent session context
+DevRag provides semantic search capabilities:
+- Automatic indexing of markdown files (scenes, codex, notes)
+- Semantic search using natural language queries
+- MCP integration for Claude Code
+- Fast vector search (~100ms vs 25s for reading files)
+- 40x fewer tokens than reading entire documents
+- Multilingual support (100+ languages)
 
-**Requirement**: `claude-mem` plugin must be installed (see setup above)
+**MCP Tools available:**
+- `search` - Semantic vector search across all documents
+- `index_markdown` - Index specific files
+- `list_documents` - View indexed documents
+- `delete_document` - Remove from index
+- `reindex_document` - Update index for changed files
+
+**Requirement**: DevRag must be installed and configured (see setup below)
 
 ## Getting Started
 
-### 0. One-Time Setup: Install claude-mem
+### 0. One-Time Setup: Install DevRag
 
-**For persistent context across sessions, install the claude-mem plugin once:**
+**For semantic search across your writing, install DevRag once:**
 
 ```bash
-# Start Claude Code
-claude
+# Download DevRag binary for your platform
+# Visit: https://github.com/tomohiro-owada/devrag/releases
 
-# Add the marketplace and install
-/plugin marketplace add thedotmack/claude-mem
-/plugin install claude-mem
+# macOS (Apple Silicon example):
+tar -xzf devrag-macos-apple-silicon.tar.gz
+chmod +x devrag-macos-apple-silicon
+sudo mv devrag-macos-apple-silicon /usr/local/bin/devrag
 
-# Restart Claude Code
-# Context will now persist across sessions automatically
+# Verify installation
+devrag --version
 ```
 
-**What claude-mem does:**
-- Captures everything Claude does during sessions (tool use, decisions, file changes)
-- Compresses context with AI and stores in local SQLite database
-- Auto-injects relevant context when you start new sessions
-- Survives conversation compaction - no more "cold starts"
-- Provides 7 search tools to query your project history
+**Configure Claude Code MCP:**
 
-**Configuration (optional):**
-```bash
-# If you want to change the AI model used for compression
-~/.claude-mem/claude-mem-settings.sh
+Add to `~/.claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "devrag": {
+      "type": "stdio",
+      "command": "/usr/local/bin/devrag",
+      "args": ["--config", ".devrag-config.json"]
+    }
+  }
+}
 ```
+
+**What DevRag does:**
+- Automatically indexes your markdown files (scenes, codex, notes)
+- Provides semantic search using natural language queries
+- Claude can search your story without reading all files
+- 40x fewer tokens, 260x faster than traditional file reading
+- Works across all your writing projects
 
 **For existing projects:**
 
-If you already have writing projects in progress and want to add claude-mem:
+To add DevRag to existing writing projects:
 
-1. Install claude-mem (instructions above)
-2. Restart Claude Code
-3. Navigate to your existing project: `cd ~/writing/your-project`
-4. Start a new session - claude-mem begins capturing from this point forward
-5. Your past work won't be automatically indexed, but:
-   - All future sessions will be captured
-   - You can reference files and scenes normally
-   - Context builds up over subsequent sessions
+1. Install DevRag binary (instructions above)
+2. Configure MCP in ~/.claude.json (above)
+3. In your project, create `.devrag-config.json`:
 
-**Tip:** After installing claude-mem, do a quick session where you:
-- Run `/status` to capture current project state
-- Run `/scenes list` to index all scenes
-- Mention key plot decisions or character details
-- This seeds the memory system with current context
+```json
+{
+  "documents_dir": "./",
+  "db_path": "./.devrag/vectors.db",
+  "chunk_size": 500,
+  "search_top_k": 5,
+  "include_patterns": [
+    "scenes/*.md",
+    "codex/*.md",
+    "notes/*.md"
+  ],
+  "exclude_patterns": [
+    "scenes/archive/*",
+    "manuscript/*",
+    ".devrag/*"
+  ]
+}
+```
+
+4. Add to `.gitignore`:
+```
+.devrag/
+```
+
+5. Initial index (automatic on first run):
+```bash
+devrag --config .devrag-config.json
+```
+
+**Tip:** DevRag watches for file changes and auto-reindexes. Just write normally!
 
 ### 1. Initialize Your First Project
 
@@ -423,7 +456,7 @@ For a series:
 ### Required
 - Claude Code CLI
 - Gemini CLI (for `/summarize`)
-- **claude-mem plugin** (for persistent context across sessions)
+- **DevRag** (for semantic search and vector-based context retrieval)
 
 ### Optional
 - `pandoc` (for DOCX/EPUB export)
@@ -446,53 +479,61 @@ This system is inspired by:
 
 ## Troubleshooting
 
-### claude-mem Not Working?
+### DevRag Not Working?
 
-**Check if claude-mem is running:**
+**Check if DevRag is running:**
 ```bash
-# View installed plugins
-/plugin list
+# Verify DevRag is installed
+devrag --version
 
-# Check worker service status
-npm run worker:logs --prefix ~/.claude-mem
+# Test configuration
+devrag --config .devrag-config.json list
 ```
 
 **Common issues:**
 
-1. **No context appearing in new sessions:**
+1. **Search not working in Claude:**
+   - Ensure `~/.claude.json` has the devrag MCP server configured
+   - Restart Claude Code after MCP configuration changes
+   - Check MCP is enabled: `/mcp` command should show devrag tools
+
+2. **Files not being indexed:**
    ```bash
-   # Restart the worker
-   cd ~/.claude-mem
-   npm run worker:restart
+   # Check your .devrag-config.json paths
+   cat .devrag-config.json
+
+   # Manually trigger reindex
+   devrag --config .devrag-config.json
    ```
 
-2. **Worker not starting:**
-   ```bash
-   # Check logs for errors
-   npm run worker:logs --prefix ~/.claude-mem
+3. **Model download issues:**
+   - First run downloads embedding models from Hugging Face
+   - Requires internet connection
+   - Check proxy settings if behind firewall:
+     ```bash
+     export HTTP_PROXY=http://your-proxy:port
+     export HTTPS_PROXY=http://your-proxy:port
+     ```
 
-   # Reinstall if needed
-   /plugin uninstall claude-mem
-   /plugin install claude-mem
-   ```
-
-3. **Search tools not available:**
-   - Ensure you've restarted Claude Code after installation
-   - Check that MCP is enabled (it should be by default)
-
-4. **Context seems incomplete:**
-   - claude-mem captures from installation forward, not retroactively
-   - Do a "seeding session" (run `/status`, `/scenes list`, mention key details)
-   - Wait for a few sessions to build up context
+4. **Performance issues:**
+   - DevRag auto-detects GPU/CPU
+   - For lower memory usage, set CPU mode in config:
+     ```json
+     {
+       "compute": {
+         "device": "cpu",
+         "fallback_to_cpu": true
+       }
+     }
+     ```
 
 **Database location:**
-- Context database: `~/.claude-mem/claude-mem.db`
-- Logs: `~/.claude-mem/logs/`
-- Configuration: `~/.claude-mem/.env`
+- Vector database: `./.devrag/vectors.db` (in project directory)
+- Gitignored (regenerable from markdown files)
 
 **For more help:**
-- [claude-mem documentation](https://github.com/thedotmack/claude-mem/tree/main/docs)
-- [Troubleshooting guide](https://github.com/thedotmack/claude-mem/blob/main/docs/troubleshooting.mdx)
+- [DevRag documentation](https://github.com/tomohiro-owada/devrag)
+- [DevRag releases](https://github.com/tomohiro-owada/devrag/releases)
 
 ## Support
 
@@ -504,14 +545,14 @@ All commands include detailed help. Each slash command explains:
 
 ## Additional Documentation
 
-- **[CONTEXT-MANAGEMENT.md](CONTEXT-MANAGEMENT.md)** - Deep dive into how context persists across sessions, claude-mem usage, and best practices
+- **[CONTEXT-MANAGEMENT.md](CONTEXT-MANAGEMENT.md)** - Deep dive into context management, DevRag vector search, and best practices
 - **[QUICK-START.md](QUICK-START.md)** - Condensed guide with all commands and workflows
 - **[IMPORTING-GUIDE.md](IMPORTING-GUIDE.md)** - How to import existing manuscripts
 
 ## Next Steps
 
 - **First time?** Read [QUICK-START.md](QUICK-START.md) for installation
-- **Existing project?** See [CONTEXT-MANAGEMENT.md](CONTEXT-MANAGEMENT.md) for claude-mem setup
+- **Existing project?** See [CONTEXT-MANAGEMENT.md](CONTEXT-MANAGEMENT.md) for DevRag setup
 - Run `/new-project` to create your first story
 - Read the command files in `.claude/commands/` for detailed usage
 - Experiment with the workflow
