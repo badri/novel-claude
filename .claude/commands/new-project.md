@@ -123,20 +123,24 @@ Copy from template at `/Users/lakshminp/nc/.gitignore.template` (ensures .devrag
 
 ## 8. Create .claude folder and copy configuration
 
-Create `.claude/` folder in the new project:
-```
-[project-name]/.claude/
-├── settings.json          # Copy from /Users/lakshminp/nc/.claude/settings.json
-└── hooks/
-    └── log-interaction.sh # Copy from /Users/lakshminp/nc/.claude/hooks/log-interaction.sh
-```
+**CRITICAL**: This step enables automatic session tracking. Do not skip!
 
-This ensures:
+1. Create `.claude/` folder in the new project
+2. Create `.claude/hooks/` subfolder
+3. Copy `/Users/lakshminp/nc/.claude/settings.json` to `[project-name]/.claude/settings.json`
+4. Copy `/Users/lakshminp/nc/.claude/hooks/log-interaction.sh` to `[project-name]/.claude/hooks/log-interaction.sh`
+5. Make the hook script executable: `chmod +x [project-name]/.claude/hooks/log-interaction.sh`
+
+**Verification**: After copying, verify these files exist:
+- `[project-name]/.claude/settings.json` (should contain SessionStart, SessionEnd, UserPromptSubmit hooks)
+- `[project-name]/.claude/hooks/log-interaction.sh` (should be executable)
+
+This configuration ensures:
 - Session tracking works automatically (SessionStart/SessionEnd hooks)
 - User interactions are logged (UserPromptSubmit hook)
 - Session cleanup and git commits happen automatically
 
-**Important**: Make the hook script executable: `chmod +x .claude/hooks/log-interaction.sh`
+**If this step is skipped, sessions will not auto-start/end and interactions won't be logged!**
 
 ## 9. Output Summary
 

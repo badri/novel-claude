@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected MCP server configuration instructions to use `claude mcp add` CLI command instead of manual JSON file editing
 - Updated all documentation (README.md, CONTEXT-MANAGEMENT.md, QUICK-START.md, setup-devrag.md) with proper MCP setup using `claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json`
 - Previous incorrect references: first to `~/.claude.json`, then to `.mcp.json` - both now replaced with correct CLI command
+- Improved `/new-project` command with explicit numbered steps and verification requirements for .claude/settings.json and hooks setup to prevent session tracking from being accidentally skipped
 
 ## [1.0.0] - 2025-11-01
 
