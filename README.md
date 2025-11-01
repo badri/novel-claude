@@ -144,6 +144,14 @@ project-name/
 - Writing problem solving
 - Context-aware responses
 
+**`/search`**
+- Semantic search across your entire project
+- Natural language queries: "Where did I mention the magic system?"
+- Searches scenes, codex, notes, session transcripts, brainstorms
+- 40x fewer tokens, 260x faster than reading all files
+- DevRag-powered vector search for context-aware results
+- Find past decisions and discussions from session logs
+
 ### Scene Management
 
 **`/cycle`**

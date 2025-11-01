@@ -59,7 +59,7 @@
 /summarize
 ```
 
-## All Commands (16)
+## All Commands (17)
 
 ### Essential Workflow
 - `/new-project` - Initialize project
@@ -70,6 +70,7 @@
 - `/brainstorm` - Develop story (auto-offers codex saves!)
 - `/summarize` - Reverse outline (Gemini)
 - `/status` - Check progress & session stats
+- `/search` - Semantic search across project & sessions
 
 ### Scene Management (Discovery Writing Power Tools)
 - `/cycle` - Plant setups backward
@@ -154,6 +155,34 @@ New elements detected:
 
 ✓ Codex auto-updated!
 Zero context overhead - seamless flow!
+```
+
+### Semantic Search Your Story ✨ NEW!
+
+```
+# Search across everything (scenes, codex, session logs, brainstorms)
+/search Where did I mention the magic system?
+
+🔍 Found 5 results:
+
+📝 scenes/scene-007.md
+Marcus collapsed after the spell. "That's why we don't use high-level magic carelessly..."
+
+📚 codex/worldbuilding.md
+Magic System: Physical stamina-based. Advanced users can draw from life force...
+
+💭 notes/session-interactions/session-20251028-143000.md
+[15:23] User: I decided magic should cost stamina, not just mental energy...
+
+# Search specific areas
+/search "character motivation" in:sessions
+/search "ancient prophecy" in:scenes
+
+# Search recent work
+/search "villain backstory" recent:7d
+
+# 40x fewer tokens, 260x faster than reading all files!
+# Your full conversation history is searchable!
 ```
 
 ### The Cycling Workflow
