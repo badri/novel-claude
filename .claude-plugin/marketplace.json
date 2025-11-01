@@ -12,7 +12,7 @@
   "plugins": [
     {
       "name": "fiction-writer",
-      "source": "github:badri/novel-claude",
+      "source": "./",
       "description": "A complete discovery writing system for fiction authors. Write scenes, track worldbuilding, brainstorm with AI, and compile manuscripts—all following the 'Writing Into the Dark' philosophy.",
       "version": "1.0.0",
       "author": {

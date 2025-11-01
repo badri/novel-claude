@@ -1,1 +1,2 @@
 - Commit to git after completing a bead with a detailed commit message.
+- when making plugin changes, always run "claude plugin validate ." in the top level directory.
