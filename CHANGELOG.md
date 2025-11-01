@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-11-01
+
 ### Added
 - **`/concept` command** - Pre-project brainstorming workflow that runs outside project directories
   - Capture high-level story concept with interactive exploration
@@ -174,4 +176,5 @@ When updating this changelog:
 
 ---
 
+[1.1.0]: https://github.com/badri/novel-claude/releases/tag/v1.1.0
 [1.0.0]: https://github.com/badri/novel-claude/releases/tag/v1.0.0
