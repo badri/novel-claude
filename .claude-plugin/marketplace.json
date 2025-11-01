@@ -12,13 +12,9 @@
   "plugins": [
     {
       "name": "fiction-writer",
-      "source": {
-        "type": "github",
-        "repo": "badri/novel-claude"
-      },
+      "source": "github:badri/novel-claude",
       "description": "A complete discovery writing system for fiction authors. Write scenes, track worldbuilding, brainstorm with AI, and compile manuscripts—all following the 'Writing Into the Dark' philosophy.",
       "version": "1.0.0",
-      "releaseDate": "2025-11-01",
       "author": {
         "name": "Lakshmi Narasimhan P",
         "url": "https://github.com/badri"
