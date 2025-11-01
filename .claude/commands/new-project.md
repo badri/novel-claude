@@ -30,7 +30,11 @@ After creation, tell user:
 ├── .devrag-config.json    # DevRag vector search configuration
 ├── .gitignore             # Git exclusions (includes .devrag/ folder)
 ├── scenes/                # Individual scene files (scene-001.md, scene-002.md, etc.)
-│   └── .gitkeep
+│   ├── .gitkeep
+│   ├── drafts/            # Experimental/out-of-order scenes
+│   │   └── .gitkeep
+│   └── archive/           # Deleted scenes kept for reference
+│       └── .gitkeep
 ├── codex/                 # Worldbuilding database (copyable for series)
 │   ├── characters.md
 │   ├── locations.md

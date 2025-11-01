@@ -2,12 +2,24 @@
 
 Create a new scene file and optionally generate scene content.
 
+## Usage
+
+- `/new-scene` - Create active scene in `scenes/`
+- `/new-scene --draft` - Create draft scene in `scenes/drafts/` (experimental/out-of-order writing)
+- `/new-scene --draft "villain-backstory"` - Create named draft scene
+
 ## Task
+
+0. **Check for --draft flag**:
+   - If `--draft` flag present: Create in `scenes/drafts/` folder
+   - If `--draft` with name: Use custom name instead of scene number
+   - If no flag: Create active scene in `scenes/` (default behavior)
 
 1. **Check project context**:
    - Verify we're in a fiction project folder (has project.json)
    - Read project.json to get current scene count
    - Calculate next scene number (zero-padded, e.g., 001, 002, etc.)
+   - For drafts: Use descriptive filename or draft-NNN numbering
 
 2. **Read relevant context** (if available):
    - Last 1-2 scene files for continuity
@@ -55,15 +67,19 @@ Create a new scene file and optionally generate scene content.
    3. Generates scene following both
    4. Returns only prose (no meta-instructions in output)
 
-4. **Create scene file**: `scenes/scene-XXX.md`
+4. **Create scene file**:
+   - Active scene: `scenes/scene-XXX.md`
+   - Draft scene (numbered): `scenes/drafts/draft-XXX.md`
+   - Draft scene (named): `scenes/drafts/[name].md`
 
 Template structure:
 ```markdown
-# Scene XXX
+# Scene XXX  (or Draft: [Name])
 
 **POV**: [character name or TBD]
 **Location**: [setting]
 **Time**: [when this takes place]
+**Status**: active | draft
 
 ---
 
@@ -73,9 +89,13 @@ Template structure:
 
 **Notes**:
 - Word count: [calculate]
-- Status: draft
-- Date: [current date]
+- Created: [current date]
+- Type: [active/draft]
 ```
+
+**Status field values**:
+- `active` - In main scenes/ folder, part of manuscript
+- `draft` - In drafts/ folder, experimental/out-of-order
 
 5. **If AI-generated**:
    - Use Claude to write the scene based on user's description
@@ -84,11 +104,17 @@ Template structure:
    - Write in the style/tone of existing scenes if available
    - Generate multiple options if user requests it
 
-6. **Update project.json**:
-   - Increment sceneCount
-   - Update currentScene to new scene number
-   - Update wordCount (calculate from all scenes)
-   - Update lastModified date
+6. **Update project.json** (only for active scenes):
+   - **IF active scene** (created in `scenes/`):
+     - Increment sceneCount
+     - Update currentScene to new scene number
+     - Update wordCount (calculate from all active scenes)
+     - Update lastModified date
+   - **IF draft scene** (created in `scenes/drafts/`):
+     - Do NOT update scene count (drafts are experimental)
+     - Do NOT update currentScene
+     - Do NOT include in word count
+     - Drafts exist outside official manuscript tracking
 
 7. **Detect new codex elements** (after scene is created):
 

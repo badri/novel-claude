@@ -39,6 +39,8 @@ project-name/
 ├── .devrag-config.json    # DevRag vector search configuration
 ├── .gitignore             # Excludes .devrag/ folder
 ├── scenes/                # Individual scene files (scene-001.md, etc.)
+│   ├── drafts/            # Experimental/out-of-order scenes
+│   └── archive/           # Deleted scenes kept for reference
 ├── summaries/             # Reverse outlines (via Gemini)
 ├── brainstorms/           # Brainstorming sessions
 ├── codex/                 # Worldbuilding database (copyable for series!)
@@ -109,6 +111,8 @@ project-name/
 - Auto-context from previous scenes
 - Auto-detects new codex elements (characters, locations, skills)
 - Updates project.json tracking
+- **`/new-scene --draft`** - Create experimental scene in `scenes/drafts/`
+- **`/new-scene --draft "name"`** - Create named draft for out-of-order writing
 
 **`/edit-scene`**
 - AI-assisted scene editing (or manual)
@@ -156,6 +160,10 @@ project-name/
 - Search scenes by content, character, location, POV
 - Jump to specific scene numbers
 - View detailed scene metadata and statistics
+- **`/scenes --drafts`** - List experimental/out-of-order draft scenes
+- **`/scenes --archive`** - List deleted but archived scenes
+- **`/scenes promote [name]`** - Move draft to active scenes (with renumbering)
+- **`/scenes archive [number]`** - Archive a scene (with renumbering)
 - Quick navigation between related scenes
 
 **`/reorder`**
@@ -500,6 +508,16 @@ The workflow is cyclical:
 - Use `/cycle` to plant discovered elements
 - Use `/reorder` when structure emerges
 - These are finishing tools, not revision
+
+### Out-of-Order Writing
+- **Drafts for experiments**: `/new-scene --draft "villain-flashback"`
+- Write future scenes before earlier ones
+- Try multiple versions of key scenes
+- Keep experiments in `scenes/drafts/` until ready
+- Promote when ready: `/scenes promote villain-flashback`
+- Archive cut scenes: `/scenes archive 15` (kept for reference)
+- Drafts don't count toward manuscript until promoted
+- Freedom to explore without breaking continuity
 
 ## Series Writing
 

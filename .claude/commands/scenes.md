@@ -2,6 +2,17 @@
 
 Browse, read, search, and manage all scenes in your project.
 
+## Usage
+
+- `/scenes` or `/scenes list` - List all active scenes
+- `/scenes --drafts` - List draft scenes
+- `/scenes --archive` - List archived scenes
+- `/scenes --all` - List all scenes (active + drafts + archive)
+- `/scenes read [number]` - Read specific scene(s)
+- `/scenes search [query]` - Search scenes
+- `/scenes promote [draft-name]` - Move draft to active scenes
+- `/scenes archive [scene-number]` - Archive a scene
+
 ## Task
 
 1. **Determine action** (ask user or infer):
@@ -10,15 +21,24 @@ Browse, read, search, and manage all scenes in your project.
    - **Search**: Find scenes by content, character, location
    - **Jump**: Quick navigation to a scene number
    - **Info**: Show scene metadata and stats
+   - **Promote**: Move draft scene to active scenes (with renumbering)
+   - **Archive**: Move active scene to archive (with renumbering)
 
 ## Actions
 
 ### List All Scenes
 
-Display scene index with key information:
+Display scene index with key information.
 
+**Default**: `/scenes` or `/scenes list` shows only active scenes
+**Flags**:
+- `--drafts` - Show only draft scenes
+- `--archive` - Show only archived scenes
+- `--all` - Show all (active + drafts + archive)
+
+**Active Scenes** (`scenes/`):
 ```markdown
-# Scene Index - [Project Name]
+# Active Scenes - [Project Name]
 
 Total Scenes: [count]
 Total Words: [count]
@@ -35,6 +55,38 @@ Legend:
 ✓ = Summarized
 Draft = Not yet summarized
 🔄 = Modified since last summary
+```
+
+**Draft Scenes** (`scenes/drafts/`):
+```markdown
+# Draft Scenes - [Project Name]
+
+Total Drafts: [count]
+Total Words: [count] (not in manuscript)
+
+| Name | POV | Location | Words | Created | Notes |
+|------|-----|----------|-------|---------|-------|
+| villain-backstory | Marcus | Warehouse | 1,456 | 2025-10-25 | Alternate timeline |
+| flashback-experiment | Martha | School | 892 | 2025-10-26 | Childhood memory |
+| alternate-ending-v1 | Martha | Border | 2,134 | 2025-10-27 | Happy ending version |
+| ... | ... | ... | ... | ... | ... |
+
+Use `/scenes promote [name]` to move to active scenes
+```
+
+**Archived Scenes** (`scenes/archive/`):
+```markdown
+# Archived Scenes - [Project Name]
+
+Total Archived: [count]
+
+| Original # | Name | Words | Archived | Reason |
+|------------|------|-------|----------|--------|
+| 015 | Confrontation at warehouse | 1,234 | 2025-10-28 | Cut for pacing |
+| 023 | Flashback to childhood | 891 | 2025-10-29 | Replaced with draft version |
+| ... | ... | ... | ... | ... |
+
+Archived scenes preserved in scenes/archive/ for reference
 ```
 
 **How to extract info**:
@@ -277,11 +329,134 @@ System: [Shows 3 scenes with shotgun mentions]
         - Scene 031: Use (shotgun in action)
 ```
 
+### Promote Draft to Active Scene
+
+**Usage**: `/scenes promote [draft-name]`
+
+Move a draft scene from `scenes/drafts/` to active `scenes/` folder.
+
+**Process**:
+1. Ask user which draft to promote (if not specified)
+2. Ask where to insert in active scenes:
+   - At end (becomes next scene number)
+   - After scene N (insert and renumber subsequent scenes)
+   - At beginning (becomes scene-001, renumber all)
+3. **Renumber if needed**:
+   - If inserting mid-sequence, renumber all scenes after insertion point
+   - Example: Promoting to after scene-005:
+     - `draft-flashback.md` → `scene-006.md`
+     - Old `scene-006.md` → `scene-007.md`
+     - Old `scene-007.md` → `scene-008.md` (etc.)
+4. **Update scene file**:
+   - Change `**Status**: draft` to `**Status**: active`
+   - Update header to reflect new scene number
+5. **Update project.json**:
+   - Increment sceneCount
+   - Update wordCount (now includes promoted scene)
+   - Update currentScene if promoting at end
+6. **Confirm success**:
+   - Show before/after scene numbers
+   - Show new file path
+   - Warn if this affects summaries (need to regenerate)
+
+**Example**:
+```
+User: /scenes promote villain-backstory
+
+System: Where should this scene go?
+        1. At end (becomes scene-025)
+        2. After scene 018 (insert as 019, renumber rest)
+        3. At beginning (becomes 001, renumber all)
+
+User: 2
+
+System: Promoting scenes/drafts/villain-backstory.md...
+
+        Renumbering:
+        ✓ villain-backstory.md → scene-019.md
+        ✓ scene-019.md → scene-020.md
+        ✓ scene-020.md → scene-021.md
+        ✓ scene-021.md → scene-022.md
+        (4 scenes renumbered)
+
+        ✓ Updated project.json (scene count: 24 → 25)
+        ✓ Word count: +1,456 words
+
+        ⚠ Summaries after scene 018 may need regeneration
+
+        Scene 019 is now active!
+```
+
+### Archive Scene
+
+**Usage**: `/scenes archive [scene-number]`
+
+Move an active scene to `scenes/archive/` (deleted but kept for reference).
+
+**Process**:
+1. Ask user which scene to archive (if not specified)
+2. **Confirm deletion**:
+   - Show scene title/summary
+   - Warn this will renumber subsequent scenes
+   - Ask for confirmation
+3. **Move to archive**:
+   - Rename: `scene-015.md` → `scene-015-archived-YYYYMMDD.md`
+   - Move to `scenes/archive/`
+4. **Renumber subsequent scenes**:
+   - `scene-016.md` → `scene-015.md`
+   - `scene-017.md` → `scene-016.md` (etc.)
+5. **Update project.json**:
+   - Decrement sceneCount
+   - Update wordCount (subtract archived scene words)
+   - Update currentScene if needed
+6. **Confirm success**:
+   - Show archived file path
+   - Show renumbering summary
+   - Remind user archived scene is in archive/ if they need it later
+
+**Example**:
+```
+User: /scenes archive 15
+
+System: Archive scene 015?
+
+        Title: "Confrontation at the warehouse"
+        Words: 1,234
+        POV: Marcus
+
+        This will:
+        - Move to scenes/archive/scene-015-archived-20251101.md
+        - Renumber scenes 016-025 → 015-024
+
+        Continue? [y/n]
+
+User: y
+
+System: Archiving scene 015...
+
+        ✓ Moved to scenes/archive/scene-015-archived-20251101.md
+
+        Renumbering:
+        ✓ scene-016.md → scene-015.md
+        ✓ scene-017.md → scene-016.md
+        ...
+        ✓ scene-025.md → scene-024.md
+        (10 scenes renumbered)
+
+        ✓ Updated project.json (scene count: 25 → 24)
+        ✓ Word count: -1,234 words
+
+        Scene archived! You can find it in scenes/archive/ if needed.
+```
+
 ## Tips
 
 - Use `/scenes list` frequently to see the big picture
+- Use `/scenes --drafts` to review experimental scenes
 - Use `/scenes search` to track elements through the story
 - Use `/scenes read` to refresh context before writing
+- Use `/scenes promote` when a draft scene is ready for the manuscript
+- Use `/scenes archive` for deleted scenes (keeps them for reference)
 - Scene navigator helps you see the emerging story shape
 
 This complements the reverse outline (summaries) with direct scene access.
