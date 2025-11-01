@@ -4,8 +4,19 @@
 
 ### 1. Install the Plugin
 
+**Using Plugin Manager (Recommended):**
 ```bash
-# Clone into your Claude Code plugins directory
+claude
+
+# Add marketplace
+/plugin marketplace add badri/novel-claude
+
+# Install plugin
+/plugin install fiction-writer@badri
+```
+
+**Or clone directly:**
+```bash
 cd ~/.claude/plugins
 git clone https://github.com/badri/novel-claude.git fiction-writer
 ```
@@ -40,13 +51,13 @@ git clone https://github.com/badri/novel-claude.git fiction-writer
 ### 3. Verify Installation
 
 ```bash
-cd ~/writing
 claude
 
-# You should see fiction writing commands:
+# Check installed plugins
+/plugin
+
+# Test commands
 /new-project
-/new-scene
-/brainstorm
 ```
 
 ## First Project (5 minutes)

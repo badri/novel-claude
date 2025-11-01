@@ -1,0 +1,41 @@
+{
+  "name": "fiction-writer-marketplace",
+  "owner": {
+    "name": "Lakshmi Narasimhan P",
+    "email": "lakshminp@gmail.com",
+    "url": "https://github.com/badri"
+  },
+  "metadata": {
+    "description": "Discovery writing tools for fiction authors following the 'Writing Into the Dark' philosophy",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "fiction-writer",
+      "source": {
+        "type": "github",
+        "repo": "badri/novel-claude"
+      },
+      "description": "A complete discovery writing system for fiction authors. Write scenes, track worldbuilding, brainstorm with AI, and compile manuscripts—all following the 'Writing Into the Dark' philosophy.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Lakshmi Narasimhan P",
+        "url": "https://github.com/badri"
+      },
+      "homepage": "https://github.com/badri/novel-claude",
+      "repository": "https://github.com/badri/novel-claude",
+      "license": "MIT",
+      "keywords": [
+        "fiction",
+        "writing",
+        "novel",
+        "discovery-writing",
+        "worldbuilding",
+        "manuscript",
+        "pulp-fiction",
+        "creative-writing",
+        "authoring"
+      ]
+    }
+  ]
+}

@@ -12,17 +12,36 @@ A complete discovery writing system inspired by Dean Wesley Smith's "Writing Int
 
 ### Install This Plugin
 
-#### Option 1: Install from GitHub (Recommended)
+#### Option 1: Using Claude Code Plugin Manager (Recommended)
+
+```bash
+# Start Claude Code
+claude
+
+# Add the marketplace
+/plugin marketplace add badri/novel-claude
+
+# Install the plugin
+/plugin install fiction-writer@badri
+```
+
+Or use the interactive menu:
+```bash
+/plugin
+# Select "Browse Plugins" → Find "fiction-writer" → Install
+```
+
+#### Option 2: Direct GitHub Clone
 
 ```bash
 # Clone into your Claude Code plugins directory
 cd ~/.claude/plugins
 git clone https://github.com/badri/novel-claude.git fiction-writer
 
-# Restart Claude Code or reload plugins
+# Restart Claude Code
 ```
 
-#### Option 2: Manual Installation
+#### Option 3: Manual Installation
 
 ```bash
 # Create plugins directory if it doesn't exist
@@ -72,15 +91,15 @@ DevRag enables semantic search across your scenes, codex, and session transcript
 ### Verify Plugin Installation
 
 ```bash
-# Start Claude Code in a writing project directory
-cd ~/writing
+# Start Claude Code
 claude
 
-# You should see the fiction writing commands available:
+# Check installed plugins
+/plugin
+
+# You should see fiction-writer in the list
+# Test a command:
 /new-project
-/new-scene
-/brainstorm
-# etc.
 ```
 
 ## Philosophy
