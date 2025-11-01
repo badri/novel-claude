@@ -155,11 +155,21 @@ project-name/
 
 ### Project Management
 
+**`/concept`** ⭐ NEW
+- **Pre-project brainstorming** - runs BEFORE creating project structure
+- Capture your story idea and explore it interactively
+- Brainstorm genre, tone, setting, characters, story, themes
+- Save concept session for reference
+- **One command to create project** with pre-populated codex and metadata
+- Workflow: **concept → brainstorm → structure** (natural creative flow)
+- Example: "Count of Monte Cristo in space" → full project setup
+
 **`/new-project`**
 - Initialize a new fiction project
 - Creates complete folder structure
 - Sets up codex templates
 - Initializes tracking
+- Use this directly if you're ready to structure, or use `/concept` first
 
 **`/import`**
 - Import existing partial drafts or manuscripts

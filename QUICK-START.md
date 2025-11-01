@@ -54,6 +54,28 @@ claude
 
 ## First Project (5 minutes)
 
+**Option 1: Start with Concept (Recommended)**
+
+```bash
+# 1. Brainstorm your story idea
+/concept
+# Example: "Count of Monte Cristo in space"
+# Explore genre, characters, setting interactively
+# Choose: Create project from concept (yes)
+
+# 2. Write your first scene
+/new-scene
+# Project already has populated codex!
+
+# 3. Keep writing
+/new-scene
+
+# 4. After 3-5 scenes, create reverse outline
+/summarize
+```
+
+**Option 2: Direct Project Creation**
+
 ```bash
 # 1. Create your project
 /new-project
@@ -64,19 +86,18 @@ claude
 
 # 3. Write your first scene
 /new-scene
-# Choose: write yourself or AI-generate
 
 # 4. Keep writing
 /new-scene
-# Repeat!
 
 # 5. After 3-5 scenes, create reverse outline
 /summarize
 ```
 
-## All Commands (17)
+## All Commands (18)
 
 ### Essential Workflow
+- `/concept` - ⭐ Pre-project brainstorming (create project from concept!)
 - `/new-project` - Initialize project
 - `/import` - Import existing drafts
 - `/session` - Track writing time & word count

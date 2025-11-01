@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`/concept` command** - Pre-project brainstorming workflow that runs outside project directories
+  - Capture high-level story concept with interactive exploration
+  - Brainstorm genre, tone, setting, characters, story, and themes
+  - Save session to `concept-YYYYMMDD-HHMMSS.md`
+  - Option to create project from concept with one command
+  - Automatically moves concept to `brainstorms/initial-concept.md`
+  - Pre-populates `project.json` with metadata from brainstorm
+  - Pre-populates codex files with extracted information
+  - Matches natural creative workflow: **concept → brainstorm → structure** (instead of structure-first approach)
+
 ### Fixed
 - Corrected MCP server configuration instructions to use `claude mcp add` CLI command instead of manual JSON file editing
 - Updated all documentation (README.md, CONTEXT-MANAGEMENT.md, QUICK-START.md, setup-devrag.md) with proper MCP setup using `claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json`
