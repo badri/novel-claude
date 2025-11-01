@@ -27,6 +27,8 @@ After creation, tell user:
 ```
 [project-name]/
 ├── project.json           # Metadata and story tracking
+├── .devrag-config.json    # DevRag vector search configuration
+├── .gitignore             # Git exclusions (includes .devrag/ folder)
 ├── scenes/                # Individual scene files (scene-001.md, scene-002.md, etc.)
 │   └── .gitkeep
 ├── codex/                 # Worldbuilding database (copyable for series)
@@ -102,18 +104,32 @@ Date: [current date]
 [possible opening scenes]
 ```
 
-## 6. Output Summary
+## 6. Create .devrag-config.json
+
+Copy from template at `/Users/lakshminp/nc/.devrag-config.json.template`, replacing:
+- `{{PROJECT_NAME}}` with the project name
+- `{{CREATED_DATE}}` with current date (ISO format)
+- `{{GENRE}}` with the genre
+
+## 7. Create .gitignore
+
+Copy from template at `/Users/lakshminp/nc/.gitignore.template` (ensures .devrag/ folder is not tracked)
+
+## 8. Output Summary
 
 After creation, tell the user:
 - ✓ Project created at: `[path]`
+- ✓ DevRag vector search configured
 - Next steps:
   - `cd [project-name]` to enter project
   - Start brainstorming with `/brainstorm`
   - Or jump into writing with `/new-scene`
 - Available commands: `/new-scene`, `/brainstorm`, `/summarize`, `/compile`
 - The codex folder is copyable for series continuity
+- Semantic search: Use natural language to find content across all markdown files
 
 **Important**:
 - Use absolute paths when creating files
 - Initialize git repo in project folder
 - Create .gitkeep files so empty folders are tracked
+- DevRag will index markdown files automatically for semantic search

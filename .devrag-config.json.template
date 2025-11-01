@@ -1,0 +1,26 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "description": "Fiction writing project - semantic search across scenes, codex, and notes",
+  "indexPaths": [
+    "scenes/**/*.md",
+    "codex/**/*.md",
+    "notes/**/*.md",
+    "brainstorms/**/*.md",
+    "summaries/**/*.md"
+  ],
+  "excludePaths": [
+    "scenes/drafts/**",
+    "scenes/archive/**",
+    "manuscript/**",
+    ".git/**",
+    "node_modules/**"
+  ],
+  "chunkSize": 1000,
+  "chunkOverlap": 200,
+  "updateInterval": "on-save",
+  "metadata": {
+    "type": "fiction-project",
+    "created": "{{CREATED_DATE}}",
+    "genre": "{{GENRE}}"
+  }
+}

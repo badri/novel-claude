@@ -84,6 +84,13 @@ project-name/
 - Export data to CSV for analysis
 - Builds consistent writing habits with streak tracking
 
+**`/setup-devrag`**
+- Add DevRag vector search to existing projects
+- Creates `.devrag-config.json` configuration
+- Updates `.gitignore` to exclude vector database
+- Enables semantic search across all markdown files
+- Use for projects created before DevRag integration
+
 ### Writing Workflow
 
 **`/new-scene`**
@@ -250,7 +257,7 @@ devrag --version
 
 **Configure Claude Code MCP:**
 
-Add to `~/.claude.json`:
+Add to `~/.claude.json` (create if it doesn't exist):
 
 ```json
 {
@@ -264,6 +271,13 @@ Add to `~/.claude.json`:
 }
 ```
 
+**Notes:**
+- The `~/.claude.json` file is in your home directory (global configuration)
+- Each writing project has its own `.devrag-config.json` (per-project settings)
+- DevRag will use the `.devrag-config.json` in whichever project directory you're working in
+- If `~/.claude.json` already exists with other MCP servers, just add the `devrag` entry to the `mcpServers` object
+- After editing `~/.claude.json`, restart Claude Code for changes to take effect
+
 **What DevRag does:**
 - Automatically indexes your markdown files (scenes, codex, notes)
 - Provides semantic search using natural language queries
@@ -273,40 +287,66 @@ Add to `~/.claude.json`:
 
 **For existing projects:**
 
-To add DevRag to existing writing projects:
+To add DevRag to existing writing projects created before DevRag integration:
 
-1. Install DevRag binary (instructions above)
-2. Configure MCP in ~/.claude.json (above)
-3. In your project, create `.devrag-config.json`:
+```bash
+# Navigate to your existing project
+cd ~/writing/your-project-name
+
+# Run the setup command
+/setup-devrag
+```
+
+This command will:
+- Create `.devrag-config.json` with your project settings
+- Update `.gitignore` to exclude the `.devrag/` folder
+- Configure semantic search for all markdown files
+- Test the search functionality
+
+**Manual setup (if needed):**
+
+If you prefer manual setup, create `.devrag-config.json`:
 
 ```json
 {
-  "documents_dir": "./",
-  "db_path": "./.devrag/vectors.db",
-  "chunk_size": 500,
-  "search_top_k": 5,
-  "include_patterns": [
-    "scenes/*.md",
-    "codex/*.md",
-    "notes/*.md"
+  "name": "your-project-name",
+  "description": "Fiction writing project - semantic search across scenes, codex, and notes",
+  "indexPaths": [
+    "scenes/**/*.md",
+    "codex/**/*.md",
+    "notes/**/*.md",
+    "brainstorms/**/*.md",
+    "summaries/**/*.md"
   ],
-  "exclude_patterns": [
-    "scenes/archive/*",
-    "manuscript/*",
-    ".devrag/*"
-  ]
+  "excludePaths": [
+    "scenes/drafts/**",
+    "scenes/archive/**",
+    "manuscript/**",
+    ".git/**"
+  ],
+  "chunkSize": 1000,
+  "chunkOverlap": 200,
+  "updateInterval": "on-save",
+  "metadata": {
+    "type": "fiction-project",
+    "created": "2025-01-15T10:30:00Z",
+    "genre": "thriller"
+  }
 }
 ```
 
-4. Add to `.gitignore`:
+Then add to `.gitignore`:
 ```
+# DevRag vector database (derivative data, regenerated from markdown)
 .devrag/
 ```
 
-5. Initial index (automatic on first run):
-```bash
-devrag --config .devrag-config.json
-```
+**Usage:**
+
+DevRag indexes automatically when you use semantic search. Just ask natural language questions:
+- "Where did I mention the magic system?"
+- "Which scenes feature Detective Morgan?"
+- "Find all references to the ancient prophecy"
 
 **Tip:** DevRag watches for file changes and auto-reindexes. Just write normally!
 
