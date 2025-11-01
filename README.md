@@ -82,14 +82,16 @@ project-name/
 
 **`/session`**
 - Track writing sessions (time and word count)
-- `/session start` - Begin session with optional goal
-- `/session end` - Log session stats
+- **Automatic**: Session starts when you launch `claude`, ends when you exit
+- `/session start` - Manually start session (optional, auto-runs via SessionStart hook)
+- `/session end` - Manually end session (optional, auto-runs via SessionEnd hook)
 - `/session status` - Check current session progress
 - `/session log` - View history, streaks, statistics
 - Export data to CSV for analysis
 - Builds consistent writing habits with streak tracking
 - **Auto-logs interactions**: All session conversations captured in `notes/session-interactions/`
 - **DevRag indexed**: Search past sessions for decisions and story discussions
+- **Hooks configured**: Sessions and cleanup happen automatically via `.claude/settings.json`
 
 **`/setup-devrag`**
 - Add DevRag vector search to existing projects
@@ -234,13 +236,16 @@ DevRag provides semantic search capabilities:
 - 40x fewer tokens than reading entire documents
 - Multilingual support (100+ languages)
 
-**Session Interaction Logging:**
-- Automatically captures all user commands and questions during active writing sessions
+**Session Interaction Logging (Fully Automatic):**
+- **Zero configuration needed** - Works automatically when you `cd` into project and run `claude`
+- Session starts automatically via `SessionStart` hook → runs `/session start`
+- Every user message captured via `UserPromptSubmit` hook → logged to markdown
+- Session ends automatically via `SessionEnd` hook → runs `/session-cleanup`
 - Logs saved to `notes/session-interactions/session-YYYYMMDD-HHMMSS.md`
 - Indexed by DevRag for searchable session history
 - Search past sessions: "What did I decide about the magic system last week?"
 - Preserves creative decisions, brainstorming notes, and story discussions
-- Auto-triggered by `UserPromptSubmit` hook when session is active
+- Hooks configured in `.claude/settings.json` (copied to new projects)
 
 **MCP Tools available:**
 - `search` - Semantic vector search across all documents

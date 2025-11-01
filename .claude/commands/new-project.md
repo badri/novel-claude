@@ -117,18 +117,38 @@ Copy from template at `/Users/lakshminp/nc/.devrag-config.json.template`, replac
 
 Copy from template at `/Users/lakshminp/nc/.gitignore.template` (ensures .devrag/ folder is not tracked)
 
-## 8. Output Summary
+## 8. Create .claude folder and copy configuration
+
+Create `.claude/` folder in the new project:
+```
+[project-name]/.claude/
+├── settings.json          # Copy from /Users/lakshminp/nc/.claude/settings.json
+└── hooks/
+    └── log-interaction.sh # Copy from /Users/lakshminp/nc/.claude/hooks/log-interaction.sh
+```
+
+This ensures:
+- Session tracking works automatically (SessionStart/SessionEnd hooks)
+- User interactions are logged (UserPromptSubmit hook)
+- Session cleanup and git commits happen automatically
+
+**Important**: Make the hook script executable: `chmod +x .claude/hooks/log-interaction.sh`
+
+## 9. Output Summary
 
 After creation, tell the user:
 - ✓ Project created at: `[path]`
 - ✓ DevRag vector search configured
+- ✓ Session tracking and interaction logging enabled (automatic)
 - Next steps:
   - `cd [project-name]` to enter project
+  - Run `claude` to start (sessions auto-start/end via hooks)
   - Start brainstorming with `/brainstorm`
   - Or jump into writing with `/new-scene`
 - Available commands: `/new-scene`, `/brainstorm`, `/summarize`, `/compile`
 - The codex folder is copyable for series continuity
 - Semantic search: Use natural language to find content across all markdown files
+- Session logs: All your commands/questions are automatically captured and searchable
 
 **Important**:
 - Use absolute paths when creating files

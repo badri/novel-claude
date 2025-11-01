@@ -45,27 +45,47 @@ If `.gitignore` exists:
   .devrag/
   ```
 
-### 4. Initialize DevRag Index
+### 4. Setup Session Interaction Logging
+
+Create `.claude/` folder if it doesn't exist and copy hook configuration:
+
+If `.claude/settings.json` doesn't exist:
+- Copy from `/Users/lakshminp/nc/.claude/settings.json`
+- Creates hooks for SessionStart, SessionEnd, UserPromptSubmit
+
+If `.claude/hooks/` doesn't exist:
+- Create the folder
+- Copy `log-interaction.sh` from `/Users/lakshminp/nc/.claude/hooks/log-interaction.sh`
+- Make it executable: `chmod +x .claude/hooks/log-interaction.sh`
+
+If `.claude/settings.json` exists:
+- Check if hooks are already configured
+- If not, merge the hooks from the template
+- Warn user if manual merge is needed
+
+### 5. Initialize DevRag Index
 
 Inform the user:
 - DevRag will automatically index your markdown files when you use semantic search
 - To manually trigger indexing, they can use the DevRag MCP tools directly
 - Indexing happens in the background and doesn't require manual action
 
-### 5. Output Summary
+### 6. Output Summary
 
 Tell the user:
 - ✓ DevRag configuration created
 - ✓ .gitignore updated (if needed)
+- ✓ Session interaction logging enabled (automatic)
 - **How to use**: Ask Claude natural language questions about your story
   - "Where did I mention the magic system?"
   - "Which scenes feature character X?"
   - "Find all references to the ancient prophecy"
 - **Performance**: DevRag uses 40x fewer tokens and is 260x faster than reading all files
 - **Index location**: `.devrag/` folder (gitignored, will be regenerated)
-- **What gets indexed**: All markdown in `scenes/`, `codex/`, `notes/`, `brainstorms/`, `summaries/`
+- **What gets indexed**: All markdown in `scenes/`, `codex/`, `notes/`, `notes/session-interactions/`, `brainstorms/`, `summaries/`
+- **Session logging**: Next time you run `claude`, sessions will auto-start/end and log all interactions
 
-### 6. Test Search (Optional)
+### 7. Test Search (Optional)
 
 Offer to test semantic search:
 - "Would you like me to test the search with a query?"
