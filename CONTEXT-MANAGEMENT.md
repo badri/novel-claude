@@ -159,18 +159,23 @@ Claude: "In scene 12 you established stamina drain,
 - Includes session summary (duration, words, activities)
 - Searchable via DevRag: "What did I decide about the ending last Tuesday?"
 
-**How it works:**
-1. `/session start` → Begins logging interactions
-2. `UserPromptSubmit` hook → Captures each user message
+**How it works (Fully Automatic):**
+1. `cd project && claude` → SessionStart hook runs `/session start`
+2. `UserPromptSubmit` hook → Captures each user message automatically
 3. Appends to session markdown file with timestamps
-4. `/session end` → Finalizes with session summary
-5. DevRag indexes → Session becomes searchable
+4. Exit Claude → SessionEnd hook runs `/session-cleanup`
+5. Session summary added, git commit/push, DevRag indexes
 
-**Commands:**
-- `/session start` - Begin tracking
-- `/session end` - Save stats + git commit/push
+**Commands (Optional - hooks auto-run these):**
+- `/session start` - Manually start (auto via SessionStart hook)
+- `/session end` - Manually end (auto via SessionEnd hook)
 - `/session status` - Check progress
 - `/session log` - View history
+
+**Hooks Configuration (.claude/settings.json):**
+- `SessionStart` → Auto-starts session on `claude` launch
+- `SessionEnd` → Auto-ends, commits, pushes on exit
+- `UserPromptSubmit` → Logs every user message during session
 
 ### Layer 3: Codex (World Bible)
 
@@ -334,91 +339,103 @@ Claude: [DevRag searches decisions.md]
 
 ### New Projects
 
-When running `/new-project`, it will:
-1. Create project structure
-2. Generate `.devrag-config.json`
-3. Add `.devrag/` to `.gitignore`
-4. Create `notes/decisions.md` template
+When running `/new-project`, it automatically:
+1. Creates complete project structure
+2. Generates `.devrag-config.json` with session-interactions indexed
+3. Adds `.devrag/` to `.gitignore`
+4. Copies `.claude/settings.json` with hooks for automatic session tracking
+5. Copies `.claude/hooks/log-interaction.sh` for interaction logging
+6. Creates `notes/session-interactions/` folder
+7. Creates `notes/decisions.md` template
+
+**Zero configuration needed** - everything works automatically!
 
 ### Existing Projects
 
-To add DevRag to existing projects:
+To add DevRag and session interaction logging to existing projects:
 
 ```bash
 cd ~/writing/existing-project
 
-# 1. Create DevRag config
-cat > .devrag-config.json << 'EOF'
-{
-  "documents_dir": "./",
-  "db_path": "./.devrag/vectors.db",
-  "chunk_size": 500,
-  "search_top_k": 5,
-  "include_patterns": [
-    "scenes/*.md",
-    "codex/*.md",
-    "notes/*.md"
-  ],
-  "exclude_patterns": [
-    "scenes/archive/*",
-    "manuscript/*",
-    ".devrag/*"
-  ]
-}
-EOF
-
-# 2. Add to .gitignore
-echo ".devrag/" >> .gitignore
-
-# 3. Initial index
-devrag --config .devrag-config.json
-
-# Done! DevRag now indexes your project
+# Run the setup command
+/setup-devrag
 ```
+
+This command will:
+1. Create `.devrag-config.json` from template (includes session-interactions/)
+2. Update `.gitignore` to exclude `.devrag/`
+3. Copy `.claude/settings.json` with hooks configuration
+4. Copy `.claude/hooks/log-interaction.sh` logging script
+5. Create `notes/session-interactions/` folder
+6. Enable automatic session tracking via hooks
+
+**Next time you run `claude`:**
+- Session auto-starts (SessionStart hook)
+- All your commands logged (UserPromptSubmit hook)
+- Session auto-ends on exit (SessionEnd hook)
+- Git auto-commits work
+- DevRag indexes session logs
 
 ## Configuration Examples
 
-### Minimal (Default)
+### Standard Configuration (Auto-Generated)
 ```json
 {
-  "documents_dir": "./",
-  "db_path": "./.devrag/vectors.db",
-  "chunk_size": 500,
-  "search_top_k": 5
+  "name": "my-noir-novel",
+  "description": "Fiction writing project - semantic search across scenes, codex, and notes",
+  "indexPaths": [
+    "scenes/**/*.md",
+    "codex/**/*.md",
+    "notes/**/*.md",
+    "notes/session-interactions/**/*.md",
+    "brainstorms/**/*.md",
+    "summaries/**/*.md"
+  ],
+  "excludePaths": [
+    "scenes/drafts/**",
+    "scenes/archive/**",
+    "manuscript/**",
+    ".git/**"
+  ],
+  "chunkSize": 1000,
+  "chunkOverlap": 200,
+  "updateInterval": "on-save",
+  "metadata": {
+    "type": "fiction-project",
+    "created": "2025-11-01T14:30:00Z",
+    "genre": "noir"
+  }
 }
 ```
 
-### With Patterns (Recommended)
+### With Drafts/Archive Excluded (Default)
 ```json
 {
-  "documents_dir": "./",
-  "db_path": "./.devrag/vectors.db",
-  "chunk_size": 500,
-  "search_top_k": 5,
-  "include_patterns": [
-    "scenes/*.md",
-    "codex/*.md",
-    "notes/decisions.md"
+  "indexPaths": [
+    "scenes/**/*.md",
+    "codex/**/*.md",
+    "notes/**/*.md",
+    "notes/session-interactions/**/*.md"
   ],
-  "exclude_patterns": [
-    "scenes/drafts/*",
-    "scenes/archive/*",
-    "manuscript/*"
+  "excludePaths": [
+    "scenes/drafts/**",      // Exclude experimental scenes
+    "scenes/archive/**",     // Exclude deleted scenes
+    "manuscript/**"          // Exclude compiled output
   ]
 }
 ```
 
-### CPU Mode (Lower Memory)
+### Including Drafts for Search (Optional)
 ```json
 {
-  "documents_dir": "./",
-  "db_path": "./.devrag/vectors.db",
-  "chunk_size": 500,
-  "search_top_k": 5,
-  "compute": {
-    "device": "cpu",
-    "fallback_to_cpu": true
-  }
+  "indexPaths": [
+    "scenes/**/*.md",        // Includes drafts/ and archive/
+    "codex/**/*.md",
+    "notes/**/*.md"
+  ],
+  "excludePaths": [
+    "manuscript/**"          // Only exclude compiled output
+  ]
 }
 ```
 
@@ -455,6 +472,31 @@ Claude: [DevRag search]
 "Found in scenes 3, 12, and 24. But I notice you
  introduced it in scene 3, reference it in 12, but
  never reveal who sent it in scene 24. Intentional?"
+```
+
+### Searching Session History
+
+```
+You: "What did I decide about the villain's motivation last week?"
+
+Claude: [DevRag searches session-interactions/]
+"In your session on 2025-10-25, you discussed making
+ the villain sympathetic rather than pure evil. You said:
+ 'I think the noir genre works better with moral ambiguity.'
+ This affected scenes 18 and 24."
+```
+
+### Recalling Past Brainstorms
+
+```
+You: "Remind me what we discussed about the ending?"
+
+Claude: [DevRag finds session from 3 days ago]
+"In your session on 2025-10-29 at 15:42, you asked about
+ the ending style. We discussed three options and you chose
+ the ambiguous ending because it 'aligns with noir tone and
+ leaves readers questioning.' You mentioned beta reader
+ feedback that the happy ending felt too neat."
 ```
 
 ## Troubleshooting
@@ -514,6 +556,83 @@ export HTTPS_PROXY=http://your-proxy:port
 devrag --config .devrag-config.json
 ```
 
+## Hooks System (Automatic Behavior)
+
+The system uses Claude Code hooks in `.claude/settings.json` for zero-config automation:
+
+### SessionStart Hook
+```json
+{
+  "hooks": {
+    "SessionStart": [{
+      "hooks": [{
+        "type": "command",
+        "command": "/session start"
+      }]
+    }]
+  }
+}
+```
+
+**Triggers:** When you run `claude` in a project directory
+**Action:** Automatically starts session tracking
+**Creates:** `notes/current-session.json`
+**Records:** Start time, initial word/scene counts
+
+### UserPromptSubmit Hook
+```json
+{
+  "UserPromptSubmit": [{
+    "hooks": [{
+      "type": "command",
+      "command": ".claude/hooks/log-interaction.sh \"$USER_MESSAGE\""
+    }]
+  }]
+}
+```
+
+**Triggers:** Every time you send a message to Claude
+**Action:** Runs bash script to log your message
+**Appends to:** `notes/session-interactions/session-YYYYMMDD-HHMMSS.md`
+**Format:** Timestamped markdown entries
+**Only logs:** When session is active (`current-session.json` exists)
+
+### SessionEnd Hook
+```json
+{
+  "SessionEnd": [{
+    "hooks": [{
+      "type": "command",
+      "command": "/session-cleanup"
+    }]
+  }]
+}
+```
+
+**Triggers:** When you exit Claude (Ctrl+D, `exit`, Ctrl+C)
+**Action:** Finalizes session and commits work
+**Steps:**
+1. Runs `/session end` (calculates stats, updates `session-log.json`)
+2. Appends session summary to interaction log
+3. Deletes `notes/current-session.json`
+4. Runs `git add -A && git commit && git push`
+5. DevRag auto-indexes the new session log file
+
+### Why This Matters
+
+**Before hooks:**
+- Manual `/session start` required
+- Easy to forget to log sessions
+- Git commits only if you remember
+- No interaction history captured
+
+**With hooks:**
+- ✅ Completely automatic
+- ✅ Never forget a session
+- ✅ All work committed on exit
+- ✅ Full conversation history preserved
+- ✅ Searchable via DevRag forever
+
 ## Best Practices
 
 ### Do:
@@ -537,34 +656,39 @@ Your writing system uses a hybrid architecture:
 
 ```
 ┌─────────────────────────────────────────────────┐
-│ Layer 1: DevRag                                 │
-│ (Semantic search, vector retrieval)             │
-│ - Fast: 100ms search                            │
+│ Layer 1: DevRag (Semantic Search Engine)        │
+│ - Vector search across ALL markdown             │
+│ - Fast: 100ms search vs 25s reading files       │
 │ - Efficient: 40x fewer tokens                   │
 │ - Derivative: Regenerable from markdown         │
+│ - Indexes: scenes, codex, notes, sessions       │
 └─────────────────────────────────────────────────┘
                      ↓
 ┌─────────────────────────────────────────────────┐
-│ Layer 2: Session Tracking                       │
-│ (Time, words, streaks, git commits)             │
-│ - notes/session-log.json                        │
-│ - Auto git commit/push on /session end          │
+│ Layer 2: Session Tracking & Interaction Logs    │
+│ - AUTOMATIC via hooks (zero config)             │
+│ - Tracks: time, words, streaks                  │
+│ - Logs: all user commands & questions           │
+│ - Files: notes/session-interactions/*.md        │
+│ - Auto git commit/push on exit                  │
+│ - Searchable via DevRag!                        │
 └─────────────────────────────────────────────────┘
                      ↓
 ┌─────────────────────────────────────────────────┐
-│ Layer 3: Codex                                  │
-│ (World bible, characters, lore)                 │
-│ - codex/*.md                                    │
+│ Layer 3: Codex (World Bible)                    │
+│ - Persistent worldbuilding reference            │
+│ - codex/characters.md, locations.md, etc.       │
 │ - Searchable via DevRag                         │
-│ - Copyable for series                           │
+│ - Copyable for series continuity                │
 └─────────────────────────────────────────────────┘
                      ↓
 ┌─────────────────────────────────────────────────┐
-│ Layer 4: Project Files                          │
-│ (Source of truth, git-tracked)                  │
-│ - scenes/*.md                                   │
-│ - notes/decisions.md                            │
-│ - All markdown, human-readable                  │
+│ Layer 4: Project Files (Source of Truth)        │
+│ - scenes/*.md (git-tracked, human-readable)     │
+│ - scenes/drafts/*.md (experimental)             │
+│ - scenes/archive/*.md (deleted but kept)        │
+│ - notes/decisions.md (plot choices)             │
+│ - All markdown, version controlled              │
 └─────────────────────────────────────────────────┘
 ```
 
