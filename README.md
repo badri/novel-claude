@@ -36,6 +36,8 @@ Each project gets:
 ```
 project-name/
 ├── project.json           # Metadata and tracking
+├── .devrag-config.json    # DevRag vector search configuration
+├── .gitignore             # Excludes .devrag/ folder
 ├── scenes/                # Individual scene files (scene-001.md, etc.)
 ├── summaries/             # Reverse outlines (via Gemini)
 ├── brainstorms/           # Brainstorming sessions
@@ -47,6 +49,9 @@ project-name/
 │   └── lore.md
 ├── manuscript/            # Compiled versions (MD/DOCX/EPUB)
 └── notes/                 # General notes and ideas
+    ├── session-interactions/  # Session conversation logs (DevRag indexed)
+    ├── current-session.json   # Active session (if writing)
+    └── session-log.json       # Session history and stats
 ```
 
 ## Available Commands
@@ -83,6 +88,8 @@ project-name/
 - `/session log` - View history, streaks, statistics
 - Export data to CSV for analysis
 - Builds consistent writing habits with streak tracking
+- **Auto-logs interactions**: All session conversations captured in `notes/session-interactions/`
+- **DevRag indexed**: Search past sessions for decisions and story discussions
 
 **`/setup-devrag`**
 - Add DevRag vector search to existing projects
@@ -220,12 +227,20 @@ The system includes a `@gemini-summarizer` subagent that:
 ### Vector Search via DevRag
 
 DevRag provides semantic search capabilities:
-- Automatic indexing of markdown files (scenes, codex, notes)
+- Automatic indexing of markdown files (scenes, codex, notes, session interactions)
 - Semantic search using natural language queries
 - MCP integration for Claude Code
 - Fast vector search (~100ms vs 25s for reading files)
 - 40x fewer tokens than reading entire documents
 - Multilingual support (100+ languages)
+
+**Session Interaction Logging:**
+- Automatically captures all user commands and questions during active writing sessions
+- Logs saved to `notes/session-interactions/session-YYYYMMDD-HHMMSS.md`
+- Indexed by DevRag for searchable session history
+- Search past sessions: "What did I decide about the magic system last week?"
+- Preserves creative decisions, brainstorming notes, and story discussions
+- Auto-triggered by `UserPromptSubmit` hook when session is active
 
 **MCP Tools available:**
 - `search` - Semantic vector search across all documents

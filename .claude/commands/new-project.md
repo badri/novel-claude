@@ -44,6 +44,8 @@ After creation, tell user:
 ├── manuscript/            # Compiled versions
 │   └── .gitkeep
 └── notes/                 # General story notes, ideas, research
+    ├── session-interactions/  # Session conversation logs (auto-created, DevRag indexed)
+    │   └── .gitkeep
     └── .gitkeep
 ```
 

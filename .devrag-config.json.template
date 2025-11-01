@@ -5,6 +5,7 @@
     "scenes/**/*.md",
     "codex/**/*.md",
     "notes/**/*.md",
+    "notes/session-interactions/**/*.md",
     "brainstorms/**/*.md",
     "summaries/**/*.md"
   ],

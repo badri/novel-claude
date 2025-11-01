@@ -28,8 +28,9 @@ project/
 │   ├── locations.md
 │   └── worldbuilding.md
 ├── notes/
-│   ├── decisions.md       # Plot decisions
-│   └── session-log.json   # Session stats
+│   ├── session-interactions/  # Session conversations (DevRag indexed)
+│   ├── decisions.md           # Plot decisions
+│   └── session-log.json       # Session stats
 └── project.json
 ```
 
@@ -126,7 +127,10 @@ Claude: "In scene 12 you established stamina drain,
 **Files indexed:**
 - scenes/*.md
 - codex/*.md
-- notes/decisions.md
+- notes/*.md
+- notes/session-interactions/*.md
+- brainstorms/*.md
+- summaries/*.md
 
 **MCP Tools:**
 - `search` - Semantic search
@@ -135,17 +139,32 @@ Claude: "In scene 12 you established stamina drain,
 - `delete_document` - Remove from index
 - `reindex_document` - Update index
 
-### Layer 2: Session Tracking (Stats)
+### Layer 2: Session Tracking & Interaction Logging
 
 **What it does:**
 - Tracks time spent writing
 - Counts words per session
 - Monitors streaks and goals
+- **Auto-logs all user interactions** (commands, questions, discussions)
+- Captures creative decisions and brainstorming
 - Git commits work
 
-**Files:**
-- `notes/current-session.json`
-- `notes/session-log.json`
+**Stats Files:**
+- `notes/current-session.json` - Active session tracking
+- `notes/session-log.json` - Historical session stats
+
+**Interaction Logs** (DevRag indexed):
+- `notes/session-interactions/session-YYYYMMDD-HHMMSS.md`
+- Captures every user command and question during active sessions
+- Includes session summary (duration, words, activities)
+- Searchable via DevRag: "What did I decide about the ending last Tuesday?"
+
+**How it works:**
+1. `/session start` → Begins logging interactions
+2. `UserPromptSubmit` hook → Captures each user message
+3. Appends to session markdown file with timestamps
+4. `/session end` → Finalizes with session summary
+5. DevRag indexes → Session becomes searchable
 
 **Commands:**
 - `/session start` - Begin tracking

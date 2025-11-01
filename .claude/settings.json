@@ -19,6 +19,16 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/log-interaction.sh \"$USER_MESSAGE\""
+          }
+        ]
+      }
     ]
   }
 }
