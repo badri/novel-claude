@@ -5,6 +5,12 @@ All notable changes to the Fiction Writer plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- Corrected MCP server configuration file path from `~/.claude.json` to `.mcp.json` in all documentation (README.md, CONTEXT-MANAGEMENT.md, QUICK-START.md, setup-devrag.md command)
+- Added clarification about project-level vs user-level MCP configuration options
+
 ## [1.0.0] - 2025-11-01
 
 ### Initial Release

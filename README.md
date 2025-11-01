@@ -69,8 +69,9 @@ DevRag enables semantic search across your scenes, codex, and session transcript
    chmod +x /usr/local/bin/devrag
    ```
 
-2. **Configure MCP** in `~/.claude.json`:
+2. **Configure MCP** in `.mcp.json` (project or user scope):
 
+   For project-level configuration, create `.mcp.json` in your project root:
    ```json
    {
      "mcpServers": {
@@ -82,6 +83,8 @@ DevRag enables semantic search across your scenes, codex, and session transcript
      }
    }
    ```
+
+   Or configure at user scope via Claude Code settings for cross-project access.
 
 3. **Verify installation**:
    ```bash
@@ -393,7 +396,11 @@ devrag --version
 
 **Configure Claude Code MCP:**
 
-Add to `~/.claude.json` (create if it doesn't exist):
+Add to `.mcp.json` in your project directory or configure at user scope:
+
+**Option 1: Project-level (recommended for per-project isolation)**
+
+Create `.mcp.json` in your writing project directory:
 
 ```json
 {
@@ -407,12 +414,16 @@ Add to `~/.claude.json` (create if it doesn't exist):
 }
 ```
 
+**Option 2: User-level (for cross-project access)**
+
+Configure via Claude Code's user settings for automatic availability across all projects.
+
 **Notes:**
-- The `~/.claude.json` file is in your home directory (global configuration)
+- Project-level `.mcp.json` is recommended - keeps MCP config with the project
 - Each writing project has its own `.devrag-config.json` (per-project settings)
 - DevRag will use the `.devrag-config.json` in whichever project directory you're working in
-- If `~/.claude.json` already exists with other MCP servers, just add the `devrag` entry to the `mcpServers` object
-- After editing `~/.claude.json`, restart Claude Code for changes to take effect
+- If `.mcp.json` already exists with other MCP servers, just add the `devrag` entry to the `mcpServers` object
+- After editing `.mcp.json`, restart Claude Code for changes to take effect
 
 **What DevRag does:**
 - Automatically indexes your markdown files (scenes, codex, notes)
@@ -679,7 +690,7 @@ devrag --config .devrag-config.json list
 **Common issues:**
 
 1. **Search not working in Claude:**
-   - Ensure `~/.claude.json` has the devrag MCP server configured
+   - Ensure `.mcp.json` has the devrag MCP server configured (either project or user level)
    - Restart Claude Code after MCP configuration changes
    - Check MCP is enabled: `/mcp` command should show devrag tools
 

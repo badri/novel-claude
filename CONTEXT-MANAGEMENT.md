@@ -528,7 +528,7 @@ devrag --config .devrag-config.json
 # etc.
 ```
 
-**Check ~/.claude.json:**
+**Check .mcp.json (project level) or user settings:**
 ```json
 {
   "mcpServers": {

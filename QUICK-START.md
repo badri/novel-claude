@@ -33,7 +33,7 @@ git clone https://github.com/badri/novel-claude.git fiction-writer
    tar -xzf devrag-macos-apple-silicon.tar.gz
    sudo mv devrag-macos-apple-silicon /usr/local/bin/devrag
 
-   # Configure MCP in ~/.claude.json:
+   # Configure MCP in .mcp.json (project directory):
    {
      "mcpServers": {
        "devrag": {
