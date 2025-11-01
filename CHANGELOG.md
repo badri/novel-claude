@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Improved `/session-cleanup` command with robust git commit/push handling
+  - Checks for changes before attempting commit
+  - Includes timestamp in commit message
+  - Gracefully handles missing git remote (commits locally even if push fails)
+  - Non-blocking push errors to ensure cleanup completes
+
 ## [1.1.0] - 2025-11-01
 
 ### Added

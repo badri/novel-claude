@@ -24,11 +24,21 @@ Auto-save work and finalize session interaction logs at session end.
    ```
 
 3. **Git commit and push**:
-   - Stage all changes: `git add -A`
-   - Commit with message: `git commit -m "Session end: auto-save work"`
-   - Push to remote: `git push`
+   - Check if there are any changes to commit: `git status --porcelain`
+   - If changes exist:
+     - Stage all changes: `git add -A`
+     - Commit with message: `git commit -m "Session end: auto-save work - [date/time]"`
+     - Push to remote if configured: `git push` (ignore errors if no remote exists)
+   - If no changes, skip commit
+
+**Important**:
+- Always attempt git operations even if there's no remote configured
+- Commit locally ensures work is versioned
+- Push failures are non-critical (user might not have a remote yet)
+- Use `git push 2>/dev/null || true` to prevent errors from stopping the cleanup
 
 This ensures:
-- No work is lost between sessions
+- No work is lost between sessions (locally committed)
 - Session interactions are captured and indexed by DevRag
 - You can search across past sessions for decisions and discussions
+- Auto-backup to remote if configured
