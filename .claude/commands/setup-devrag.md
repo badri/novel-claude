@@ -9,7 +9,7 @@ Add DevRag vector search to an existing fiction writing project that was created
 Before running, verify:
 1. You are in a fiction project directory (has `project.json`)
 2. The project has the expected structure (`scenes/`, `codex/`, etc.)
-3. DevRag MCP server is configured in `.mcp.json` (project or user level - see README.md for setup)
+3. DevRag MCP server is configured: `claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json` (see README.md for setup)
 
 ## Steps to Execute
 

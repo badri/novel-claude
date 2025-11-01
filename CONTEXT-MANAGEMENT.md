@@ -528,17 +528,13 @@ devrag --config .devrag-config.json
 # etc.
 ```
 
-**Check .mcp.json (project level) or user settings:**
-```json
-{
-  "mcpServers": {
-    "devrag": {
-      "type": "stdio",
-      "command": "/usr/local/bin/devrag",
-      "args": ["--config", ".devrag-config.json"]
-    }
-  }
-}
+**Check MCP configuration:**
+```bash
+# Ensure DevRag MCP server is added
+claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json
+
+# Verify MCP servers are configured
+claude mcp list
 ```
 
 ### Model Download Failed
