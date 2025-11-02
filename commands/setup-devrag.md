@@ -122,18 +122,21 @@ If `.mcp.json` exists:
 **Handle settings.json carefully:**
 
 If `.claude/settings.json` doesn't exist:
-- Copy from `$PLUGIN_DIR/.claude-settings.json.template`
-- Creates hooks for SessionStart, SessionEnd, UserPromptSubmit
+- **Execute:** `cp $PLUGIN_DIR/.claude-settings.json.template .claude/settings.json`
+- **Verify:** Confirm `.claude/settings.json` was created successfully
+- This creates hooks configuration for SessionStart, SessionEnd, UserPromptSubmit
+- Tell user: "✓ Created .claude/settings.json with session hooks"
 
 If `.claude/settings.json` exists:
-- Read current settings
+- **Execute:** Read current settings with `cat .claude/settings.json`
 - Check if hooks are configured (look for SessionStart, SessionEnd, UserPromptSubmit)
 - Compare with template to see if hooks are up-to-date
 - If hooks missing or paths wrong:
-  - Show user what's different
-  - Offer to update automatically (merge)
-  - Or show template location for manual merge: `$PLUGIN_DIR/.claude-settings.json.template`
+  - Show user what's different (current vs template)
+  - Offer to update automatically (merge) OR
+  - Show template location for manual merge: `$PLUGIN_DIR/.claude-settings.json.template`
 - Preserve any custom user settings not related to hooks
+- If no changes needed, tell user: "✓ .claude/settings.json already configured"
 
 ### 8. Update/Verify project.json Structure
 
