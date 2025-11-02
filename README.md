@@ -201,11 +201,15 @@ project-name/
 - **Hooks configured**: Sessions and cleanup happen automatically via `.claude/settings.json`
 
 **`/setup-devrag`**
-- Add DevRag vector search to existing projects
-- Creates `.devrag-config.json` configuration
-- Updates `.gitignore` to exclude vector database
-- Enables semantic search across all markdown files
-- Use for projects created before DevRag integration
+- **Comprehensive project upgrade tool** - syncs existing projects with latest plugin features
+- Adds DevRag vector search if missing
+- Updates hooks and settings to latest versions (bug fixes, improvements)
+- Adds missing folders (`scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`)
+- Merges config updates while preserving customizations
+- Rebuilds DevRag index on demand
+- Safe to run multiple times (idempotent, non-destructive)
+- Shows dry-run preview before making changes
+- Use after pulling plugin updates or to modernize old projects
 
 ### Writing Workflow
 
@@ -431,11 +435,22 @@ cd ~/writing/your-project-name
 /setup-devrag
 ```
 
-This command will:
-- Create `.devrag-config.json` with your project settings
-- Update `.gitignore` to exclude the `.devrag/` folder
-- Configure semantic search for all markdown files
-- Test the search functionality
+This comprehensive upgrade command will:
+- Show you a dry-run preview of what will change
+- Add DevRag configuration (`.devrag-config.json`, `.mcp.json`) if missing
+- Create missing folders (`scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`)
+- Update hook scripts to latest versions (bug fixes, improvements)
+- Merge settings updates while preserving your customizations
+- Update `.gitignore` with recommended exclusions
+- Add missing fields to `project.json`
+- Optionally rebuild DevRag index for fresh semantic search
+- Provide detailed summary of changes made
+
+**Safe to run multiple times** - it's idempotent and non-destructive. Great for:
+- Adding DevRag to old projects
+- Syncing with plugin updates
+- Fixing broken configurations
+- Getting latest hook improvements
 
 **Manual setup (if needed):**
 

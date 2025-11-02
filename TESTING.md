@@ -527,16 +527,19 @@ cat manuscript-*.md
 
 ## Test 12: Setup Existing Project (`/setup-devrag`)
 
-**Goal:** Test adding DevRag to existing project
+**Goal:** Test comprehensive project upgrade tool - adding DevRag, updating hooks, creating missing folders
+
+**Test Case 1: Fresh Old Project (No DevRag)**
 
 ```bash
 cd ~/writing
 mkdir old-project
 cd old-project
 
-# Create minimal project structure
+# Create minimal project structure (old-style, no DevRag)
 mkdir -p scenes codex notes
 echo '{"projectName":"old-project","genre":"thriller"}' > project.json
+echo "# Scene 1" > scenes/scene-001.md
 
 # Start Claude
 claude
@@ -548,20 +551,36 @@ claude
 /setup-devrag
 ```
 
+**Expected behavior:**
+- Shows dry-run preview listing missing items
+- Creates `.devrag-config.json`, `.mcp.json`
+- Creates missing folders: `scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`
+- Creates `.claude/settings.json` and hook scripts
+- Updates/creates `.gitignore`
+- Shows comprehensive summary of changes
+
 **Manual Verification:**
 
 ```bash
 # Exit and check
 cd ~/writing/old-project
 
-# Check files created
-ls -la .devrag-config.json
-ls -la .gitignore
+# Check DevRag files
+ls -la .devrag-config.json .mcp.json .gitignore
+
+# Check folder structure
+ls -la scenes/drafts/ scenes/archive/ notes/session-interactions/
+
+# Check hooks
 ls -la .claude/settings.json
+ls -la .claude/hooks/session-start.sh
+ls -la .claude/hooks/session-end.sh
 ls -la .claude/hooks/log-interaction.sh
 
-# Run MCP setup
-claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
+# Verify hooks are executable
+test -x .claude/hooks/session-start.sh && echo "✓ session-start.sh executable"
+test -x .claude/hooks/session-end.sh && echo "✓ session-end.sh executable"
+test -x .claude/hooks/log-interaction.sh && echo "✓ log-interaction.sh executable"
 
 # Check .mcp.json created
 ls -la .mcp.json
@@ -572,6 +591,70 @@ ls -la .mcp.json
 - ✓ .gitignore created/updated
 - ✓ Session hooks configured
 - ✓ MCP configuration added
+- ✓ All folders created
+- ✓ Hooks are executable
+
+**Test Case 2: Re-run on Already Configured Project (Idempotency)**
+
+```bash
+# In the same old-project from Test Case 1
+claude
+```
+
+**Run setup again:**
+
+```bash
+/setup-devrag
+```
+
+**Expected behavior:**
+- Detects existing configuration
+- Shows what's already configured
+- Offers to update hook scripts (may have bug fixes)
+- Asks before overwriting configs
+- Does NOT duplicate or break existing setup
+- Shows "no changes needed" or minimal updates
+- Remains non-destructive
+
+**Expected Results:**
+- ✓ Safe re-run (no errors)
+- ✓ Preserves existing configs
+- ✓ Updates only what's outdated
+- ✓ Idempotent behavior confirmed
+
+**Test Case 3: Partial Configuration (Missing Some Features)**
+
+```bash
+cd ~/writing
+mkdir partial-project
+cd partial-project
+
+# Create project with DevRag but missing folders/hooks
+mkdir -p scenes codex notes
+echo '{"projectName":"partial","genre":"sci-fi"}' > project.json
+cp /path/to/plugin/.devrag-config.json.template .devrag-config.json
+# (manually edit placeholders)
+
+claude
+```
+
+**Run setup:**
+
+```bash
+/setup-devrag
+```
+
+**Expected behavior:**
+- Detects existing `.devrag-config.json`
+- Finds missing folders and hooks
+- Creates only what's missing
+- Preserves existing DevRag config
+- Shows what was added vs. what was kept
+
+**Expected Results:**
+- ✓ Incremental updates only
+- ✓ Preserves existing files
+- ✓ Fills in gaps intelligently
 
 ---
 

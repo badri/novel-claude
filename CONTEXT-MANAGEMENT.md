@@ -352,22 +352,31 @@ When running `/new-project`, it automatically:
 
 ### Existing Projects
 
-To add DevRag and session interaction logging to existing projects:
+To add DevRag and sync with latest plugin features:
 
 ```bash
 cd ~/writing/existing-project
 
-# Run the setup command
+# Run the comprehensive upgrade command
 /setup-devrag
 ```
 
-This command will:
-1. Create `.devrag-config.json` from template (includes session-interactions/)
-2. Update `.gitignore` to exclude `.devrag/`
-3. Copy `.claude/settings.json` with hooks configuration
-4. Copy `.claude/hooks/log-interaction.sh` logging script
-5. Create `notes/session-interactions/` folder
-6. Enable automatic session tracking via hooks
+This comprehensive upgrade tool will:
+1. **Show dry-run preview** of what will change
+2. **Add DevRag** if missing (`.devrag-config.json`, `.mcp.json`)
+3. **Create missing folders**: `scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`
+4. **Update hook scripts** to latest versions (bug fixes, improvements)
+5. **Merge settings** updates while preserving your customizations
+6. **Update `.gitignore`** with recommended exclusions
+7. **Update `project.json`** with any missing fields
+8. **Rebuild DevRag index** (optional) for fresh semantic search
+9. **Provide detailed summary** of all changes made
+
+**Safe to run multiple times** - idempotent and non-destructive. Perfect for:
+- Adding DevRag to projects created before semantic search
+- Getting latest hook improvements after plugin updates
+- Fixing broken or missing configurations
+- Adding new folder structure features (drafts, archive)
 
 **Next time you run `claude`:**
 - Session auto-starts (SessionStart hook)
