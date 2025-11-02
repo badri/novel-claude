@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`/setup-devrag` enhanced as comprehensive project upgrade tool**
+  - Syncs existing projects with latest plugin features automatically
+  - Adds missing folders: `scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`
+  - Updates hooks to latest versions (bug fixes and improvements)
+  - Merges config updates while preserving user customizations
+  - Rebuilds DevRag index on demand
+  - Safe to run multiple times (idempotent, non-destructive)
+  - Dry-run preview shows what will change before applying
+  - Comprehensive change summary after completion
+  - Use to add DevRag to old projects or sync with plugin updates
+
 ### Changed
 - **Plugin structure refactored to follow Claude Code plugin conventions**
   - Moved commands from `.claude/commands/` to `commands/` at root level
