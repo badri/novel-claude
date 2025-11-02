@@ -121,10 +121,11 @@ If this doesn't work, the plugin is likely at: the directory where this command 
 
 ## 7. Create .devrag-config.json
 
-Copy from `$PLUGIN_DIR/.devrag-config.json.template`, replacing:
-- `{{PROJECT_NAME}}` with the project name
-- `{{CREATED_DATE}}` with current date (ISO format)
-- `{{GENRE}}` with the genre
+Copy from `$PLUGIN_DIR/.devrag-config.json.template`:
+- **Execute:** `cp $PLUGIN_DIR/.devrag-config.json.template [project-name]/.devrag-config.json`
+- No placeholder replacement needed (template is ready to use)
+- This configures DevRag to index all markdown files in project root
+- Database will be stored in `.devrag/vectors.db` (gitignored)
 
 ## 8. Create .gitignore
 

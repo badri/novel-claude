@@ -69,18 +69,22 @@ Check and create if missing:
 ### 4. Create/Update .devrag-config.json
 
 If `.devrag-config.json` doesn't exist:
-- Copy from `$PLUGIN_DIR/.devrag-config.json.template`
-- Replace placeholders:
-  - `{{PROJECT_NAME}}` → actual project name
-  - `{{CREATED_DATE}}` → created date from project.json
-  - `{{GENRE}}` → genre from project.json
+- **Execute:** `cp $PLUGIN_DIR/.devrag-config.json.template .devrag-config.json`
+- No placeholder replacement needed (template is ready to use)
+- Configures DevRag to index all markdown files in project root (documents_dir: ".")
+- Database stored in `.devrag/vectors.db` (gitignored)
+- Tell user: "✓ Created .devrag-config.json"
 
 If `.devrag-config.json` already exists:
-- Show current version
-- Ask user if they want to:
-  - Keep current (preserve customizations)
-  - Update to latest template (may override custom settings)
-  - Show diff first
+- **Execute:** `cat .devrag-config.json` to show current version
+- Check if it has correct schema (documents_dir, db_path, chunk_size, etc.)
+- If it has old invalid fields (indexPaths, excludePaths, chunkSize, metadata):
+  - **Warn user:** "Your config has outdated fields that DevRag doesn't support"
+  - Show diff between current and new template
+  - Ask user if they want to:
+    - Replace with new template (recommended)
+    - Keep current (may not work correctly)
+- If config is already correct, tell user: "✓ .devrag-config.json already up to date"
 
 ### 5. Create/Update .gitignore
 

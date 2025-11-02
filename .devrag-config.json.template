@@ -1,27 +1,14 @@
 {
-  "name": "{{PROJECT_NAME}}",
-  "description": "Fiction writing project - semantic search across scenes, codex, and notes",
-  "indexPaths": [
-    "scenes/**/*.md",
-    "codex/**/*.md",
-    "notes/**/*.md",
-    "notes/session-interactions/**/*.md",
-    "brainstorms/**/*.md",
-    "summaries/**/*.md"
-  ],
-  "excludePaths": [
-    "scenes/drafts/**",
-    "scenes/archive/**",
-    "manuscript/**",
-    ".git/**",
-    "node_modules/**"
-  ],
-  "chunkSize": 1000,
-  "chunkOverlap": 200,
-  "updateInterval": "on-save",
-  "metadata": {
-    "type": "fiction-project",
-    "created": "{{CREATED_DATE}}",
-    "genre": "{{GENRE}}"
+  "documents_dir": ".",
+  "db_path": ".devrag/vectors.db",
+  "chunk_size": 1000,
+  "search_top_k": 10,
+  "compute": {
+    "device": "auto",
+    "fallback_to_cpu": true
+  },
+  "model": {
+    "name": "multilingual-e5-small",
+    "dimensions": 384
   }
 }
