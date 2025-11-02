@@ -240,7 +240,7 @@ Stored in .devrag/vectors.db
 ```bash
 # Just rebuild from markdown!
 rm -rf .devrag/
-devrag --config .devrag-config.json
+devrag --config .devrag/config.json
 ```
 
 ### Benefits of This Approach
@@ -341,7 +341,7 @@ Claude: [DevRag searches decisions.md]
 
 When running `/new-project`, it automatically:
 1. Creates complete project structure
-2. Generates `.devrag-config.json` with session-interactions indexed
+2. Generates `.devrag/config.json` with session-interactions indexed
 3. Adds `.devrag/` to `.gitignore`
 4. Copies `.claude/settings.json` with hooks for automatic session tracking
 5. Copies `.claude/hooks/log-interaction.sh` for interaction logging
@@ -363,7 +363,7 @@ cd ~/writing/existing-project
 
 This comprehensive upgrade tool will:
 1. **Show dry-run preview** of what will change
-2. **Add DevRag** if missing (`.devrag-config.json`, `.mcp.json`)
+2. **Add DevRag** if missing (`.devrag/config.json`, `.mcp.json`)
 3. **Create missing folders**: `scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`
 4. **Update hook scripts** to latest versions (bug fixes, improvements)
 5. **Merge settings** updates while preserving your customizations
@@ -514,13 +514,13 @@ Claude: [DevRag finds session from 3 days ago]
 
 **Check configuration:**
 ```bash
-cat .devrag-config.json
+cat .devrag/config.json
 # Verify paths are correct
 ```
 
 **Manual reindex:**
 ```bash
-devrag --config .devrag-config.json
+devrag --config .devrag/config.json
 ```
 
 ### Search Not Working
@@ -540,7 +540,7 @@ devrag --config .devrag-config.json
 **Check MCP configuration:**
 ```bash
 # Ensure DevRag MCP server is added
-claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json
+claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag/config.json
 
 # Verify MCP servers are configured
 claude mcp list
@@ -558,7 +558,7 @@ export HTTP_PROXY=http://your-proxy:port
 export HTTPS_PROXY=http://your-proxy:port
 
 # Retry
-devrag --config .devrag-config.json
+devrag --config .devrag/config.json
 ```
 
 ## Hooks System (Automatic Behavior)

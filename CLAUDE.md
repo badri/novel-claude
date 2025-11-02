@@ -27,6 +27,10 @@ Each writing project (created by `/new-project`) has:
 ```
 project-name/
 ├── project.json              # Metadata, scene count, word count
+├── .devrag/                  # DevRag semantic search
+│   ├── .gitkeep              # Track folder in git
+│   ├── config.json           # DevRag configuration
+│   └── vectors.db            # Vector database (gitignored)
 ├── scenes/
 │   ├── scene-001.md          # Active scenes (numbered)
 │   ├── drafts/               # Experimental scenes (future feature)
@@ -45,8 +49,7 @@ project-name/
 │   └── reorders.md           # Scene reorganization history
 ├── summaries/                # Reverse outlines (Gemini-generated)
 ├── brainstorms/              # Saved brainstorm sessions
-├── manuscript/               # Compiled output (MD/DOCX/EPUB)
-└── .devrag-config.json       # Vector search configuration
+└── manuscript/               # Compiled output (MD/DOCX/EPUB)
 ```
 
 ### Command System
@@ -111,7 +114,7 @@ bd dep tree nc-7  # View dependency chain
 ```
 
 Current priorities:
-- **nc-2**: Integrate DevRag (update `/new-project` to create `.devrag-config.json`)
+- **nc-2**: Integrate DevRag (update `/new-project` to create `.devrag/config.json`)
 - **nc-3**: Implement drafts/archive workflow
 - **nc-4**: Add `notes/decisions.md` tracking
 - **nc-7**: Convert to Claude Code plugin (epic)
@@ -182,4 +185,4 @@ Tracked in beads:
 3. **Preserve scene numbering** - when adding/deleting scenes, renumber subsequent scenes
 4. **Update project.json** - any scene changes must update metadata
 5. **Git-friendly** - all files are markdown or JSON, readable diffs
-6. **Per-project DevRag** - each project has own `.devrag-config.json` and `.devrag/vectors.db`
+6. **Per-project DevRag** - each project has own `.devrag/` folder with `config.json` and `vectors.db`

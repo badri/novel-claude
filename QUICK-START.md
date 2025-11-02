@@ -34,7 +34,7 @@ git clone https://github.com/badri/novel-claude.git fiction-writer
    sudo mv devrag-macos-apple-silicon /usr/local/bin/devrag
 
    # Add DevRag as an MCP server:
-   claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json
+   claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag/config.json
    ```
 
 **Optional:**
@@ -310,7 +310,7 @@ If you already have a writing project:
 
 1. Install DevRag (instructions above)
 2. Navigate to your project: `cd ~/writing/your-project`
-3. Create `.devrag-config.json`:
+3. Create `.devrag/config.json`:
    ```json
    {
      "documents_dir": "./",
@@ -327,7 +327,7 @@ If you already have a writing project:
 4. Add `.devrag/` to `.gitignore`
 5. Run DevRag once to index:
    ```bash
-   devrag --config .devrag-config.json
+   devrag --config .devrag/config.json
    ```
 6. Done! Claude can now search your entire project semantically.
 

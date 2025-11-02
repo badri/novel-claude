@@ -78,7 +78,7 @@ Exit Claude and run:
 
 ```bash
 cd ~/writing/test-mystery
-claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
+claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag/config.json
 ```
 
 **Manual Verification:**
@@ -88,7 +88,7 @@ cd ~/writing/test-mystery
 
 # Check directory structure
 ls -la
-# Should see: project.json, .devrag-config.json, .gitignore, .mcp.json, .claude/, scenes/, codex/, notes/, etc.
+# Should see: project.json, .devrag/config.json, .gitignore, .mcp.json, .claude/, scenes/, codex/, notes/, etc.
 
 # Verify .claude/settings.json has hooks
 cat .claude/settings.json | grep -E "SessionStart|SessionEnd|UserPromptSubmit"
@@ -102,8 +102,8 @@ ls -la .claude/hooks/log-interaction.sh
 cat project.json
 # Should have: projectName: "test-mystery", genre: "mystery", premise: "A librarian..."
 
-# Check .devrag-config.json was created from template
-cat .devrag-config.json | grep "test-mystery"
+# Check .devrag/config.json was created from template
+cat .devrag/config.json | grep "test-mystery"
 # Should show project name
 
 # Check .mcp.json was created
@@ -124,7 +124,7 @@ ls notes/session-interactions/
 **Expected Results:**
 - ✓ All directories created
 - ✓ `project.json` has correct metadata
-- ✓ `.devrag-config.json` created with project name substituted
+- ✓ `.devrag/config.json` created with project name substituted
 - ✓ `.gitignore` created from template
 - ✓ `.mcp.json` created with devrag configuration
 - ✓ `.claude/settings.json` has SessionStart, SessionEnd, UserPromptSubmit hooks
@@ -553,7 +553,7 @@ claude
 
 **Expected behavior:**
 - Shows dry-run preview listing missing items
-- Creates `.devrag-config.json`, `.mcp.json`
+- Creates `.devrag/config.json`, `.mcp.json`
 - Creates missing folders: `scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`
 - Creates `.claude/settings.json` and hook scripts
 - Updates/creates `.gitignore`
@@ -566,7 +566,7 @@ claude
 cd ~/writing/old-project
 
 # Check DevRag files
-ls -la .devrag-config.json .mcp.json .gitignore
+ls -la .devrag/config.json .mcp.json .gitignore
 
 # Check folder structure
 ls -la scenes/drafts/ scenes/archive/ notes/session-interactions/
@@ -632,7 +632,7 @@ cd partial-project
 # Create project with DevRag but missing folders/hooks
 mkdir -p scenes codex notes
 echo '{"projectName":"partial","genre":"sci-fi"}' > project.json
-cp /path/to/plugin/.devrag-config.json.template .devrag-config.json
+cp /path/to/plugin/.devrag/config.json.template .devrag/config.json
 # (manually edit placeholders)
 
 claude
@@ -645,7 +645,7 @@ claude
 ```
 
 **Expected behavior:**
-- Detects existing `.devrag-config.json`
+- Detects existing `.devrag/config.json`
 - Finds missing folders and hooks
 - Creates only what's missing
 - Preserves existing DevRag config
@@ -728,16 +728,16 @@ ls -la
 # Should see both test-mystery/ and test-scifi/
 
 # Check each has own config
-diff test-mystery/.devrag-config.json test-scifi/.devrag-config.json
+diff test-mystery/.devrag/config.json test-scifi/.devrag/config.json
 # Should be different (different project names)
 
 diff test-mystery/.mcp.json test-scifi/.mcp.json
-# Should both reference same devrag binary but own .devrag-config.json
+# Should both reference same devrag binary but own .devrag/config.json
 ```
 
 **Expected Results:**
 - ✓ Each project has independent configuration
-- ✓ Each has own `.devrag-config.json`
+- ✓ Each has own `.devrag/config.json`
 - ✓ Each has own `.mcp.json`
 - ✓ No cross-contamination of data
 

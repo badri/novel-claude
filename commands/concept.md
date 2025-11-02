@@ -132,7 +132,7 @@ Run the `/new-project` workflow with the collected information:
 1. Create all directories (scenes/, codex/, notes/, etc.)
 2. Create project.json with metadata from brainstorm
 3. Create codex templates
-4. Copy .devrag-config.json
+4. Copy .devrag/config.json
 5. Copy .gitignore
 6. Copy .claude/settings.json and hooks
 7. **Move** `concept-YYYYMMDD-HHMMSS.md` to `[project-name]/brainstorms/initial-concept.md`

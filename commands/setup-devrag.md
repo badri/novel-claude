@@ -219,7 +219,8 @@ Provide detailed change summary:
 - What gets indexed: All markdown in `scenes/`, `codex/`, `notes/`, `notes/session-interactions/`, `brainstorms/`, `summaries/`
 
 **Files to Commit:**
-- `.devrag-config.json` (if new/updated)
+- `.devrag/config.json` (if new/updated)
+- `.devrag/.gitkeep` (if new)
 - `.mcp.json` (if new/updated)
 - `.gitignore` (if modified)
 - `.claude/settings.json` (if modified)
@@ -239,4 +240,4 @@ Offer to test semantic search:
 - It's gitignored because it can be regenerated from markdown files
 - DevRag indexes files automatically when you search
 - No manual reindexing needed - it detects file changes
-- Each project has its own independent `.devrag-config.json` and `.devrag/` folder
+- Each project has its own independent `.devrag/` folder with `config.json` and `vectors.db`

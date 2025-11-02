@@ -73,7 +73,7 @@ DevRag enables semantic search across your scenes, codex, and session transcript
 
    ```bash
    # Add DevRag as an MCP server
-   claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json
+   claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag/config.json
    ```
 
    This configures DevRag for semantic search across your writing projects.
@@ -131,8 +131,11 @@ Each project gets:
 ```
 project-name/
 ├── project.json           # Metadata and tracking
-├── .devrag-config.json    # DevRag vector search configuration
-├── .gitignore             # Excludes .devrag/ folder
+├── .devrag/               # DevRag semantic search
+│   ├── .gitkeep           # Track folder in git
+│   ├── config.json        # DevRag configuration
+│   └── vectors.db         # Vector database (gitignored)
+├── .gitignore             # Excludes .devrag/* folder
 ├── scenes/                # Individual scene files (scene-001.md, etc.)
 │   ├── drafts/            # Experimental/out-of-order scenes
 │   └── archive/           # Deleted scenes kept for reference
@@ -405,15 +408,15 @@ devrag --version
 Add DevRag as an MCP server using the Claude Code CLI:
 
 ```bash
-claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json
+claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag/config.json
 ```
 
 This command registers DevRag with Claude Code for semantic search capabilities.
 
 **Notes:**
 - This configures DevRag for automatic availability in your Claude Code sessions
-- Each writing project has its own `.devrag-config.json` (per-project settings)
-- DevRag will use the `.devrag-config.json` in whichever project directory you're working in
+- Each writing project has its own `.devrag/config.json` (per-project settings)
+- DevRag will use the `.devrag/config.json` in whichever project directory you're working in
 - After adding the MCP server, restart Claude Code for changes to take effect
 
 **What DevRag does:**
@@ -437,7 +440,7 @@ cd ~/writing/your-project-name
 
 This comprehensive upgrade command will:
 - Show you a dry-run preview of what will change
-- Add DevRag configuration (`.devrag-config.json`, `.mcp.json`) if missing
+- Add DevRag configuration (`.devrag/config.json`, `.mcp.json`) if missing
 - Create missing folders (`scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`)
 - Update hook scripts to latest versions (bug fixes, improvements)
 - Merge settings updates while preserving your customizations
@@ -454,7 +457,7 @@ This comprehensive upgrade command will:
 
 **Manual setup (if needed):**
 
-If you prefer manual setup, create `.devrag-config.json`:
+If you prefer manual setup, create `.devrag/config.json`:
 
 ```json
 {
@@ -686,23 +689,23 @@ This system is inspired by:
 devrag --version
 
 # Test configuration
-devrag --config .devrag-config.json list
+devrag --config .devrag/config.json list
 ```
 
 **Common issues:**
 
 1. **Search not working in Claude:**
-   - Ensure DevRag MCP server is added: `claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json`
+   - Ensure DevRag MCP server is added: `claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag/config.json`
    - Restart Claude Code after adding MCP server
    - Check MCP is enabled: `/mcp` command should show devrag tools
 
 2. **Files not being indexed:**
    ```bash
-   # Check your .devrag-config.json paths
-   cat .devrag-config.json
+   # Check your .devrag/config.json paths
+   cat .devrag/config.json
 
    # Manually trigger reindex
-   devrag --config .devrag-config.json
+   devrag --config .devrag/config.json
    ```
 
 3. **Model download issues:**

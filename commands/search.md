@@ -16,7 +16,7 @@ User provides a natural language search query. Examples:
 ### Execution
 
 1. **Check DevRag is configured**:
-   - Verify `.devrag-config.json` exists
+   - Verify `.devrag/config.json` exists
    - If not, suggest running `/setup-devrag` first
 
 2. **Perform semantic search**:

@@ -27,8 +27,11 @@ After creation, tell user:
 ```
 [project-name]/
 ├── project.json           # Metadata and story tracking
-├── .devrag-config.json    # DevRag vector search configuration
-├── .gitignore             # Git exclusions (includes .devrag/ folder)
+├── .devrag/               # DevRag semantic search
+│   ├── .gitkeep           # Track folder in git
+│   ├── config.json        # DevRag configuration
+│   └── vectors.db         # Vector database (gitignored)
+├── .gitignore             # Git exclusions (includes .devrag/* folder)
 ├── scenes/                # Individual scene files (scene-001.md, scene-002.md, etc.)
 │   ├── .gitkeep
 │   ├── drafts/            # Experimental/out-of-order scenes
