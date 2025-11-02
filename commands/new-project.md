@@ -110,46 +110,72 @@ Date: [current date]
 [possible opening scenes]
 ```
 
-## 6. Create .devrag-config.json
+## 6. Locate Plugin Directory
 
-Copy from template at `/Users/lakshminp/nc/.devrag-config.json.template`, replacing:
+Find the plugin installation directory:
+```bash
+PLUGIN_DIR=$(dirname $(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null))
+```
+
+If this doesn't work, the plugin is likely at: the directory where this command file exists.
+
+## 7. Create .devrag-config.json
+
+Copy from `$PLUGIN_DIR/.devrag-config.json.template`, replacing:
 - `{{PROJECT_NAME}}` with the project name
 - `{{CREATED_DATE}}` with current date (ISO format)
 - `{{GENRE}}` with the genre
 
-## 7. Create .gitignore
+## 8. Create .gitignore
 
-Copy from template at `/Users/lakshminp/nc/.gitignore.template` (ensures .devrag/ folder is not tracked)
+Copy from `$PLUGIN_DIR/.gitignore.template` (ensures .devrag/ folder is not tracked)
 
-## 8. Create .claude folder and copy configuration
+## 9. Create .claude folder and copy configuration
 
 **CRITICAL**: This step enables automatic session tracking. Do not skip!
 
-1. Create `.claude/` folder in the new project
-2. Create `.claude/hooks/` subfolder
-3. Copy `/Users/lakshminp/nc/.claude/settings.json` to `[project-name]/.claude/settings.json`
-4. Copy `/Users/lakshminp/nc/.claude/hooks/log-interaction.sh` to `[project-name]/.claude/hooks/log-interaction.sh`
-5. Make the hook script executable: `chmod +x [project-name]/.claude/hooks/log-interaction.sh`
+Execute these steps:
 
-**Verification**: After copying, verify these files exist:
+1. Create `.claude/` folder and `.claude/hooks/` subfolder in the new project
+2. Copy settings.json template: `cp $PLUGIN_DIR/.claude-settings.json.template [project-name]/.claude/settings.json`
+3. Copy hook script: `cp $PLUGIN_DIR/hooks-template/log-interaction.sh [project-name]/.claude/hooks/log-interaction.sh`
+4. Make hook script executable: `chmod +x [project-name]/.claude/hooks/log-interaction.sh`
+
+**Verification**: After copying, verify these files exist and are correct:
 - `[project-name]/.claude/settings.json` (should contain SessionStart, SessionEnd, UserPromptSubmit hooks)
-- `[project-name]/.claude/hooks/log-interaction.sh` (should be executable)
+- `[project-name]/.claude/hooks/log-interaction.sh` (should be executable with -rwxr-xr-x permissions)
 
 This configuration ensures:
-- Session tracking works automatically (SessionStart/SessionEnd hooks)
-- User interactions are logged (UserPromptSubmit hook)
+- **SessionStart hook**: Automatically runs `/session start` when Claude session begins
+- **SessionEnd hook**: Automatically runs `/session-cleanup` when Claude session ends
+- **UserPromptSubmit hook**: Logs all user interactions during the session
 - Session cleanup and git commits happen automatically
 
 **If this step is skipped, sessions will not auto-start/end and interactions won't be logged!**
 
-## 9. Output Summary
+## 10. Configure DevRag MCP Server (Project Scope)
+
+**CRITICAL**: After creating the project, navigate into it and add the DevRag MCP server at project scope:
+
+```bash
+cd [project-name]
+claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
+```
+
+This creates `.mcp.json` in the project root, which should be committed to git so all users of the project have access to semantic search.
+
+## 11. Output Summary
 
 After creation, tell the user:
 - ✓ Project created at: `[path]`
 - ✓ DevRag vector search configured
 - ✓ Session tracking and interaction logging enabled (automatic)
-- Next steps:
-  - `cd [project-name]` to enter project
+- **IMPORTANT NEXT STEP**: Configure DevRag MCP server:
+  ```bash
+  cd [project-name]
+  claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
+  ```
+- Then start working:
   - Run `claude` to start (sessions auto-start/end via hooks)
   - Start brainstorming with `/brainstorm`
   - Or jump into writing with `/new-scene`
@@ -163,3 +189,4 @@ After creation, tell the user:
 - Initialize git repo in project folder
 - Create .gitkeep files so empty folders are tracked
 - DevRag will index markdown files automatically for semantic search
+- The `.mcp.json` file will be created by the `claude mcp add` command above

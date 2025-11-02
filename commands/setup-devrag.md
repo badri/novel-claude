@@ -9,7 +9,6 @@ Add DevRag vector search to an existing fiction writing project that was created
 Before running, verify:
 1. You are in a fiction project directory (has `project.json`)
 2. The project has the expected structure (`scenes/`, `codex/`, etc.)
-3. DevRag MCP server is configured: `claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag-config.json` (see README.md for setup)
 
 ## Steps to Execute
 
@@ -20,10 +19,14 @@ Read `project.json` to get:
 - Genre
 - Created date
 
-### 2. Create .devrag-config.json
+### 2. Locate Plugin Directory
+
+Find the plugin installation directory where templates are stored.
+
+### 3. Create .devrag-config.json
 
 If `.devrag-config.json` doesn't exist:
-- Copy from template at `/Users/lakshminp/nc/.devrag-config.json.template`
+- Copy from `$PLUGIN_DIR/.devrag-config.json.template`
 - Replace placeholders:
   - `{{PROJECT_NAME}}` → actual project name
   - `{{CREATED_DATE}}` → created date from project.json
@@ -32,10 +35,10 @@ If `.devrag-config.json` doesn't exist:
 If `.devrag-config.json` already exists:
 - Ask user if they want to overwrite or keep existing config
 
-### 3. Create/Update .gitignore
+### 4. Create/Update .gitignore
 
 If `.gitignore` doesn't exist:
-- Copy from `/Users/lakshminp/nc/.gitignore.template`
+- Copy from `$PLUGIN_DIR/.gitignore.template`
 
 If `.gitignore` exists:
 - Check if `.devrag/` is already listed
@@ -45,37 +48,51 @@ If `.gitignore` exists:
   .devrag/
   ```
 
-### 4. Setup Session Interaction Logging
+### 5. Setup Session Interaction Logging
 
 Create `.claude/` folder if it doesn't exist and copy hook configuration:
 
 If `.claude/settings.json` doesn't exist:
-- Copy from `/Users/lakshminp/nc/.claude/settings.json`
+- Copy from `$PLUGIN_DIR/.claude-settings.json.template`
 - Creates hooks for SessionStart, SessionEnd, UserPromptSubmit
 
 If `.claude/hooks/` doesn't exist:
 - Create the folder
-- Copy `log-interaction.sh` from `/Users/lakshminp/nc/.claude/hooks/log-interaction.sh`
+- Copy `log-interaction.sh` from `$PLUGIN_DIR/hooks-template/log-interaction.sh`
 - Make it executable: `chmod +x .claude/hooks/log-interaction.sh`
 
 If `.claude/settings.json` exists:
-- Check if hooks are already configured
-- If not, merge the hooks from the template
-- Warn user if manual merge is needed
+- Check if hooks are already configured (grep for SessionStart, SessionEnd, UserPromptSubmit)
+- If hooks are missing, warn user and offer to merge
+- If manual merge is needed, show the user the template location: `$PLUGIN_DIR/.claude-settings.json.template`
 
-### 5. Initialize DevRag Index
+### 6. Initialize DevRag Index
 
 Inform the user:
 - DevRag will automatically index your markdown files when you use semantic search
 - To manually trigger indexing, they can use the DevRag MCP tools directly
 - Indexing happens in the background and doesn't require manual action
 
-### 6. Output Summary
+### 7. Configure DevRag MCP Server (Project Scope)
+
+**CRITICAL**: Add the DevRag MCP server at project scope:
+
+```bash
+claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
+```
+
+This creates `.mcp.json` in the project root, which should be committed to git.
+
+### 8. Output Summary
 
 Tell the user:
 - ✓ DevRag configuration created
 - ✓ .gitignore updated (if needed)
 - ✓ Session interaction logging enabled (automatic)
+- **IMPORTANT NEXT STEP**: Configure DevRag MCP server:
+  ```bash
+  claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
+  ```
 - **How to use**: Ask Claude natural language questions about your story
   - "Where did I mention the magic system?"
   - "Which scenes feature character X?"
@@ -84,8 +101,9 @@ Tell the user:
 - **Index location**: `.devrag/` folder (gitignored, will be regenerated)
 - **What gets indexed**: All markdown in `scenes/`, `codex/`, `notes/`, `notes/session-interactions/`, `brainstorms/`, `summaries/`
 - **Session logging**: Next time you run `claude`, sessions will auto-start/end and log all interactions
+- **MCP configuration**: `.mcp.json` will be created and should be committed to git
 
-### 7. Test Search (Optional)
+### 9. Test Search (Optional)
 
 Offer to test semantic search:
 - "Would you like me to test the search with a query?"

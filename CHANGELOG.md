@@ -8,6 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- **Plugin structure refactored to follow Claude Code plugin conventions**
+  - Moved commands from `.claude/commands/` to `commands/` at root level
+  - Moved agents from `.claude/subagents/` to `agents/` at root level
+  - Consolidated `CLAUDE.md` to root level (removed `.claude/CLAUDE.md`)
+  - `.claude/` now only contains hooks and settings (correct plugin structure)
+
+### Added
+- **Portable template system for project scaffolding**
+  - `.claude-settings.json.template` - Session hooks configuration template
+  - `hooks-template/log-interaction.sh` - User interaction logging hook template
+  - Replaces hardcoded absolute paths with `$PLUGIN_DIR` variable
+  - Projects now scaffold correctly on any machine where plugin is installed
+- **Project-scoped MCP configuration**
+  - Updated `/new-project` and `/setup-devrag` to use `--scope project` for DevRag MCP
+  - Creates `.mcp.json` in project root (should be committed to git)
+  - Enables team collaboration with shared MCP configuration
+
+### Fixed
+- Removed hardcoded absolute paths from all commands (except `/usr/local/bin/devrag`)
+- Fixed plugin directory structure to match official Claude Code conventions
+- Session hooks (SessionStart, SessionEnd, UserPromptSubmit) now properly copied to scaffolded projects
 - Improved `/session-cleanup` command with robust git commit/push handling
   - Checks for changes before attempting commit
   - Includes timestamp in commit message
