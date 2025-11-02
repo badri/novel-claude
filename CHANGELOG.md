@@ -17,7 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Portable template system for project scaffolding**
   - `.claude-settings.json.template` - Session hooks configuration template
-  - `hooks-template/log-interaction.sh` - User interaction logging hook template
+  - `hooks-template/session-start.sh` - Auto-starts session tracking
+  - `hooks-template/session-end.sh` - Auto-ends session, logs stats, commits work
+  - `hooks-template/log-interaction.sh` - User interaction logging hook
   - `.mcp.json.template` - DevRag MCP server configuration template
   - Replaces hardcoded absolute paths with `$PLUGIN_DIR` variable
   - Projects now scaffold correctly on any machine where plugin is installed
@@ -28,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `.mcp.json` committed to git for team collaboration
 
 ### Fixed
+- **Session hooks now use bash scripts instead of slash commands**
+  - SessionStart/SessionEnd hooks call scripts directly (not `/session start` or `/session-cleanup`)
+  - Fixes compatibility issues - hooks should invoke scripts, not Claude commands
+  - Session tracking now works reliably with proper hook execution
 - Removed hardcoded absolute paths from all commands (except `/usr/local/bin/devrag`)
 - Fixed plugin directory structure to match official Claude Code conventions
 - Session hooks (SessionStart, SessionEnd, UserPromptSubmit) now properly copied to scaffolded projects

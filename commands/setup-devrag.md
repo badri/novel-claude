@@ -66,8 +66,11 @@ If `.claude/settings.json` doesn't exist:
 
 If `.claude/hooks/` doesn't exist:
 - Create the folder
-- Copy `log-interaction.sh` from `$PLUGIN_DIR/hooks-template/log-interaction.sh`
-- Make it executable: `chmod +x .claude/hooks/log-interaction.sh`
+- Copy all hook scripts from `$PLUGIN_DIR/hooks-template/`:
+  - `session-start.sh` - Auto-starts session tracking
+  - `session-end.sh` - Auto-ends session, logs stats, commits work
+  - `log-interaction.sh` - Logs user interactions during session
+- Make all scripts executable: `chmod +x .claude/hooks/*.sh`
 
 If `.claude/settings.json` exists:
 - Check if hooks are already configured (grep for SessionStart, SessionEnd, UserPromptSubmit)

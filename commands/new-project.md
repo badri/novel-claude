@@ -146,18 +146,23 @@ Execute these steps:
 
 1. Create `.claude/` folder and `.claude/hooks/` subfolder in the new project
 2. Copy settings.json template: `cp $PLUGIN_DIR/.claude-settings.json.template [project-name]/.claude/settings.json`
-3. Copy hook script: `cp $PLUGIN_DIR/hooks-template/log-interaction.sh [project-name]/.claude/hooks/log-interaction.sh`
-4. Make hook script executable: `chmod +x [project-name]/.claude/hooks/log-interaction.sh`
+3. Copy all hook scripts from `$PLUGIN_DIR/hooks-template/` to `[project-name]/.claude/hooks/`:
+   - `session-start.sh` - Auto-starts session tracking
+   - `session-end.sh` - Auto-ends session, logs stats, commits work
+   - `log-interaction.sh` - Logs user interactions during session
+4. Make all hook scripts executable: `chmod +x [project-name]/.claude/hooks/*.sh`
 
 **Verification**: After copying, verify these files exist and are correct:
 - `[project-name]/.claude/settings.json` (should contain SessionStart, SessionEnd, UserPromptSubmit hooks)
-- `[project-name]/.claude/hooks/log-interaction.sh` (should be executable with -rwxr-xr-x permissions)
+- `[project-name]/.claude/hooks/session-start.sh` (should be executable)
+- `[project-name]/.claude/hooks/session-end.sh` (should be executable)
+- `[project-name]/.claude/hooks/log-interaction.sh` (should be executable)
 
 This configuration ensures:
-- **SessionStart hook**: Automatically runs `/session start` when Claude session begins
-- **SessionEnd hook**: Automatically runs `/session-cleanup` when Claude session ends
+- **SessionStart hook**: Automatically creates session tracking on Claude start
+- **SessionEnd hook**: Automatically ends session, logs stats, and commits work to git
 - **UserPromptSubmit hook**: Logs all user interactions during the session
-- Session cleanup and git commits happen automatically
+- All session management happens transparently in the background
 
 **If this step is skipped, sessions will not auto-start/end and interactions won't be logged!**
 
