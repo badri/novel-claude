@@ -48,7 +48,15 @@ If `.gitignore` exists:
   .devrag/
   ```
 
-### 5. Setup Session Interaction Logging
+### 5. Create .mcp.json
+
+Copy from `$PLUGIN_DIR/.mcp.json.template` to enable DevRag MCP server at project scope.
+
+This file configures the DevRag MCP server for the project. When users start Claude in this project, they'll be prompted to approve the MCP server (one-time approval).
+
+**Important**: This file should be committed to git so all collaborators have access to semantic search.
+
+### 6. Setup Session Interaction Logging
 
 Create `.claude/` folder if it doesn't exist and copy hook configuration:
 
@@ -66,33 +74,23 @@ If `.claude/settings.json` exists:
 - If hooks are missing, warn user and offer to merge
 - If manual merge is needed, show the user the template location: `$PLUGIN_DIR/.claude-settings.json.template`
 
-### 6. Initialize DevRag Index
+### 7. Initialize DevRag Index
 
 Inform the user:
 - DevRag will automatically index your markdown files when you use semantic search
 - To manually trigger indexing, they can use the DevRag MCP tools directly
 - Indexing happens in the background and doesn't require manual action
 
-### 7. Configure DevRag MCP Server (Project Scope)
-
-**CRITICAL**: Add the DevRag MCP server at project scope:
-
-```bash
-claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
-```
-
-This creates `.mcp.json` in the project root, which should be committed to git.
-
 ### 8. Output Summary
 
 Tell the user:
 - ✓ DevRag configuration created
+- ✓ DevRag MCP server configured (`.mcp.json` created)
 - ✓ .gitignore updated (if needed)
 - ✓ Session interaction logging enabled (automatic)
-- **IMPORTANT NEXT STEP**: Configure DevRag MCP server:
-  ```bash
-  claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
-  ```
+- **Next steps**:
+  - Exit and restart Claude in this project
+  - **First time only**: You'll be prompted to approve the DevRag MCP server - click "Approve" to enable semantic search
 - **How to use**: Ask Claude natural language questions about your story
   - "Where did I mention the magic system?"
   - "Which scenes feature character X?"
@@ -101,7 +99,7 @@ Tell the user:
 - **Index location**: `.devrag/` folder (gitignored, will be regenerated)
 - **What gets indexed**: All markdown in `scenes/`, `codex/`, `notes/`, `notes/session-interactions/`, `brainstorms/`, `summaries/`
 - **Session logging**: Next time you run `claude`, sessions will auto-start/end and log all interactions
-- **MCP configuration**: `.mcp.json` will be created and should be committed to git
+- **MCP configuration**: `.mcp.json` created and should be committed to git
 
 ### 9. Test Search (Optional)
 

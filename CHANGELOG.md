@@ -18,12 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Portable template system for project scaffolding**
   - `.claude-settings.json.template` - Session hooks configuration template
   - `hooks-template/log-interaction.sh` - User interaction logging hook template
+  - `.mcp.json.template` - DevRag MCP server configuration template
   - Replaces hardcoded absolute paths with `$PLUGIN_DIR` variable
   - Projects now scaffold correctly on any machine where plugin is installed
-- **Project-scoped MCP configuration**
-  - Updated `/new-project` and `/setup-devrag` to use `--scope project` for DevRag MCP
-  - Creates `.mcp.json` in project root (should be committed to git)
-  - Enables team collaboration with shared MCP configuration
+- **Automatic MCP configuration**
+  - `/new-project` and `/setup-devrag` now automatically create `.mcp.json` from template
+  - No manual `claude mcp add` command needed
+  - Users only need to approve MCP server on first use (one-time prompt)
+  - `.mcp.json` committed to git for team collaboration
 
 ### Fixed
 - Removed hardcoded absolute paths from all commands (except `/usr/local/bin/devrag`)

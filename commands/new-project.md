@@ -130,7 +130,15 @@ Copy from `$PLUGIN_DIR/.devrag-config.json.template`, replacing:
 
 Copy from `$PLUGIN_DIR/.gitignore.template` (ensures .devrag/ folder is not tracked)
 
-## 9. Create .claude folder and copy configuration
+## 9. Create .mcp.json
+
+Copy from `$PLUGIN_DIR/.mcp.json.template` to enable DevRag MCP server at project scope.
+
+This file configures the DevRag MCP server for the project. When users start Claude in this project, they'll be prompted to approve the MCP server (one-time approval).
+
+**Important**: This file should be committed to git so all collaborators have access to semantic search.
+
+## 10. Create .claude folder and copy configuration
 
 **CRITICAL**: This step enables automatic session tracking. Do not skip!
 
@@ -153,30 +161,16 @@ This configuration ensures:
 
 **If this step is skipped, sessions will not auto-start/end and interactions won't be logged!**
 
-## 10. Configure DevRag MCP Server (Project Scope)
-
-**CRITICAL**: After creating the project, navigate into it and add the DevRag MCP server at project scope:
-
-```bash
-cd [project-name]
-claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
-```
-
-This creates `.mcp.json` in the project root, which should be committed to git so all users of the project have access to semantic search.
-
 ## 11. Output Summary
 
 After creation, tell the user:
 - ✓ Project created at: `[path]`
-- ✓ DevRag vector search configured
+- ✓ DevRag MCP server configured (`.mcp.json` created)
 - ✓ Session tracking and interaction logging enabled (automatic)
-- **IMPORTANT NEXT STEP**: Configure DevRag MCP server:
-  ```bash
-  cd [project-name]
-  claude mcp add --transport stdio devrag --scope project -- /usr/local/bin/devrag --config .devrag-config.json
-  ```
-- Then start working:
-  - Run `claude` to start (sessions auto-start/end via hooks)
+- **Next steps**:
+  - `cd [project-name]` to enter project
+  - Run `claude` to start
+  - **First time only**: You'll be prompted to approve the DevRag MCP server - click "Approve" to enable semantic search
   - Start brainstorming with `/brainstorm`
   - Or jump into writing with `/new-scene`
 - Available commands: `/new-scene`, `/brainstorm`, `/summarize`, `/compile`
