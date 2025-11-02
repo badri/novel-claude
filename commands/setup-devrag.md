@@ -63,20 +63,25 @@ Check and create if missing:
 - `summaries/` (with `.gitkeep`)
 - `brainstorms/` (with `.gitkeep`)
 - `manuscript/` (with `.gitkeep`)
+- `.devrag/` (with `.gitkeep`) - for DevRag database and config
 - `.claude/` (for hooks)
 - `.claude/hooks/` (for hook scripts)
 
-### 4. Create/Update .devrag-config.json
+### 4. Create/Update DevRag config
 
-If `.devrag-config.json` doesn't exist:
-- **Execute:** `cp $PLUGIN_DIR/.devrag-config.json.template .devrag-config.json`
+**Important:** DevRag requires config file to be named exactly `config.json` in `.devrag/` folder.
+
+If `.devrag/config.json` doesn't exist:
+- **Execute:** `mkdir -p .devrag`
+- **Execute:** `cp $PLUGIN_DIR/config.json.template .devrag/config.json`
+- **Execute:** `touch .devrag/.gitkeep`
 - No placeholder replacement needed (template is ready to use)
 - Configures DevRag to index all markdown files in project root (documents_dir: ".")
 - Database stored in `.devrag/vectors.db` (gitignored)
-- Tell user: "✓ Created .devrag-config.json"
+- Tell user: "✓ Created .devrag/config.json"
 
-If `.devrag-config.json` already exists:
-- **Execute:** `cat .devrag-config.json` to show current version
+If `.devrag/config.json` already exists:
+- **Execute:** `cat .devrag/config.json` to show current version
 - Check if it has correct schema (documents_dir, db_path, chunk_size, etc.)
 - If it has old invalid fields (indexPaths, excludePaths, chunkSize, metadata):
   - **Warn user:** "Your config has outdated fields that DevRag doesn't support"
@@ -84,7 +89,15 @@ If `.devrag-config.json` already exists:
   - Ask user if they want to:
     - Replace with new template (recommended)
     - Keep current (may not work correctly)
-- If config is already correct, tell user: "✓ .devrag-config.json already up to date"
+- If config is already correct, tell user: "✓ .devrag/config.json already up to date"
+
+**Migration from old location:**
+If `.devrag-config.json` exists in project root (old location):
+- **Warn user:** "Found old .devrag-config.json in project root. DevRag requires config.json in .devrag/ folder."
+- Offer to migrate:
+  - Create `.devrag/config.json` with new template
+  - Delete old `.devrag-config.json`
+  - Tell user: "✓ Migrated config to .devrag/config.json"
 
 ### 5. Create/Update .gitignore
 

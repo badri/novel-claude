@@ -119,13 +119,16 @@ PLUGIN_DIR=$(dirname $(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null
 
 If this doesn't work, the plugin is likely at: the directory where this command file exists.
 
-## 7. Create .devrag-config.json
+## 7. Create .devrag/ folder and config
 
-Copy from `$PLUGIN_DIR/.devrag-config.json.template`:
-- **Execute:** `cp $PLUGIN_DIR/.devrag-config.json.template [project-name]/.devrag-config.json`
+Create the DevRag directory and configuration:
+- **Execute:** `mkdir -p [project-name]/.devrag`
+- **Execute:** `cp $PLUGIN_DIR/config.json.template [project-name]/.devrag/config.json`
+- **Execute:** `touch [project-name]/.devrag/.gitkeep`
 - No placeholder replacement needed (template is ready to use)
 - This configures DevRag to index all markdown files in project root
 - Database will be stored in `.devrag/vectors.db` (gitignored)
+- `.gitkeep` ensures git tracks the empty folder
 
 ## 8. Create .gitignore
 

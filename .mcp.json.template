@@ -2,7 +2,7 @@
   "mcpServers": {
     "devrag": {
       "command": "/usr/local/bin/devrag",
-      "args": ["--config", ".devrag-config.json"]
+      "args": ["--config", ".devrag/config.json"]
     }
   }
 }

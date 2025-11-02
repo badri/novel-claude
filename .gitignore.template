@@ -1,5 +1,7 @@
 # DevRag vector database (derivative data, regenerated from markdown)
-.devrag/
+# Keep .gitkeep to track the folder itself
+.devrag/*
+!.devrag/.gitkeep
 
 # Session tracking (optional - remove if you want to track sessions in git)
 notes/current-session.json
