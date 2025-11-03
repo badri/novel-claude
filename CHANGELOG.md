@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **`/compile-manuscript` command** - Professional manuscript generation in standard submission format
+  - Creates .docx and .doc files formatted to industry standards (Shunn manuscript format)
+  - Title page with author contact info and word count
+  - Headers on every page: Author / TITLE / Page #
+  - 12pt Courier New, double-spaced, 1-inch margins
+  - Each scene becomes a chapter with proper heading
+  - Preserves markdown formatting (italics, bold) in final document
+  - Strips invisible Unicode characters that AI might insert
+  - Handles scene breaks with centered # symbols
+  - Auto-converts between .docx and .doc formats for maximum compatibility
+  - Suitable for traditional publishing submission and professional presentation
 - **`/setup-devrag` enhanced as comprehensive project upgrade tool**
   - Syncs existing projects with latest plugin features automatically
   - Adds missing folders: `scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`
