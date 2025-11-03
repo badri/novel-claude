@@ -257,40 +257,32 @@ def create_manuscript(project_dir, output_path):
         content = clean_invisible_unicode(content)
 
         # Strip metadata header
-        # Format: # Scene NNN + metadata fields + --- separator + prose
+        # Everything before the first --- is metadata
+        # After ---, prose begins
+        if '---' in content:
+            # Split on first ---
+            parts = content.split('---', 1)
+            if len(parts) == 2:
+                # Everything after first --- is potentially prose
+                content = parts[1].strip()
+            else:
+                # No --- found or only one part, keep as is
+                pass
+
+        # Also handle case where there's no --- but starts with # Scene
         lines = content.split('\n')
-        prose_start = 0
-
-        # Find where prose actually starts
-        for i, line in enumerate(lines):
-            stripped = line.strip()
-
-            # Skip scene heading (# Scene XXX)
-            if stripped.startswith('# Scene'):
-                prose_start = i + 1
-                continue
-
-            # Skip blank lines
-            if not stripped:
-                continue
-
-            # Skip metadata fields (**Field**: value)
-            if stripped.startswith('**') and '**:' in stripped:
-                prose_start = i + 1
-                continue
-
-            # If we hit the --- separator, skip it and start prose after
-            if stripped == '---':
-                prose_start = i + 1
-                break
-
-            # If we hit regular text (not metadata), this is where prose starts
-            if stripped and not stripped.startswith('**'):
-                prose_start = i
-                break
-
-        # Rejoin from where prose starts
-        content = '\n'.join(lines[prose_start:]).strip()
+        if lines and lines[0].strip().startswith('# Scene'):
+            # Skip until we find non-metadata
+            prose_start = 0
+            for i, line in enumerate(lines):
+                stripped = line.strip()
+                if not stripped:
+                    continue
+                # If it's not metadata (not starting with # or **), prose begins
+                if not stripped.startswith('#') and not stripped.startswith('**') and not stripped.startswith('-'):
+                    prose_start = i
+                    break
+            content = '\n'.join(lines[prose_start:]).strip()
 
         # Strip end metadata (after final --- separator)
         # Format: ---\n\n**Notes**:\n- Word count: ...
@@ -306,6 +298,18 @@ def create_manuscript(project_dir, output_path):
         # For scenes after the first, add page break (scenes = chapters)
         if not first_scene:
             doc.add_page_break()
+
+        # Add chapter heading (centered, uppercase)
+        para = doc.add_paragraph()
+        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
+        run = para.add_run(f"CHAPTER {idx}")
+        run.font.name = 'Times New Roman'
+        run.font.size = Pt(12)
+
+        # Blank line after chapter heading
+        para = doc.add_paragraph()
+        para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
 
         first_scene = False
 
