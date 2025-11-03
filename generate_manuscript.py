@@ -84,7 +84,7 @@ def add_formatted_text(paragraph, text):
         run = paragraph.add_run(segment_text)
         run.italic = is_italic
         run.bold = is_bold
-        run.font.name = 'Courier New'
+        run.font.name = 'Times New Roman'
         run.font.size = Pt(12)
 
 def get_title_keywords(title):
@@ -109,7 +109,7 @@ def create_header(section, author_last_name, title_keywords):
 
     # Set font first
     run = header_para.add_run(f"{author_last_name} / {title_keywords} / ")
-    run.font.name = 'Courier New'
+    run.font.name = 'Times New Roman'
     run.font.size = Pt(12)
 
     # Add page number field
@@ -127,7 +127,7 @@ def create_header(section, author_last_name, title_keywords):
     fldChar2.set(qn('w:fldCharType'), 'end')
     run._r.append(fldChar2)
 
-    run.font.name = 'Courier New'
+    run.font.name = 'Times New Roman'
     run.font.size = Pt(12)
 
 def create_manuscript(project_dir, output_path):
@@ -171,7 +171,7 @@ def create_manuscript(project_dir, output_path):
     para = doc.add_paragraph()
     para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
     run = para.add_run(author)
-    run.font.name = 'Courier New'
+    run.font.name = 'Times New Roman'
     run.font.size = Pt(12)
 
     # Contact info continuation
@@ -182,13 +182,13 @@ def create_manuscript(project_dir, output_path):
                 para = doc.add_paragraph(str(line))
                 para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
                 run = para.runs[0]
-                run.font.name = 'Courier New'
+                run.font.name = 'Times New Roman'
                 run.font.size = Pt(12)
         elif address:
             para = doc.add_paragraph(str(address))
             para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
             run = para.runs[0]
-            run.font.name = 'Courier New'
+            run.font.name = 'Times New Roman'
             run.font.size = Pt(12)
 
         phone = contact.get('phone', '')
@@ -196,7 +196,7 @@ def create_manuscript(project_dir, output_path):
             para = doc.add_paragraph(phone)
             para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
             run = para.runs[0]
-            run.font.name = 'Courier New'
+            run.font.name = 'Times New Roman'
             run.font.size = Pt(12)
 
         email = contact.get('email', '')
@@ -204,7 +204,7 @@ def create_manuscript(project_dir, output_path):
             para = doc.add_paragraph(email)
             para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
             run = para.runs[0]
-            run.font.name = 'Courier New'
+            run.font.name = 'Times New Roman'
             run.font.size = Pt(12)
 
     # Upper right: Word count (we'll do this manually by going back)
@@ -223,7 +223,7 @@ def create_manuscript(project_dir, output_path):
     para.alignment = WD_ALIGN_PARAGRAPH.CENTER
     para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
     run = para.add_run(title)
-    run.font.name = 'Courier New'
+    run.font.name = 'Times New Roman'
     run.font.size = Pt(12)
 
     # Double-space once and add byline
@@ -231,7 +231,7 @@ def create_manuscript(project_dir, output_path):
     para.alignment = WD_ALIGN_PARAGRAPH.CENTER
     para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
     run = para.add_run(f"by {pen_name}")
-    run.font.name = 'Courier New'
+    run.font.name = 'Times New Roman'
     run.font.size = Pt(12)
 
     # Double-space twice more, then start text
@@ -313,7 +313,7 @@ def create_manuscript(project_dir, output_path):
                 para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
                 run = para.add_run('#')
-                run.font.name = 'Courier New'
+                run.font.name = 'Times New Roman'
                 run.font.size = Pt(12)
                 continue
 
@@ -333,7 +333,7 @@ def create_manuscript(project_dir, output_path):
     para.alignment = WD_ALIGN_PARAGRAPH.CENTER
     para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
     run = para.add_run("END")
-    run.font.name = 'Courier New'
+    run.font.name = 'Times New Roman'
     run.font.size = Pt(12)
 
     # Now add header to pages 2+ (not page 1)
