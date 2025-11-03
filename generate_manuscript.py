@@ -88,18 +88,18 @@ def add_formatted_text(paragraph, text):
         run.font.size = Pt(12)
 
 def get_title_keywords(title):
-    """Extract 1-2 keywords from title for header."""
+    """Extract 1-2 keywords from title for header (uppercase)."""
     # Remove common words
     stopwords = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with'}
     words = [w for w in title.lower().split() if w not in stopwords]
 
-    # Return first 2 significant words, or first word if short title
+    # Return first 2 significant words in UPPERCASE, or first word if short title
     if len(words) >= 2:
-        return ' '.join(words[:2]).title()
+        return ' '.join(words[:2]).upper()
     elif words:
-        return words[0].title()
+        return words[0].upper()
     else:
-        return title.split()[0] if title.split() else 'Story'
+        return (title.split()[0] if title.split() else 'Story').upper()
 
 def create_header(section, author_last_name, title_keywords):
     """Create header with Surname / Keywords / Page# format per Shunn spec."""
