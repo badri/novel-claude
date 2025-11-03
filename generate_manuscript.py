@@ -325,10 +325,11 @@ def create_manuscript(project_dir, output_path):
             # Convert all common scene break markers to centered #
             if para_text in ['***', '* * *', '# # #', '#', '---', '—', '- - -']:
                 # Center scene break per Shunn spec
-                para = doc.add_paragraph()
+                para = doc.add_paragraph('#')
                 para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
-                run = para.add_run('#')
+                # Apply font to the run
+                run = para.runs[0]
                 run.font.name = 'Times New Roman'
                 run.font.size = Pt(12)
                 continue
