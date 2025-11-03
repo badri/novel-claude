@@ -218,11 +218,11 @@ def create_manuscript(project_dir, output_path):
         para = doc.add_paragraph()
         para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
 
-    # Title (centered)
+    # Title (centered, lowercase per sample)
     para = doc.add_paragraph()
     para.alignment = WD_ALIGN_PARAGRAPH.CENTER
     para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
-    run = para.add_run(title)
+    run = para.add_run(title.lower())
     run.font.name = 'Times New Roman'
     run.font.size = Pt(12)
 
