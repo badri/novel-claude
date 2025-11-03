@@ -256,11 +256,41 @@ def create_manuscript(project_dir, output_path):
         # Clean invisible Unicode
         content = clean_invisible_unicode(content)
 
-        # Strip frontmatter/metadata (everything before first blank line after ---)
-        if content.startswith('---'):
-            parts = content.split('---', 2)
-            if len(parts) >= 3:
-                content = parts[2].strip()
+        # Strip metadata header
+        # Format: # Scene NNN + metadata fields + --- separator + prose
+        lines = content.split('\n')
+        prose_start = 0
+
+        # Find where prose actually starts
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+
+            # Skip scene heading (# Scene XXX)
+            if stripped.startswith('# Scene'):
+                prose_start = i + 1
+                continue
+
+            # Skip blank lines
+            if not stripped:
+                continue
+
+            # Skip metadata fields (**Field**: value)
+            if stripped.startswith('**') and '**:' in stripped:
+                prose_start = i + 1
+                continue
+
+            # If we hit the --- separator, skip it and start prose after
+            if stripped == '---':
+                prose_start = i + 1
+                break
+
+            # If we hit regular text (not metadata), this is where prose starts
+            if stripped and not stripped.startswith('**'):
+                prose_start = i
+                break
+
+        # Rejoin from where prose starts
+        content = '\n'.join(lines[prose_start:]).strip()
 
         # For scenes after the first, add page break (scenes = chapters)
         if not first_scene:
