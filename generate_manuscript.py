@@ -149,8 +149,8 @@ def create_manuscript(project_dir, output_path):
     else:
         word_count_rounded = round(word_count / 100) * 100
 
-    # Get author last name
-    author_last_name = author.split()[-1] if ' ' in author else author
+    # Get pen name last name for header (not author's real name)
+    pen_name_last = pen_name.split()[-1] if ' ' in pen_name else pen_name
 
     # Get title keywords for header
     title_keywords = get_title_keywords(title)
@@ -218,11 +218,11 @@ def create_manuscript(project_dir, output_path):
         para = doc.add_paragraph()
         para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
 
-    # Title (centered, lowercase per sample)
+    # Title (centered, UPPERCASE)
     para = doc.add_paragraph()
     para.alignment = WD_ALIGN_PARAGRAPH.CENTER
     para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
-    run = para.add_run(title.lower())
+    run = para.add_run(title.upper())
     run.font.name = 'Times New Roman'
     run.font.size = Pt(12)
 
@@ -292,6 +292,17 @@ def create_manuscript(project_dir, output_path):
         # Rejoin from where prose starts
         content = '\n'.join(lines[prose_start:]).strip()
 
+        # Strip end metadata (after final --- separator)
+        # Format: ---\n\n**Notes**:\n- Word count: ...
+        if '\n---\n' in content:
+            # Split on last occurrence of ---
+            parts = content.rsplit('\n---\n', 1)
+            if len(parts) == 2:
+                # Check if second part looks like metadata (starts with **Notes** or similar)
+                after_separator = parts[1].strip()
+                if after_separator.startswith('**Notes**') or after_separator.startswith('**'):
+                    content = parts[0].strip()
+
         # For scenes after the first, add page break (scenes = chapters)
         if not first_scene:
             doc.add_page_break()
@@ -344,7 +355,8 @@ def create_manuscript(project_dir, output_path):
     doc.sections[0].different_first_page_header_footer = True
 
     # Add header to subsequent pages (section 0, but not first page)
-    create_header(doc.sections[0], author_last_name, title_keywords)
+    # Use pen name in header, not real name
+    create_header(doc.sections[0], pen_name_last, title_keywords)
 
     # Save .docx
     doc.save(output_path)
