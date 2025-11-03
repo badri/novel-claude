@@ -318,8 +318,9 @@ def create_manuscript(project_dir, output_path):
                 continue
 
             # Check for scene break markers within content
-            if para_text in ['***', '* * *', '# # #', '#']:
-                # Center scene break
+            # Convert all common scene break markers to centered #
+            if para_text in ['***', '* * *', '# # #', '#', '---', '—', '- - -']:
+                # Center scene break per Shunn spec
                 para = doc.add_paragraph()
                 para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.DOUBLE
