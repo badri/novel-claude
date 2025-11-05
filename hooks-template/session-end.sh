@@ -14,70 +14,25 @@ if [[ ! -f "notes/current-session.json" ]]; then
   exit 0  # No active session
 fi
 
-# Create session-log.json if it doesn't exist
-if [[ ! -f "notes/session-log.json" ]]; then
-  echo '{"sessions":[],"totalSessions":0,"totalMinutes":0,"totalWords":0}' > notes/session-log.json
-fi
+# Find the plugin directory (where scripts are located)
+# This hook is in <project>/.claude/hooks/ and scripts are in <plugin>/scripts/
+PLUGIN_DIR="${PLUGIN_DIR:-$HOME/.claude/plugins/novel-claude}"
 
-# Read session data
-START_TIME=$(jq -r '.startTime' notes/current-session.json)
-START_SCENES=$(jq -r '.startSceneCount // 0' notes/current-session.json)
-START_WORDS=$(jq -r '.startWordCount // 0' notes/current-session.json)
-GOAL=$(jq -r '.sessionGoal // ""' notes/current-session.json)
+# Use the ironclad session calculator script
+CALC_SCRIPT="$PLUGIN_DIR/scripts/session/calculate-stats.sh"
 
-# Get current stats
-END_SCENES=$(jq -r '.sceneCount // 0' project.json 2>/dev/null || echo "0")
-END_WORDS=$(jq -r '.wordCount // 0' project.json 2>/dev/null || echo "0")
-END_TIME=$(date -Iseconds)
-
-# Calculate duration in minutes
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  # macOS
-  START_EPOCH=$(date -j -f "%Y-%m-%dT%H:%M:%S" "${START_TIME:0:19}" +%s 2>/dev/null || date +%s)
-  END_EPOCH=$(date +%s)
+if [[ -x "$CALC_SCRIPT" ]]; then
+  # Call the script to calculate stats and update session log
+  # It outputs session summary JSON which we can ignore in the hook
+  "$CALC_SCRIPT" . >/dev/null 2>&1 || {
+    echo "WARNING: Session stats calculation failed, falling back to manual deletion" >&2
+    rm -f notes/current-session.json
+  }
 else
-  # Linux
-  START_EPOCH=$(date -d "$START_TIME" +%s 2>/dev/null || date +%s)
-  END_EPOCH=$(date +%s)
+  echo "WARNING: Session calculator script not found at $CALC_SCRIPT" >&2
+  echo "Deleting session file without recording stats" >&2
+  rm -f notes/current-session.json
 fi
-DURATION=$(( (END_EPOCH - START_EPOCH) / 60 ))
-
-# Calculate stats
-SCENES_WRITTEN=$((END_SCENES - START_SCENES))
-WORDS_WRITTEN=$((END_WORDS - START_WORDS))
-
-# Calculate words per hour
-if [[ $DURATION -gt 0 ]]; then
-  WORDS_PER_HOUR=$(( (WORDS_WRITTEN * 60) / DURATION ))
-else
-  WORDS_PER_HOUR=0
-fi
-
-# Create session entry
-SESSION_ENTRY=$(cat <<EOF
-{
-  "date": "$(date -I)",
-  "startTime": "$START_TIME",
-  "endTime": "$END_TIME",
-  "duration": $DURATION,
-  "startScenes": $START_SCENES,
-  "endScenes": $END_SCENES,
-  "scenesWritten": $SCENES_WRITTEN,
-  "startWords": $START_WORDS,
-  "endWords": $END_WORDS,
-  "wordsWritten": $WORDS_WRITTEN,
-  "wordsPerHour": $WORDS_PER_HOUR,
-  "goal": "$GOAL"
-}
-EOF
-)
-
-# Append to session log
-jq ".sessions += [$SESSION_ENTRY] | .totalSessions += 1 | .totalMinutes += $DURATION | .totalWords = $END_WORDS" \
-  notes/session-log.json > notes/session-log.json.tmp && mv notes/session-log.json.tmp notes/session-log.json
-
-# Delete current session file
-rm notes/current-session.json
 
 # Git commit and push (non-blocking)
 if git rev-parse --git-dir > /dev/null 2>&1; then

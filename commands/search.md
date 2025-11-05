@@ -19,8 +19,10 @@ User provides a natural language search query. Examples:
    - Verify `.devrag/config.json` exists
    - If not, suggest running `/setup-devrag` first
 
-2. **Perform semantic search**:
-   - Use DevRag MCP to search across all indexed markdown files:
+2. **Perform semantic search using ironclad script**:
+   - Use `scripts/search/devrag-search.sh` wrapper to execute DevRag search
+   - The script handles DevRag CLI discovery and error handling
+   - Searches across all indexed markdown files:
      - `scenes/**/*.md`
      - `codex/**/*.md`
      - `notes/**/*.md`
@@ -29,7 +31,22 @@ User provides a natural language search query. Examples:
      - `summaries/**/*.md`
    - Return top 5-10 most relevant results
 
-3. **Format results**:
+3. **Call the search script**:
+   ```bash
+   # Basic search
+   $PLUGIN_DIR/scripts/search/devrag-search.sh "magic system"
+
+   # Search specific type
+   $PLUGIN_DIR/scripts/search/devrag-search.sh --type scenes "character development"
+
+   # Recent only
+   $PLUGIN_DIR/scripts/search/devrag-search.sh --recent 7 "ending decisions"
+
+   # Combined filters
+   $PLUGIN_DIR/scripts/search/devrag-search.sh --type sessions --recent 30 "plot discussion"
+   ```
+
+4. **Format results**:
    ```
    🔍 Search: "magic system"
 
