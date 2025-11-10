@@ -89,7 +89,29 @@ Each codex file should have helpful structure:
 **worldbuilding.md**: Rules of the world, magic systems, tech, society, culture
 **lore.md**: History, myths, backstory, world events
 
-## 5. Create Initial Brainstorm File
+## 5. Create Project-Specific CLAUDE.md
+
+Copy from `$PLUGIN_DIR/CLAUDE-PROJECT.md.template` and populate with project metadata:
+
+1. Read the template file
+2. Replace placeholders:
+   - `{PROJECT_NAME}` → project name
+   - `{PREMISE}` → user's premise/logline
+   - `{GENRE}` → genre
+   - `{FORMAT}` → format (short story, novella, novel)
+   - `{CONCEPT_DESCRIPTION}` → brief expansion of the premise (1-2 paragraphs)
+3. Save to `[project-name]/CLAUDE.md`
+
+This file provides story-specific context to Claude Code and serves as a reference for:
+- POV, tense, narrative structure
+- Writing style preferences
+- Tone and pacing
+- Story rules and constraints
+- Character focus
+
+Writers can fill in additional sections (POV, style, themes) immediately or as the story develops during discovery writing.
+
+## 6. Create Initial Brainstorm File
 
 In `brainstorms/initial-brainstorm.md`, create template:
 ```markdown
@@ -113,7 +135,7 @@ Date: [current date]
 [possible opening scenes]
 ```
 
-## 6. Locate Plugin Directory
+## 7. Locate Plugin Directory
 
 Find the plugin installation directory:
 ```bash
@@ -122,7 +144,7 @@ PLUGIN_DIR=$(dirname $(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null
 
 If this doesn't work, the plugin is likely at: the directory where this command file exists.
 
-## 7. Create .devrag/ folder and config
+## 8. Create .devrag/ folder and config
 
 Create the DevRag directory and configuration:
 - **Execute:** `mkdir -p [project-name]/.devrag`
@@ -133,11 +155,11 @@ Create the DevRag directory and configuration:
 - Database will be stored in `.devrag/vectors.db` (gitignored)
 - `.gitkeep` ensures git tracks the empty folder
 
-## 8. Create .gitignore
+## 9. Create .gitignore
 
 Copy from `$PLUGIN_DIR/.gitignore.template` (ensures .devrag/ folder is not tracked)
 
-## 9. Create .mcp.json
+## 10. Create .mcp.json
 
 Copy from `$PLUGIN_DIR/.mcp.json.template` to enable DevRag MCP server at project scope.
 
@@ -145,7 +167,7 @@ This file configures the DevRag MCP server for the project. When users start Cla
 
 **Important**: This file should be committed to git so all collaborators have access to semantic search.
 
-## 10. Create .claude folder and copy configuration
+## 11. Create .claude folder and copy configuration
 
 **CRITICAL**: This step enables automatic session tracking. Do not skip!
 
@@ -173,14 +195,16 @@ This configuration ensures:
 
 **If this step is skipped, sessions will not auto-start/end and interactions won't be logged!**
 
-## 11. Output Summary
+## 12. Output Summary
 
 After creation, tell the user:
 - ✓ Project created at: `[path]`
+- ✓ CLAUDE.md created with story parameters (fill in POV, style, themes as you develop the story)
 - ✓ DevRag MCP server configured (`.mcp.json` created)
 - ✓ Session tracking and interaction logging enabled (automatic)
 - **Next steps**:
   - `cd [project-name]` to enter project
+  - **Optional**: Edit `CLAUDE.md` to add POV, tense, writing style preferences
   - Run `claude` to start
   - **First time only**: You'll be prompted to approve the DevRag MCP server - click "Approve" to enable semantic search
   - Start brainstorming with `/brainstorm`

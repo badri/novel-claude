@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Per-project CLAUDE.md generation** - Story-specific context file created automatically
+  - `/new-project` now generates `CLAUDE.md` with story metadata (concept, genre, format, premise)
+  - `/concept` pre-populates CLAUDE.md with brainstorm data (themes, tone, setting, characters)
+  - Comprehensive template with sections for: POV, tense, narrator voice, writing style reference, prose density, dialogue style, tone, pacing, genre conventions, themes, content boundaries, story rules, character focus, world details, target word count, series potential
+  - Writers can fill in sections immediately or as story develops (discovery writing friendly)
+  - Provides immediate story context to Claude Code at session start
+  - Template stored at `CLAUDE-PROJECT.md.template` with placeholder variables
+  - Complements plugin's root CLAUDE.md (which explains the system) by explaining the story
 - **Ironclad script system for deterministic operations**
   - `scripts/session/calculate-stats.sh` - Reliable session time/streak/word calculations using Python (eliminates cross-platform date math fumbles)
   - `scripts/summarize/gemini-wrapper.sh` - Finds and executes gemini-cli with proper error handling across npm, nvm, homebrew installations

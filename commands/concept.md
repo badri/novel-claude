@@ -138,7 +138,28 @@ Run the `/new-project` workflow with the collected information:
 7. **Move** `concept-YYYYMMDD-HHMMSS.md` to `[project-name]/brainstorms/initial-concept.md`
 8. Initialize git repo
 
-### 8. Populate Project Metadata
+### 8. Create Project-Specific CLAUDE.md
+
+Copy from `$PLUGIN_DIR/CLAUDE-PROJECT.md.template` and populate with brainstorm data:
+
+1. Read the template file
+2. Replace placeholders:
+   - `{PROJECT_NAME}` → project name
+   - `{PREMISE}` → summarized premise/logline
+   - `{GENRE}` → genre from brainstorm
+   - `{FORMAT}` → format (short story, novella, novel)
+   - `{CONCEPT_DESCRIPTION}` → user's initial pitch + expanded concept
+3. Pre-populate additional sections from brainstorm:
+   - **Themes** → themes discussed
+   - **Emotional Tone** → tone from brainstorm
+   - **Setting** → setting details
+   - **Protagonist** → character notes (if discussed)
+   - **World Rules** → worldbuilding notes
+4. Save to `[project-name]/CLAUDE.md`
+
+This gives the writer a head start with story context already captured from the brainstorm session.
+
+### 9. Populate Project Metadata
 
 Update `project.json` with rich metadata from the brainstorm:
 
@@ -163,7 +184,7 @@ Update `project.json` with rich metadata from the brainstorm:
 }
 ```
 
-### 9. Populate Codex from Brainstorm
+### 10. Populate Codex from Brainstorm
 
 Extract information from the brainstorm session and add to codex files:
 
@@ -181,12 +202,13 @@ Extract information from the brainstorm session and add to codex files:
 
 This gives the writer a head start instead of empty codex files.
 
-### 10. Output Summary
+### 11. Output Summary
 
 Tell the user:
 
 ```
 ✓ Project created at: [full path]
+✓ CLAUDE.md created with story context from brainstorm
 ✓ Concept brainstorm moved to brainstorms/initial-concept.md
 ✓ Codex pre-populated with brainstorm notes
 ✓ DevRag vector search configured
@@ -194,7 +216,13 @@ Tell the user:
 
 Next steps:
   cd [project-name]
-  claude
+
+Optional: Review/edit CLAUDE.md to add:
+  - POV and tense preferences
+  - Writing style references
+  - Story rules and constraints
+
+  claude  # Start working
 
 Ready to write!
   /new-scene - Start writing your first scene

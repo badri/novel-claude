@@ -1,0 +1,183 @@
+# {PROJECT_NAME}
+
+> **Story Concept**: {PREMISE}
+
+This file provides story-specific context to Claude Code when working on this fiction project. It complements the plugin's root CLAUDE.md (which explains the system) by explaining the story.
+
+---
+
+## Quick Reference
+
+| Field | Value |
+|-------|-------|
+| **Genre** | {GENRE} |
+| **Format** | {FORMAT} |
+| **POV** | _(e.g., 1st person, 3rd limited, 3rd omniscient)_ |
+| **Tense** | _(e.g., past, present)_ |
+| **Protagonist** | _(name and brief description)_ |
+| **Target Audience** | _(e.g., adult, YA, literary, commercial)_ |
+
+---
+
+## Story Concept
+
+{CONCEPT_DESCRIPTION}
+
+**Premise/Logline**: {PREMISE}
+
+**What makes this story unique?**
+_(What's the hook? What sets this apart from similar stories?)_
+
+---
+
+## Narrative Structure
+
+### Point of View (POV)
+_(e.g., "1st person from protagonist's perspective", "3rd limited following main character", "3rd omniscient", "multiple POVs alternating by chapter")_
+
+### Tense
+_(e.g., "past tense", "present tense for immediacy")_
+
+### Narrator Voice
+_(e.g., "reliable narrator", "unreliable narrator with paranoid tendencies", "close 3rd person", "distant observational")_
+
+### Timeline Structure
+_(e.g., "linear chronological", "non-linear with flashbacks", "dual timeline past/present", "in medias res opening")_
+
+---
+
+## Style & Voice
+
+### Writing Style Reference
+_(Optional: reference authors/works whose style inspires this story)_
+
+**Examples:**
+- "Raymond Chandler - hardboiled noir, cynical voice, vivid metaphors"
+- "Ursula K. Le Guin - philosophical, lyrical, character-focused"
+- "Elmore Leonard - sparse, dialogue-driven, no wasted words"
+- "N.K. Jemisin - lush worldbuilding, immersive second person"
+
+### Prose Density
+_(e.g., "sparse and minimalist", "lush and descriptive", "commercial pacing", "literary with rich imagery")_
+
+### Dialogue Style
+_(e.g., "snappy Sorkin-style rapid-fire", "naturalistic with filler words", "formal period-appropriate", "dialect-heavy")_
+
+---
+
+## Tone & Atmosphere
+
+### Emotional Tone
+_(e.g., "dark and morally complex", "hopeful with humor", "tense psychological thriller", "bittersweet coming-of-age")_
+
+### Pacing Preference
+_(e.g., "fast-paced action thriller", "slow-burn character study", "methodical mystery", "breakneck pulp")_
+
+### Genre Conventions
+**Embrace:**
+_(Which genre tropes/conventions are we leaning into?)_
+
+**Subvert:**
+_(Which conventions are we intentionally breaking or inverting?)_
+
+---
+
+## Story Parameters
+
+### Themes
+_(What questions or ideas does this story explore?)_
+
+**Examples:**
+- Revenge vs redemption
+- Power and corruption
+- Identity and belonging
+- Love across boundaries
+- Moral ambiguity
+
+### Content Boundaries
+_(Content warnings, violence/sexual content levels, triggers to avoid)_
+
+**Examples:**
+- "Graphic violence okay, no sexual assault"
+- "PG-13 level content"
+- "Literary fiction - no content restrictions"
+- "Avoid: suicide, animal harm"
+
+### Story Rules
+_(Non-negotiable constraints for this story)_
+
+**Examples:**
+- "Hard sci-fi - no FTL travel, obey physics"
+- "Magic always has a cost (equivalent exchange)"
+- "No deus ex machina resolutions"
+- "Protagonist cannot use guns (character principle)"
+- "Time travel paradoxes must be consistent"
+
+---
+
+## Character Focus
+
+### Protagonist
+**Name**: _(main character name)_
+
+**What they want**: _(external goal)_
+
+**What they need**: _(internal need/arc)_
+
+**Character-driven vs Plot-driven**: _(Is this story about the character's journey or the external plot events?)_
+
+### Ensemble or Single POV?
+_(Single protagonist focus, ensemble cast, multiple POVs?)_
+
+---
+
+## World Details
+
+### Setting
+_(Where and when does this take place?)_
+
+### World Rules
+_(Technology level, magic system, society structure, cultural norms - see codex/ for full details)_
+
+### Unique World Elements
+_(What makes this world different from reality or other similar settings?)_
+
+---
+
+## Practical Info
+
+### Target Word Count
+_(e.g., "short story ~7,500 words", "novella 40k", "novel 80-100k", "epic 150k+")_
+
+_(Note: This is guidance, not a constraint. Discovery writing means the story determines its own length.)_
+
+### Series Potential
+_(e.g., "standalone", "series starter - world is copyable", "trilogy planned")_
+
+### Publication Intent
+_(e.g., "traditional publishing", "self-publish", "writing for craft/fun", "submission to literary journals")_
+
+---
+
+## Development Notes
+
+### Current Status
+_(e.g., "first draft in progress", "revision phase", "final polish", "planning")_
+
+### Open Questions
+_(Story questions you're still figuring out - discovery writing is okay with not knowing!)_
+
+### Key Decisions
+_(Important plot/character decisions made - see notes/decisions.md for full log)_
+
+---
+
+## Using This File
+
+- **Update as the story evolves** - Discovery writing means voice and rules emerge organically
+- **Style guidelines are suggestions, not mandates** - Feel free to experiment
+- **Leave sections blank if unknown** - You don't need to know everything upfront
+- **Reference codex/ for detailed worldbuilding** - This file is high-level only
+- **Check notes/decisions.md for plot decisions** - This file is structural/stylistic
+
+When in doubt about the story's direction, refer back to the **Story Concept** and **Themes** sections - those are your north star.
