@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Ironclad script system for deterministic operations**
+  - `scripts/session/calculate-stats.sh` - Reliable session time/streak/word calculations using Python (eliminates cross-platform date math fumbles)
+  - `scripts/summarize/gemini-wrapper.sh` - Finds and executes gemini-cli with proper error handling across npm, nvm, homebrew installations
+  - `scripts/search/devrag-search.sh` - DevRag semantic search wrapper that actually triggers vector search (fixes issue where Claude would read all markdown files instead)
+  - `scripts/utils/word-count.sh` - Accurate word counting across all scenes with atomic project.json updates
+  - `scripts/utils/renumber-scenes.sh` - Safe scene renumbering using temp directory for atomic operations
+  - `scripts/README.md` - Comprehensive documentation for all scripts and usage patterns
+  - Philosophy: **"Commands coordinate, scripts execute"** - separates creative AI interpretation from precise deterministic operations
 - **`/compile-manuscript` command** - Professional manuscript generation in standard submission format
   - Creates .docx and .doc files formatted to industry standards (Shunn manuscript format)
   - Title page with author contact info and word count
@@ -31,6 +39,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Use to add DevRag to old projects or sync with plugin updates
 
 ### Changed
+- **Session tracking now uses ironclad scripts** (`hooks-template/session-end.sh`)
+  - Calls `calculate-stats.sh` instead of inline bash date math (eliminates macOS/Linux date parsing differences)
+  - Python-based calculations handle timezones, ISO8601 parsing, and edge cases correctly
+  - Streak calculations use proper date arithmetic (no more off-by-one errors)
+  - Graceful fallback if script missing (won't break session end)
+- **Search command now reliably triggers DevRag** (`commands/search.md`)
+  - Calls `devrag-search.sh` instead of vague "use DevRag MCP" instruction
+  - Actually performs semantic vector search (fixes fumbling where Claude would grep/read markdown files)
+  - Supports filters: `--type scenes|codex|notes|sessions`, `--recent <days>`, `--limit <n>`
+  - Clear error messages with installation instructions if DevRag not found
+- **Gemini summarization now finds CLI reliably** (`agents/gemini-summarizer.md`)
+  - Calls `gemini-wrapper.sh` which searches npm global, nvm, homebrew, and PATH locations
+  - No more "gemini-cli not found" fumbles
+  - Proper error handling with clear installation instructions
+  - Captures stdout/stderr for debugging
 - **Plugin structure refactored to follow Claude Code plugin conventions**
   - Moved commands from `.claude/commands/` to `commands/` at root level
   - Moved agents from `.claude/subagents/` to `agents/` at root level
