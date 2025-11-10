@@ -1,5 +1,12 @@
 {
-  "documents_dir": ".",
+  "document_patterns": [
+    "./scenes/**/*.md",
+    "./codex/**/*.md",
+    "./notes/**/*.md",
+    "./summaries/**/*.md",
+    "./brainstorms/**/*.md",
+    "./CLAUDE.md"
+  ],
   "db_path": ".devrag/vectors.db",
   "chunk_size": 1000,
   "search_top_k": 10,

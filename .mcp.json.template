@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "devrag": {
+      "type": "stdio",
       "command": "/usr/local/bin/devrag",
       "args": ["--config", ".devrag/config.json"]
     }
