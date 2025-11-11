@@ -132,11 +132,15 @@ Run the `/new-project` workflow with the collected information:
 1. Create all directories (scenes/, codex/, notes/, etc.)
 2. Create project.json with metadata from brainstorm
 3. Create codex templates
-4. Copy .devrag/config.json
-5. Copy .gitignore
-6. Copy .claude/settings.json and hooks
-7. **Move** `concept-YYYYMMDD-HHMMSS.md` to `[project-name]/brainstorms/initial-concept.md`
-8. Initialize git repo
+4. Copy .devrag/config.json from `$PLUGIN_DIR/config.json.template`
+5. Copy .gitignore from `$PLUGIN_DIR/.gitignore.template`
+6. Copy .mcp.json from `$PLUGIN_DIR/.mcp.json.template`
+7. Create `.claude/` folder and `.claude/hooks/` subfolder
+8. Copy settings.json: `cp $PLUGIN_DIR/.claude-settings.json.template [project-name]/.claude/settings.json`
+9. Copy all hook scripts: `cp $PLUGIN_DIR/hooks-template/*.sh [project-name]/.claude/hooks/`
+10. Make hooks executable: `chmod +x [project-name]/.claude/hooks/*.sh`
+11. **Move** `concept-YYYYMMDD-HHMMSS.md` to `[project-name]/brainstorms/initial-concept.md`
+12. Initialize git repo
 
 ### 8. Create Project-Specific CLAUDE.md
 
@@ -211,8 +215,8 @@ Tell the user:
 ✓ CLAUDE.md created with story context from brainstorm
 ✓ Concept brainstorm moved to brainstorms/initial-concept.md
 ✓ Codex pre-populated with brainstorm notes
-✓ DevRag vector search configured
-✓ Session tracking enabled (automatic)
+✓ DevRag vector search configured (.mcp.json created)
+✓ Session tracking hooks installed (automatic start/end/logging)
 
 Next steps:
   cd [project-name]
