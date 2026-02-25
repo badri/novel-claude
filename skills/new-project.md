@@ -1,0 +1,196 @@
+---
+name: new-project
+description: Use when the user wants to start a completely new writing project. Trigger on: "new project", "start a new story", "create a project", "let's begin a new novel/story/novella", "I want to write something new".
+---
+
+# New Fiction Project
+
+Create a new fiction writing project with the pulp writing system for discovery writers.
+
+**Task**: Set up a complete project structure including:
+
+## 1. Collect Project Metadata
+
+Ask the user for:
+- **Project name** (will create folder with this name, use kebab-case)
+- **Genre** (e.g., thriller, sci-fi, romance, western, noir, fantasy, mystery)
+- **Story format** (short story, novella, novel - for reference only, can change)
+- **Working premise/logline** (1-2 sentences: character + problem + stakes)
+
+**Important**: The project folder will be created in the **current working directory** where Claude Code was started.
+
+If user is in `/Users/lakshminp/writing` and runs this skill with name "midnight-noir":
+- Creates: `/Users/lakshminp/writing/midnight-noir/`
+
+After creation, tell user:
+- **Project location**: `/full/path/to/midnight-noir`
+- **To enter project**: `cd midnight-noir`
+- **To work on it**: `cd midnight-noir && claude`
+
+## 2. Create Folder Structure
+
+```
+[project-name]/
+├── project.json           # Metadata and story tracking
+├── .gitignore             # Git exclusions
+├── scenes/                # Individual scene files (scene-001.md, scene-002.md, etc.)
+│   ├── .gitkeep
+│   ├── drafts/            # Experimental/out-of-order scenes
+│   │   └── .gitkeep
+│   └── archive/           # Deleted scenes kept for reference
+│       └── .gitkeep
+├── codex/                 # Worldbuilding database (copyable for series)
+│   ├── characters.md
+│   ├── locations.md
+│   ├── timeline.md
+│   ├── worldbuilding.md
+│   └── lore.md
+├── summaries/             # Scene summaries for reverse outlining
+│   └── .gitkeep
+├── brainstorms/           # Brainstorming sessions saved here
+│   └── initial-brainstorm.md
+├── manuscript/            # Compiled versions
+│   └── .gitkeep
+└── notes/                 # General story notes, ideas, research
+    ├── session-interactions/  # Session conversation logs (auto-created)
+    │   └── .gitkeep
+    └── .gitkeep
+```
+
+## 3. Initialize project.json
+
+Create with this structure:
+```json
+{
+  "projectName": "",
+  "genre": "",
+  "format": "",
+  "premise": "",
+  "createdDate": "",
+  "lastModified": "",
+  "status": "in-progress",
+  "sceneCount": 0,
+  "wordCount": 0,
+  "currentScene": null,
+  "metadata": {
+    "povCharacter": null,
+    "setting": null,
+    "timeframe": null
+  }
+}
+```
+
+## 4. Create Codex Templates
+
+Each codex file should have helpful structure:
+
+**characters.md**: Name, role, age, appearance, personality, goals, conflicts, arc notes
+**locations.md**: Name, description, significance, atmosphere, key features
+**timeline.md**: Chronological events, story timeline vs narrative timeline
+**worldbuilding.md**: Rules of the world, magic systems, tech, society, culture
+**lore.md**: History, myths, backstory, world events
+
+## 5. Create Project-Specific CLAUDE.md
+
+Copy from `$PLUGIN_DIR/CLAUDE-PROJECT.md.template` and populate with project metadata:
+
+1. Read the template file
+2. Replace placeholders:
+   - `{PROJECT_NAME}` → project name
+   - `{PREMISE}` → user's premise/logline
+   - `{GENRE}` → genre
+   - `{FORMAT}` → format (short story, novella, novel)
+   - `{CONCEPT_DESCRIPTION}` → brief expansion of the premise (1-2 paragraphs)
+3. Save to `[project-name]/CLAUDE.md`
+
+This file provides story-specific context to Claude Code and serves as a reference for:
+- POV, tense, narrative structure
+- Writing style preferences
+- Tone and pacing
+- Story rules and constraints
+- Character focus
+
+Writers can fill in additional sections (POV, style, themes) immediately or as the story develops during discovery writing.
+
+## 6. Create Initial Brainstorm File
+
+In `brainstorms/initial-brainstorm.md`, create template:
+```markdown
+# Initial Brainstorm - [Project Name]
+
+Date: [current date]
+
+## The Premise
+[paste user's premise]
+
+## Character
+[prompt user to brainstorm the protagonist]
+
+## Setting
+[prompt user to describe the world/location]
+
+## The Problem
+[what challenge/conflict kicks off the story]
+
+## First Scene Ideas
+[possible opening scenes]
+```
+
+## 7. Locate Plugin Directory
+
+Find the plugin installation directory:
+```bash
+PLUGIN_DIR=$(dirname $(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null))
+```
+
+If this doesn't work, the plugin is likely at: the directory where this skill file exists.
+
+## 8. Create .gitignore
+
+Copy from `$PLUGIN_DIR/.gitignore.template`
+
+## 9. Create .claude folder and copy configuration
+
+**CRITICAL**: This step enables automatic session tracking. Do not skip!
+
+Execute these steps:
+
+1. Create `.claude/` folder and `.claude/hooks/` subfolder in the new project
+2. Copy settings.json template: `cp $PLUGIN_DIR/.claude-settings.json.template [project-name]/.claude/settings.json`
+3. Copy all hook scripts from `$PLUGIN_DIR/hooks-template/` to `[project-name]/.claude/hooks/`:
+   - `session-start.sh` - Auto-starts session tracking
+   - `session-end.sh` - Auto-ends session, logs stats, commits work
+   - `log-interaction.sh` - Logs user interactions during session
+4. Make all hook scripts executable: `chmod +x [project-name]/.claude/hooks/*.sh`
+
+**Verification**: After copying, verify these files exist and are correct:
+- `[project-name]/.claude/settings.json` (should contain SessionStart, SessionEnd, UserPromptSubmit hooks)
+- `[project-name]/.claude/hooks/session-start.sh` (should be executable)
+- `[project-name]/.claude/hooks/session-end.sh` (should be executable)
+- `[project-name]/.claude/hooks/log-interaction.sh` (should be executable)
+
+This configuration ensures:
+- **SessionStart hook**: Automatically creates session tracking on Claude start
+- **SessionEnd hook**: Automatically ends session, logs stats, and commits work to git
+- **UserPromptSubmit hook**: Logs all user interactions during the session
+
+**If this step is skipped, sessions will not auto-start/end and interactions won't be logged!**
+
+## 10. Output Summary
+
+After creation, tell the user:
+- ✓ Project created at: `[path]`
+- ✓ CLAUDE.md created with story parameters (fill in POV, style, themes as you develop the story)
+- ✓ Session tracking and interaction logging enabled (automatic)
+- **Next steps**:
+  - `cd [project-name]` to enter project
+  - **Optional**: Edit `CLAUDE.md` to add POV, tense, writing style preferences
+  - Run `claude` to start
+  - Start brainstorming or jump into writing with a new scene
+- Available skills: new-scene, brainstorm, summarize, compile
+- The codex folder is copyable for series continuity
+
+**Important**:
+- Use absolute paths when creating files
+- Initialize git repo in project folder
+- Create .gitkeep files so empty folders are tracked
