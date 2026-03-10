@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Complete documentation rewrite for v2.0.0 skills-based system**
+  - `README.md` rewritten from scratch — removes all slash command references, Gemini CLI, DevRag; documents intent-driven skills workflow
+  - `QUICK-START.md` rewritten as a concise natural language reference
+  - `CONTEXT-MANAGEMENT.md` rewritten to explain CLAUDE.md, codex, and summaries as context strategy (not DevRag)
+  - `IMPORTING-GUIDE.md` rewritten to reflect import skill workflow
+
 ### Added
 - **Per-project CLAUDE.md generation** - Story-specific context file created automatically
   - `/new-project` now generates `CLAUDE.md` with story metadata (concept, genre, format, premise)

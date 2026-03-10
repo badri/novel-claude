@@ -1,361 +1,78 @@
-# Quick Start Guide
+# Quick Start
 
-## Installation
+## Install
 
-### 1. Install the Plugin
-
-**Using Plugin Manager (Recommended):**
 ```bash
 claude
-
-# Add marketplace
 /plugin marketplace add badri/novel-claude
-
-# Install plugin
 /plugin install fiction-writer@badri
 ```
 
-**Or clone directly:**
-```bash
-cd ~/.claude/plugins
-git clone https://github.com/badri/novel-claude.git fiction-writer
-```
+Restart Claude Code after installing.
 
-### 2. Install Prerequisites
+## Start a New Project
 
-**Required:**
-1. **Claude Code CLI** - Install from [claude.ai/code](https://claude.com/code)
-2. **Gemini CLI** (for summarization) - Install from [Google AI Studio](https://aistudio.google.com/)
-3. **DevRag** (for semantic search):
-   ```bash
-   # Download from https://github.com/tomohiro-owada/devrag/releases
-   # macOS example:
-   tar -xzf devrag-macos-apple-silicon.tar.gz
-   sudo mv devrag-macos-apple-silicon /usr/local/bin/devrag
+Navigate to your writing directory, open Claude Code, and say:
 
-   # Add DevRag as an MCP server:
-   claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag/config.json
-   ```
+> "I want to start a new story"
 
-**Optional:**
-- `pandoc` for DOCX/EPUB export
+Claude will ask for title, genre, format, and premise, then create the full project structure.
 
-### 3. Verify Installation
+## Daily Writing Loop
 
-```bash
-claude
+Open Claude Code in your project directory and just talk:
 
-# Check installed plugins
-/plugin
+| What you want | What to say |
+|---|---|
+| Continue writing | "let's write the next scene" |
+| Write a specific scene | "write the scene where Devi finds the encrypted file" |
+| Write out of order | "I want to write the climax now — I'll figure out where it fits later" |
+| Get unstuck | "I'm stuck, help me figure out what happens next" |
+| Review what you have | "show me my scenes" |
+| Plant a setup you missed | "cycle back — I need to plant the backup drive earlier" |
+| Update worldbuilding | "add Vikram to the codex" |
+| Check progress | "how am I doing?" |
+| End the day | "that's it for today" |
 
-# Test commands
-/new-project
-```
+Sessions start and end automatically via hooks. Git commits happen on exit.
 
-## First Project (5 minutes)
+## Out-of-Order Writing
 
-**Option 1: Start with Concept (Recommended)**
+Write any scene whenever the energy is there:
 
-```bash
-# 1. Brainstorm your story idea
-/concept
-# Example: "Count of Monte Cristo in space"
-# Explore genre, characters, setting interactively
-# Choose: Create project from concept (yes)
+- "write the climax now" → goes to `scenes/drafts/climax.md`
+- Keep writing in sequence normally
+- "promote the climax draft after scene 12" → becomes `scene-013.md`
 
-# 2. Write your first scene
-/new-scene
-# Project already has populated codex!
+Draft scenes don't count toward the manuscript until promoted.
 
-# 3. Keep writing
-/new-scene
+## Key Concepts
 
-# 4. After 3-5 scenes, create reverse outline
-/summarize
-```
+**Cycling** — When you write a payoff and realize the setup is missing, cycle back: "I need to plant the backup drive in scene 7." Claude inserts it and logs the change.
 
-**Option 2: Direct Project Creation**
+**Codex** — Your world bible. Claude auto-detects new characters and locations in scenes and offers to save them. Or just say "add this to the codex."
 
-```bash
-# 1. Create your project
-/new-project
-# Enter: name, genre, premise
+**Brainstorm** — When stuck, brainstorm before writing. Saves the session so you can reference it later.
 
-# 2. Brainstorm your opening
-/brainstorm
+**Summarize** — Reverse outline of what you've written. Useful after every 5-10 scenes to see the shape of the story.
 
-# 3. Write your first scene
-/new-scene
-
-# 4. Keep writing
-/new-scene
-
-# 5. After 3-5 scenes, create reverse outline
-/summarize
-```
-
-## All Commands (18)
-
-### Essential Workflow
-- `/concept` - ⭐ Pre-project brainstorming (create project from concept!)
-- `/new-project` - Initialize project
-- `/import` - Import existing drafts
-- `/session` - Track writing time & word count
-- `/new-scene` - Write scenes (auto-detects new codex elements!)
-- `/edit-scene` - AI-assisted editing (polish, refine, expand)
-- `/brainstorm` - Develop story (auto-offers codex saves!)
-- `/summarize` - Reverse outline (Gemini)
-- `/status` - Check progress & session stats
-- `/search` - Semantic search across project & sessions
-
-### Scene Management (Discovery Writing Power Tools)
-- `/cycle` - Plant setups backward
-- `/scenes` - Navigate & search scenes
-- `/reorder` - Reorganize sequence
-
-### Worldbuilding
-- `/codex` - Track characters, locations, lore (natural language + auto-detection!)
-- `/chat` - Discuss your story
-
-### Publication
-- `/compile` - Create manuscript
-- `/blurb` - Marketing copy
-- `/cover` - Cover concepts
-
-## Common Workflows
-
-### Session Tracking ✨ NEW!
+## Project Structure
 
 ```
-# Start your writing session
-/session start
-> Goal: Write 2 scenes
-✓ Session started at 2:30 PM
-
-# Write...
-/new-scene
-/new-scene
-
-# Check progress
-/session status
-> 1h 15m elapsed, +2,234 words, goal reached!
-
-# End session
-/session end
-
-📊 Session Summary
-Duration: 1h 15min
-Words: +2,234
-Pace: 1,787 words/hour
-🔥 Streak: 7 days
-
-# View history
-/session log
-> Last 7 days, statistics, streaks
+your-story/
+├── scenes/
+│   ├── scene-001.md     # active, numbered scenes
+│   └── drafts/          # out-of-order scenes waiting to be placed
+├── codex/               # characters, locations, worldbuilding
+├── brainstorms/         # brainstorm sessions
+├── summaries/           # reverse outlines
+├── notes/               # session tracking
+└── manuscript/          # compiled output
 ```
 
-### Auto-Codex Magic ✨
+## When You're Ready to Publish
 
-```
-# During brainstorming
-/brainstorm
-[Discuss new character Devika Menon...]
-> "Add to codex"
-✓ Immediately creates codex entry!
-
-# Or after brainstorm
-Session complete!
-Detected: Devika Menon (character), Forbidden Vault (location)
-Add to codex? [all/pick/skip/later]
-> all
-✓ Both added!
-
-# Or natural language
-/codex add character Devika from our discussion
-✓ Extracts from conversation and creates entry!
-```
-
-### Auto-Detection in Scenes ✨ NEW!
-
-```
-/new-scene
-> Marcus meets informant Yuki at Jade Dragon restaurant
-
-✓ Scene created!
-
-New elements detected:
-👤 Yuki - Add to codex? [y/n/later]
-📍 Jade Dragon restaurant - Add? [y/n/later]
-
-> y, y
-
-✓ Codex auto-updated!
-Zero context overhead - seamless flow!
-```
-
-### Semantic Search Your Story ✨ NEW!
-
-```
-# Search across everything (scenes, codex, session logs, brainstorms)
-/search Where did I mention the magic system?
-
-🔍 Found 5 results:
-
-📝 scenes/scene-007.md
-Marcus collapsed after the spell. "That's why we don't use high-level magic carelessly..."
-
-📚 codex/worldbuilding.md
-Magic System: Physical stamina-based. Advanced users can draw from life force...
-
-💭 notes/session-interactions/session-20251028-143000.md
-[15:23] User: I decided magic should cost stamina, not just mental energy...
-
-# Search specific areas
-/search "character motivation" in:sessions
-/search "ancient prophecy" in:scenes
-
-# Search recent work
-/search "villain backstory" recent:7d
-
-# 40x fewer tokens, 260x faster than reading all files!
-# Your full conversation history is searchable!
-```
-
-### The Cycling Workflow
-```
-1. Write scene 24: "Martha grabbed the shotgun from her trunk"
-2. Realize: Need to plant this earlier
-3. /cycle
-4. System: "Where should setup go?" → Scene 11
-5. System generates 3 options for inserting the setup
-6. Pick one, scene 11 updated
-7. Continue writing
-```
-
-### Finding What You Wrote
-```
-/scenes search "shotgun"
-# Shows all scenes mentioning shotgun
-
-/scenes list
-# See all scenes with POV, location, word count
-
-/scenes read 12
-# Read scene 12 with context
-```
-
-### Reordering Discovered Structure
-```
-# You realize Jack's scenes (5, 9, 13) work better grouped
-/reorder
-# System guides you through reorganization
-# All references auto-update
-```
-
-## Discovery Writing Tips
-
-### Do:
-- ✅ Write forward, follow the character
-- ✅ Cycle back to plant discovered elements
-- ✅ Summarize every 3-5 scenes
-- ✅ Let auto-codex capture elements (just say "add to codex"!)
-- ✅ Reorder if structure reveals itself
-- ✅ Generate multiple options, pick best
-- ✅ Use "later" for codex items, process with `/codex review-todo`
-
-### Don't:
-- ❌ Plan the ending beforehand
-- ❌ Force plot structures
-- ❌ Rewrite (except on editorial order)
-- ❌ Pre-populate codex
-- ❌ Worry about "correct" chapter breaks
-
-## File Structure
-
-```
-your-project/
-├── scenes/           ← Your story (scene-001.md, etc.)
-├── summaries/        ← Reverse outlines (auto-generated)
-├── codex/            ← Characters, locations, lore
-├── brainstorms/      ← Saved brainstorm sessions
-├── manuscript/       ← Compiled versions
-└── notes/            ← cycles.md, reorders.md, etc.
-```
-
-## Multi-Model Magic
-
-- **Claude** writes and brainstorms with you
-- **Gemini** summarizes efficiently (saves Claude tokens)
-- **DevRag** provides semantic search across all your writing
-- Invoke with `/summarize` - automatic!
-
-### Semantic Search in Action
-
-```bash
-# You write 50 scenes across multiple sessions
-
-You: "Where did I mention the villain's tragic backstory?"
-
-Claude: [Uses DevRag search internally]
-"Found in scene 24. Let me read that scene..."
-[Reads only scene 24, not all 50 scenes]
-Claude: "In scene 24, the villain reveals..."
-
-# ✅ 40x fewer tokens, instant results!
-```
-
-### For Existing Projects
-
-If you already have a writing project:
-
-1. Install DevRag (instructions above)
-2. Navigate to your project: `cd ~/writing/your-project`
-3. Create `.devrag/config.json`:
-   ```json
-   {
-     "documents_dir": "./",
-     "db_path": "./.devrag/vectors.db",
-     "chunk_size": 500,
-     "search_top_k": 5,
-     "include_patterns": [
-       "scenes/*.md",
-       "codex/*.md",
-       "notes/*.md"
-     ]
-   }
-   ```
-4. Add `.devrag/` to `.gitignore`
-5. Run DevRag once to index:
-   ```bash
-   devrag --config .devrag/config.json
-   ```
-6. Done! Claude can now search your entire project semantically.
-
-## Series Workflow
-
-```bash
-# Finish book 1
-cd book-1
-/compile
-
-# Start book 2 with same world
-cp -r book-1/codex book-2/codex
-cd book-2
-/new-scene
-# Codex already has your world!
-```
-
-## Getting Help
-
-- Read full docs: `README.md`
-- Each command has detailed help built-in
-- View command source: `.claude/commands/[command].md`
-- View subagent: `.claude/subagents/gemini-summarizer.md`
-
-## Ready to Write?
-
-```bash
-/new-project
-```
-
-**Write into the dark!** 📝✨
+1. "show me my draft scenes" — review and promote any remaining drafts
+2. "compile the manuscript" — assembles everything into a DOCX
+3. "write a blurb" — back-cover copy
+4. "cover concept" — art direction brief

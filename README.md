@@ -1,765 +1,254 @@
-# Pulp Fiction Writing System for Claude Code
+# Fiction Writer — A Claude Code Plugin
 
-A complete discovery writing system inspired by Dean Wesley Smith's "Writing Into the Dark" philosophy, designed for writing short stories, novellas, and novels in any genre.
-
-## Installation
-
-### Prerequisites
-
-1. **Claude Code CLI** - Install from [claude.ai/code](https://claude.com/code)
-2. **Gemini CLI** (for summarization) - Install from [Google AI Studio](https://aistudio.google.com/)
-3. **DevRag** (for semantic search) - See setup instructions below
-
-### Install This Plugin
-
-#### Option 1: Using Claude Code Plugin Manager (Recommended)
-
-```bash
-# Start Claude Code
-claude
-
-# Add the marketplace
-/plugin marketplace add badri/novel-claude
-
-# Install the plugin
-/plugin install fiction-writer@badri
-```
-
-Or use the interactive menu:
-```bash
-/plugin
-# Select "Browse Plugins" → Find "fiction-writer" → Install
-```
-
-#### Option 2: Direct GitHub Clone
-
-```bash
-# Clone into your Claude Code plugins directory
-cd ~/.claude/plugins
-git clone https://github.com/badri/novel-claude.git fiction-writer
-
-# Restart Claude Code
-```
-
-#### Option 3: Manual Installation
-
-```bash
-# Create plugins directory if it doesn't exist
-mkdir -p ~/.claude/plugins
-
-# Download and extract
-cd ~/.claude/plugins
-curl -L https://github.com/badri/novel-claude/archive/main.zip -o fiction-writer.zip
-unzip fiction-writer.zip
-mv novel-claude-main fiction-writer
-rm fiction-writer.zip
-```
-
-### DevRag Setup (Required for Semantic Search)
-
-DevRag enables semantic search across your scenes, codex, and session transcripts.
-
-1. **Download DevRag** from [DevRag releases](https://github.com/tomohiro-owada/devrag/releases)
-
-   ```bash
-   # macOS Apple Silicon example:
-   curl -L https://github.com/tomohiro-owada/devrag/releases/latest/download/devrag-macos-apple-silicon.tar.gz -o devrag.tar.gz
-   tar -xzf devrag.tar.gz
-   sudo mv devrag-macos-apple-silicon /usr/local/bin/devrag
-   chmod +x /usr/local/bin/devrag
-   ```
-
-2. **Add MCP server to Claude Code**:
-
-   ```bash
-   # Add DevRag as an MCP server
-   claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag/config.json
-   ```
-
-   This configures DevRag for semantic search across your writing projects.
-
-3. **Verify installation**:
-   ```bash
-   devrag --version
-   ```
-
-### Verify Plugin Installation
-
-```bash
-# Start Claude Code
-claude
-
-# Check installed plugins
-/plugin
-
-# You should see fiction-writer in the list
-# Test a command:
-/new-project
-```
+A discovery writing system for fiction authors, built as a Claude Code plugin. Inspired by Dean Wesley Smith's *Writing Into the Dark* philosophy: no outlines, no rewriting, clean first drafts written scene by scene.
 
 ## Philosophy
 
-This system supports **clean first draft writing** with:
-- No outlines before writing (discovery/organic writing)
-- Scene-by-scene workflow
-- Reverse outlining (summarize after writing)
-- Minimal rewriting (except on editorial order)
-- AI-assisted brainstorming and generation
-- Persistent worldbuilding codex
-- Multi-model support (Claude for creative, Gemini for summarizing)
+- **Write into the dark** — no outlines before writing, no character sketches, no planning
+- **Clean first drafts** — cycling builds momentum and produces finished prose, not sloppy drafts to fix later
+- **Discovery over engineering** — follow the story, trust the creative voice
+- **Out-of-order freedom** — write any scene whenever the energy is there, assemble later
+- **Scene-by-scene** — the unit of work is a scene, not a chapter or a manuscript
 
-## System Overview
+## Installation
 
-### Core Workflow
+### Via Claude Code Plugin Manager
 
-```
-Brainstorm → Write Scene → Summarize → Repeat
-      ↓           ↓            ↓
-   /cycle    Navigate      Update
-   (plant    (/scenes)     Codex
-   setups)      ↓
-                ↓
-           Reorder
-          (/reorder)
-                ↓
-         Compile Manuscript → Blurb → Cover → Publish
+```bash
+claude
+/plugin marketplace add badri/novel-claude
+/plugin install fiction-writer@badri
 ```
 
-### Project Structure
+Or use the interactive menu: `/plugin` → Browse → fiction-writer → Install
 
-Each project gets:
+### Manual (GitHub Clone)
+
+```bash
+cd ~/.claude/plugins
+git clone https://github.com/badri/novel-claude.git fiction-writer
+# Restart Claude Code
+```
+
+## How It Works
+
+This is a **skills-based** system. You write naturally — no slash commands to memorize. Claude recognizes your intent and invokes the right skill automatically.
+
+Just talk to Claude:
+
+> "let's start a new project"
+> "I want to write the scene where Devi finds the encrypted file"
+> "I'm stuck — help me figure out what happens next"
+> "show me what I've written so far"
+> "I know how the climax ends — let me write it now"
+
+Claude handles the file management, numbering, codex updates, and session tracking behind the scenes.
+
+## Project Structure
+
+Each writing project gets:
+
 ```
 project-name/
-├── project.json           # Metadata and tracking
-├── .devrag/               # DevRag semantic search
-│   ├── .gitkeep           # Track folder in git
-│   ├── config.json        # DevRag configuration
-│   └── vectors.db         # Vector database (gitignored)
-├── .gitignore             # Excludes .devrag/* folder
-├── scenes/                # Individual scene files (scene-001.md, etc.)
-│   ├── drafts/            # Experimental/out-of-order scenes
-│   └── archive/           # Deleted scenes kept for reference
-├── summaries/             # Reverse outlines (via Gemini)
-├── brainstorms/           # Brainstorming sessions
-├── codex/                 # Worldbuilding database (copyable for series!)
+├── project.json              # Metadata, scene count, word count
+├── CLAUDE.md                 # Story-specific context (auto-generated)
+├── scenes/
+│   ├── scene-001.md          # Numbered, active scenes
+│   ├── scene-002.md
+│   └── drafts/               # Out-of-order scenes (no sequence yet)
+├── codex/                    # World bible
 │   ├── characters.md
 │   ├── locations.md
 │   ├── timeline.md
 │   ├── worldbuilding.md
 │   └── lore.md
-├── manuscript/            # Compiled versions (MD/DOCX/EPUB)
-└── notes/                 # General notes and ideas
-    ├── session-interactions/  # Session conversation logs (DevRag indexed)
-    ├── current-session.json   # Active session (if writing)
-    └── session-log.json       # Session history and stats
+├── notes/
+│   ├── current-session.json  # Active session tracking
+│   ├── session-log.json      # Session history
+│   └── cycles.md             # Setup/payoff log
+├── brainstorms/              # Saved brainstorm sessions
+├── summaries/                # Reverse outlines
+└── manuscript/               # Compiled output
 ```
 
-## Available Commands
+## Skills Reference
 
-### Project Management
+### Starting Out
 
-**`/concept`** ⭐ NEW
-- **Pre-project brainstorming** - runs BEFORE creating project structure
-- Capture your story idea and explore it interactively
-- Brainstorm genre, tone, setting, characters, story, themes
-- Save concept session for reference
-- **One command to create project** with pre-populated codex and metadata
-- Workflow: **concept → brainstorm → structure** (natural creative flow)
-- Example: "Count of Monte Cristo in space" → full project setup
+**new-project** — Start a new writing project. Claude will ask for title, genre, format, and premise, then scaffold the full project structure with a story-specific `CLAUDE.md`.
 
-**`/new-project`**
-- Initialize a new fiction project
-- Creates complete folder structure
-- Sets up codex templates
-- Initializes tracking
-- Use this directly if you're ready to structure, or use `/concept` first
+*Trigger: "new project", "start a new story", "I want to write something new"*
 
-**`/import`**
-- Import existing partial drafts or manuscripts
-- Context-economical: processes in chunks, uses Gemini for summaries
-- Minimal codex setup (user provides brief character/location info)
-- Auto-splits into scenes intelligently
-- Supports MD, TXT, DOCX formats
-- Continue writing from where you left off
+**import** — Bring an existing manuscript (Word, text, markdown) into the system. Claude splits it into scenes intelligently.
 
-**`/status`**
-- View project statistics
-- Scene count, word count, progress
-- Active session status (if writing)
-- Session statistics and streaks
-- Health check and next steps
-- Recent activity summary
-
-**`/session`**
-- Track writing sessions (time and word count)
-- **Automatic**: Session starts when you launch `claude`, ends when you exit
-- `/session start` - Manually start session (optional, auto-runs via SessionStart hook)
-- `/session end` - Manually end session (optional, auto-runs via SessionEnd hook)
-- `/session status` - Check current session progress
-- `/session log` - View history, streaks, statistics
-- Export data to CSV for analysis
-- Builds consistent writing habits with streak tracking
-- **Auto-logs interactions**: All session conversations captured in `notes/session-interactions/`
-- **DevRag indexed**: Search past sessions for decisions and story discussions
-- **Hooks configured**: Sessions and cleanup happen automatically via `.claude/settings.json`
-
-**`/setup-devrag`**
-- **Comprehensive project upgrade tool** - syncs existing projects with latest plugin features
-- Adds DevRag vector search if missing
-- Updates hooks and settings to latest versions (bug fixes, improvements)
-- Adds missing folders (`scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`)
-- Merges config updates while preserving customizations
-- Rebuilds DevRag index on demand
-- Safe to run multiple times (idempotent, non-destructive)
-- Shows dry-run preview before making changes
-- Use after pulling plugin updates or to modernize old projects
-
-### Writing Workflow
-
-**`/new-scene`**
-- Create new scene file with auto-numbering
-- Option to write yourself or AI-generate
-- Multiple options/alternatives generation
-- Auto-context from previous scenes
-- Auto-detects new codex elements (characters, locations, skills)
-- Updates project.json tracking
-- **`/new-scene --draft`** - Create experimental scene in `scenes/drafts/`
-- **`/new-scene --draft "name"`** - Create named draft for out-of-order writing
-
-**`/edit-scene`**
-- AI-assisted scene editing (or manual)
-- Modes: specific changes, rewrite section, polish, expand
-- Before/after preview with accept/edit/revert
-- Auto-backup and edit history
-- Detects new elements added in edits
-- Preserves scene voice and structure
-
-**`/brainstorm`**
-- Interactive brainstorming sessions
-- Character development
-- Plot exploration
-- Problem solving
-- Multiple path generation
-- Saves session for reference
-
-**`/summarize`**
-- Reverse outline scenes using Gemini CLI
-- Single scene or range
-- Leverages Gemini's large context window
-- Saves summaries for future reference
-- Continuity checking
-
-**`/chat`**
-- Discuss your story with full context
-- Ask about characters, plot, themes
-- Continuity checks
-- Writing problem solving
-- Context-aware responses
-
-**`/search`**
-- Semantic search across your entire project
-- Natural language queries: "Where did I mention the magic system?"
-- Searches scenes, codex, notes, session transcripts, brainstorms
-- 40x fewer tokens, 260x faster than reading all files
-- DevRag-powered vector search for context-aware results
-- Find past decisions and discussions from session logs
-
-### Scene Management
-
-**`/cycle`**
-- Plant setups backward in earlier scenes
-- Discovery writing essential: write payoff first, add setup later
-- Example: Martha grabs shotgun (scene 24) → cycle back to plant it (scene 11)
-- Generates multiple insertion options (minimal/organic/expanded)
-- Tracks all cycles in notes/cycles.md
-- Updates scene files while preserving voice and flow
-
-**`/scenes`**
-- List all scenes with POV, location, word count, status
-- Read specific scenes (single, multiple, ranges)
-- Search scenes by content, character, location, POV
-- Jump to specific scene numbers
-- View detailed scene metadata and statistics
-- **`/scenes --drafts`** - List experimental/out-of-order draft scenes
-- **`/scenes --archive`** - List deleted but archived scenes
-- **`/scenes promote [name]`** - Move draft to active scenes (with renumbering)
-- **`/scenes archive [number]`** - Archive a scene (with renumbering)
-- Quick navigation between related scenes
-
-**`/reorder`**
-- Reorganize scene sequence as story structure emerges
-- Swap two scenes, move scene to new position, or resequence multiple
-- Preview changes before executing
-- Auto-updates all references (summaries, cycles, codex)
-- Logs all reorders for tracking
-- Verifies integrity after changes
-- Supports grouping by POV, timeline, or story thread
-
-### Worldbuilding
-
-**`/codex`**
-- Add/update/delete/search codex entries
-- Natural language support: `/codex add character Devika from our discussion`
-- Pulls details from recent conversation context
-- Extract from scenes automatically
-- Review TODO list from brainstorm/scene detections
-- Copyable for series continuity
-- Cross-reference with scenes
-
-**Automatic Codex Integration:**
-- `/brainstorm` detects new characters/locations and offers to save
-- `/new-scene` auto-detects new elements (characters, locations, skills, worldbuilding)
-- Inline during work: just say "add to codex" and it happens
-- Choose: add now, skip, or save to TODO for later
-- Seamless workflow - never breaks creative flow
-
-### Publication
-
-**`/compile`**
-- Compile all scenes into manuscript
-- Clean formatting for publication
-- Export to DOCX/EPUB (via pandoc)
-- Statistics and compilation report
-- Chapter detection
-
-**`/blurb`**
-- Generate story descriptions
-- Multiple versions (hook, short, full, long)
-- Genre-appropriate formatting
-- Marketing copy variations
-- A/B testing options
-
-**`/cover`**
-- Cover design concepts
-- Genre analysis
-- AI image generation prompts
-- Technical specifications
-- Designer brief templates
-
-## Multi-Model Support
-
-The system uses different AI models and tools for different tasks:
-
-- **Claude** (this): Creative writing, brainstorming, character development
-- **Gemini** (via CLI): Scene summarizing, reverse outlining, continuity checking
-- **DevRag**: Semantic search and vector-based context retrieval
-
-### Gemini Summarizer Subagent
-
-The system includes a `@gemini-summarizer` subagent that:
-- Wraps the Gemini CLI for efficient summarization
-- Handles large context (1M+ tokens)
-- Preserves Claude tokens for creative work
-- Automatically invoked by `/summarize` command
-
-**Requirement**: `gemini-cli` must be installed and configured
-
-### Vector Search via DevRag
-
-DevRag provides semantic search capabilities:
-- Automatic indexing of markdown files (scenes, codex, notes, session interactions)
-- Semantic search using natural language queries
-- MCP integration for Claude Code
-- Fast vector search (~100ms vs 25s for reading files)
-- 40x fewer tokens than reading entire documents
-- Multilingual support (100+ languages)
-
-**Session Interaction Logging (Fully Automatic):**
-- **Zero configuration needed** - Works automatically when you `cd` into project and run `claude`
-- Session starts automatically via `SessionStart` hook → runs `/session start`
-- Every user message captured via `UserPromptSubmit` hook → logged to markdown
-- Session ends automatically via `SessionEnd` hook → runs `/session-cleanup`
-- Logs saved to `notes/session-interactions/session-YYYYMMDD-HHMMSS.md`
-- Indexed by DevRag for searchable session history
-- Search past sessions: "What did I decide about the magic system last week?"
-- Preserves creative decisions, brainstorming notes, and story discussions
-- Hooks configured in `.claude/settings.json` (copied to new projects)
-
-**MCP Tools available:**
-- `search` - Semantic vector search across all documents
-- `index_markdown` - Index specific files
-- `list_documents` - View indexed documents
-- `delete_document` - Remove from index
-- `reindex_document` - Update index for changed files
-
-**Requirement**: DevRag must be installed and configured (see setup below)
-
-## Getting Started
-
-### 0. One-Time Setup: Install DevRag
-
-**For semantic search across your writing, install DevRag once:**
-
-```bash
-# Download DevRag binary for your platform
-# Visit: https://github.com/tomohiro-owada/devrag/releases
-
-# macOS (Apple Silicon example):
-tar -xzf devrag-macos-apple-silicon.tar.gz
-chmod +x devrag-macos-apple-silicon
-sudo mv devrag-macos-apple-silicon /usr/local/bin/devrag
-
-# Verify installation
-devrag --version
-```
-
-**Configure Claude Code MCP:**
-
-Add DevRag as an MCP server using the Claude Code CLI:
-
-```bash
-claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag/config.json
-```
-
-This command registers DevRag with Claude Code for semantic search capabilities.
-
-**Notes:**
-- This configures DevRag for automatic availability in your Claude Code sessions
-- Each writing project has its own `.devrag/config.json` (per-project settings)
-- DevRag will use the `.devrag/config.json` in whichever project directory you're working in
-- After adding the MCP server, restart Claude Code for changes to take effect
-
-**What DevRag does:**
-- Automatically indexes your markdown files (scenes, codex, notes)
-- Provides semantic search using natural language queries
-- Claude can search your story without reading all files
-- 40x fewer tokens, 260x faster than traditional file reading
-- Works across all your writing projects
-
-**For existing projects:**
-
-To add DevRag to existing writing projects created before DevRag integration:
-
-```bash
-# Navigate to your existing project
-cd ~/writing/your-project-name
-
-# Run the setup command
-/setup-devrag
-```
-
-This comprehensive upgrade command will:
-- Show you a dry-run preview of what will change
-- Add DevRag configuration (`.devrag/config.json`, `.mcp.json`) if missing
-- Create missing folders (`scenes/drafts/`, `scenes/archive/`, `notes/session-interactions/`)
-- Update hook scripts to latest versions (bug fixes, improvements)
-- Merge settings updates while preserving your customizations
-- Update `.gitignore` with recommended exclusions
-- Add missing fields to `project.json`
-- Optionally rebuild DevRag index for fresh semantic search
-- Provide detailed summary of changes made
-
-**Safe to run multiple times** - it's idempotent and non-destructive. Great for:
-- Adding DevRag to old projects
-- Syncing with plugin updates
-- Fixing broken configurations
-- Getting latest hook improvements
-
-**Manual setup (if needed):**
-
-If you prefer manual setup, create `.devrag/config.json`:
-
-```json
-{
-  "name": "your-project-name",
-  "description": "Fiction writing project - semantic search across scenes, codex, and notes",
-  "indexPaths": [
-    "scenes/**/*.md",
-    "codex/**/*.md",
-    "notes/**/*.md",
-    "brainstorms/**/*.md",
-    "summaries/**/*.md"
-  ],
-  "excludePaths": [
-    "scenes/drafts/**",
-    "scenes/archive/**",
-    "manuscript/**",
-    ".git/**"
-  ],
-  "chunkSize": 1000,
-  "chunkOverlap": 200,
-  "updateInterval": "on-save",
-  "metadata": {
-    "type": "fiction-project",
-    "created": "2025-01-15T10:30:00Z",
-    "genre": "thriller"
-  }
-}
-```
-
-Then add to `.gitignore`:
-```
-# DevRag vector database (derivative data, regenerated from markdown)
-.devrag/
-```
-
-**Usage:**
-
-DevRag indexes automatically when you use semantic search. Just ask natural language questions:
-- "Where did I mention the magic system?"
-- "Which scenes feature Detective Morgan?"
-- "Find all references to the ancient prophecy"
-
-**Tip:** DevRag watches for file changes and auto-reindexes. Just write normally!
-
-### 1. Initialize Your First Project
-
-**Choose your writing directory first:**
-```bash
-# Navigate to where you want to keep your writing projects
-cd ~/writing
-# or
-mkdir -p ~/writing && cd ~/writing
-
-# Start Claude Code
-claude
-```
-
-**Create your project:**
-```bash
-/new-project
-```
-
-Provide:
-- Project name (e.g., "midnight-noir")
-- Genre (e.g., "noir thriller")
-- Format (e.g., "novella")
-- Premise (e.g., "A burned-out detective finds a cryptic message that reopens his biggest failure")
-
-**Project folder created in current directory:**
-- If you ran `/new-project` from `~/writing`, creates `~/writing/midnight-noir/`
-- Full folder structure scaffolded and ready
-
-### 2. Start with Brainstorming
-
-```bash
-cd midnight-noir
-/brainstorm
-```
-
-Explore your protagonist, setting, and opening problem.
-
-### 3. Write Your First Scene
-
-```bash
-/new-scene
-```
-
-Choose to write it yourself or have AI generate options.
-
-### 4. Reverse Outline
-
-```bash
-/summarize
-```
-
-After writing 3-5 scenes, create a reverse outline to see what's emerging.
-
-### 5. Cycle Back When Needed
-
-```bash
-/cycle
-```
-
-When you write a payoff (scene 24: "Martha grabs the shotgun from her trunk"), cycle back to plant the setup (scene 11: "Martha puts shotgun in trunk").
-
-### 6. Navigate and Manage Scenes
-
-```bash
-/scenes list          # See all scenes
-/scenes read 12       # Read specific scene
-/scenes search "shotgun"  # Find references
-```
-
-As your story grows, use scene navigation to track elements and maintain continuity.
-
-### 7. Reorder If Structure Emerges
-
-```bash
-/reorder
-```
-
-If you discover a better sequence (e.g., grouping POV scenes), reorder scenes while maintaining all references.
-
-### 8. Repeat Until Done
-
-The workflow is cyclical:
-- Write scenes when inspired
-- Brainstorm when stuck
-- Cycle back to plant setups
-- Navigate scenes to maintain context
-- Summarize to see the shape
-- Update codex as elements emerge
-- Reorder if structure reveals itself
-
-### 9. Compile and Publish
-
-```bash
-/compile
-/blurb
-/cover
-```
-
-## Tips for Discovery Writing
-
-### Trust the Process
-- Don't plan the ending
-- Let characters make their own choices
-- Follow the energy of the story
-- Embrace surprises
-
-### Use the Codex Organically
-- Don't pre-populate everything
-- Add entries as they emerge in scenes
-- Keep it practical, not exhaustive
-- Copy for series continuity
-
-### Leverage AI Smartly
-- Claude for creative decisions
-- Gemini for mechanical summarizing
-- Generate multiple options
-- Pick what resonates with your vision
-
-### Clean First Drafts
-- Write forward, don't revise
-- Fix only glaring errors
-- Trust your storytelling instinct
-- Cycling is setup, not rewriting
-- Save rewriting for editorial guidance
-
-### Scene Management
-- Use `/scenes` to navigate and search
-- Use `/cycle` to plant discovered elements
-- Use `/reorder` when structure emerges
-- These are finishing tools, not revision
-
-### Out-of-Order Writing
-- **Drafts for experiments**: `/new-scene --draft "villain-flashback"`
-- Write future scenes before earlier ones
-- Try multiple versions of key scenes
-- Keep experiments in `scenes/drafts/` until ready
-- Promote when ready: `/scenes promote villain-flashback`
-- Archive cut scenes: `/scenes archive 15` (kept for reference)
-- Drafts don't count toward manuscript until promoted
-- Freedom to explore without breaking continuity
-
-## Series Writing
-
-For a series:
-
-1. Complete first book
-2. Copy the `codex/` folder to new project
-3. Run `/new-project` for book 2
-4. Replace the new codex folder with copied one
-5. Maintain continuity across books
-
-## Technical Requirements
-
-### Required
-- Claude Code CLI
-- Gemini CLI (for `/summarize`)
-- **DevRag** (for semantic search and vector-based context retrieval)
-
-### Optional
-- `pandoc` (for DOCX/EPUB export)
-- Git (for version control)
-
-## File Naming Conventions
-
-- **Scenes**: `scene-001.md`, `scene-002.md`, etc.
-- **Summaries**: `summary-scene-001.md` or `reverse-outline-scenes-001-to-010.md`
-- **Brainstorms**: `brainstorm-[date]-[topic].md`
-- **Manuscripts**: `[project-name]-manuscript.md`
-
-## Philosophy Notes
-
-This system is inspired by:
-- **Dean Wesley Smith**: Writing Into the Dark, clean first drafts
-- **Pulp writers**: High volume, forward momentum, publish frequently
-- **Discovery writing**: Trust the muse, follow the story
-- **Modern tools**: Leverage AI without losing creative control
-
-## Troubleshooting
-
-### DevRag Not Working?
-
-**Check if DevRag is running:**
-```bash
-# Verify DevRag is installed
-devrag --version
-
-# Test configuration
-devrag --config .devrag/config.json list
-```
-
-**Common issues:**
-
-1. **Search not working in Claude:**
-   - Ensure DevRag MCP server is added: `claude mcp add --transport stdio devrag -- /usr/local/bin/devrag --config .devrag/config.json`
-   - Restart Claude Code after adding MCP server
-   - Check MCP is enabled: `/mcp` command should show devrag tools
-
-2. **Files not being indexed:**
-   ```bash
-   # Check your .devrag/config.json paths
-   cat .devrag/config.json
-
-   # Manually trigger reindex
-   devrag --config .devrag/config.json
-   ```
-
-3. **Model download issues:**
-   - First run downloads embedding models from Hugging Face
-   - Requires internet connection
-   - Check proxy settings if behind firewall:
-     ```bash
-     export HTTP_PROXY=http://your-proxy:port
-     export HTTPS_PROXY=http://your-proxy:port
-     ```
-
-4. **Performance issues:**
-   - DevRag auto-detects GPU/CPU
-   - For lower memory usage, set CPU mode in config:
-     ```json
-     {
-       "compute": {
-         "device": "cpu",
-         "fallback_to_cpu": true
-       }
-     }
-     ```
-
-**Database location:**
-- Vector database: `./.devrag/vectors.db` (in project directory)
-- Gitignored (regenerable from markdown files)
-
-**For more help:**
-- [DevRag documentation](https://github.com/tomohiro-owada/devrag)
-- [DevRag releases](https://github.com/tomohiro-owada/devrag/releases)
-
-## Support
-
-All commands include detailed help. Each slash command explains:
-- What it does
-- What options are available
-- How it integrates with the system
-- Next steps after completion
-
-## Additional Documentation
-
-- **[CONTEXT-MANAGEMENT.md](CONTEXT-MANAGEMENT.md)** - Deep dive into context management, DevRag vector search, and best practices
-- **[QUICK-START.md](QUICK-START.md)** - Condensed guide with all commands and workflows
-- **[IMPORTING-GUIDE.md](IMPORTING-GUIDE.md)** - How to import existing manuscripts
-
-## Next Steps
-
-- **First time?** Read [QUICK-START.md](QUICK-START.md) for installation
-- **Existing project?** See [CONTEXT-MANAGEMENT.md](CONTEXT-MANAGEMENT.md) for DevRag setup
-- Run `/new-project` to create your first story
-- Read the command files in `.claude/commands/` for detailed usage
-- Experiment with the workflow
-- Write into the dark!
+*Trigger: "import", "I wrote this in Word", "bring in my draft"*
 
 ---
 
-**Remember**: The system serves the story. You're the writer. AI is your assistant. Trust your instincts, follow your characters, and write!
+### Writing
+
+**new-scene** — Write the next scene, or a draft scene out of order. Claude auto-numbers, pulls context from previous scenes, and offers to detect new characters/locations for the codex.
+
+For out-of-order writing: tell Claude you want to write a future scene or a scene you're not sure where it fits — it goes into `scenes/drafts/` with a descriptive name instead of a number.
+
+*Trigger: "let's write", "next scene", "continue", "write the scene where X", "I want to write the climax now"*
+
+**edit-scene** — Fix, improve, or rework an existing scene. Claude shows a preview before changing anything.
+
+*Trigger: "fix scene 3", "this scene feels off", "scene 4 needs work"*
+
+**brainstorm** — Work through story problems, explore what happens next, develop a character, or get unstuck. Saves the session to `brainstorms/` for reference.
+
+*Trigger: "I'm stuck", "help me figure out what happens next", "what if", "let's brainstorm"*
+
+**chat** — Open-ended story discussion when you're not ready to write yet. Talk through characters, themes, decisions, continuity.
+
+*Trigger: general creative conversation about the project*
+
+---
+
+### Out-of-Order Writing
+
+The system supports DWS's "unstuck in time" approach — writing any scene whenever the energy is there, assembling later.
+
+**Draft scenes** live in `scenes/drafts/` with descriptive names instead of numbers. They don't count toward the manuscript until promoted. Use them to:
+- Write a future scene while it's vivid
+- Try alternate versions of a key moment
+- Write the climax before you've earned it in sequence
+- Explore a subplot that may or may not fit
+
+**cycle** — Plant setups backward. Write the payoff first (scene 18: Devi grabs the backup drive), then cycle back to plant the setup earlier (scene 7: Devi stashes a backup drive). Logs all cycles in `notes/cycles.md`.
+
+*Trigger: "write the ending first", "I know how this ends", "plant the setup for X", "cycle back"*
+
+---
+
+### Managing Scenes
+
+**scenes** — See what you've written. Lists all scenes with title, word count, POV, location. Can show draft scenes separately. Can promote a draft into the main sequence.
+
+*Trigger: "what scenes do I have", "show me my scenes", "what have I written", "promote the climax draft"*
+
+**reorder** — Restructure the scene sequence when you discover a better order. Preview before executing. Logs all reorders.
+
+*Trigger: "move scene 5 before scene 3", "reorder", "scene 7 should come first", "swap scenes 4 and 6"*
+
+**search** — Find anything across scenes, codex, notes, and brainstorms using natural language.
+
+*Trigger: "find X", "where did I mention", "which scene has", "did I write about"*
+
+---
+
+### Worldbuilding
+
+**codex** — Add, view, or update characters, locations, timeline, lore. Claude auto-detects new elements in scenes and offers to save them. Pull details from recent conversation context naturally.
+
+*Trigger: "add to codex", "who is Devi", "update Vikram's entry", "what do I know about the AI cabal"*
+
+---
+
+### Session Tracking
+
+**session-start** — Begin a writing session. Records start time and word count baseline. Hooks run this automatically when you open a project.
+
+**session-end** — End the session. Calculates time, words written, updates streak. Commits work to git. Hooks run this automatically on exit.
+
+**status** — Project snapshot: total words, scene count, session stats, streak.
+
+*Trigger: "how am I doing", "project status", "word count", "how far am I"*
+
+---
+
+### Publication
+
+**summarize** — Reverse outline: what you've written, what each scene does structurally, the shape of the story so far.
+
+*Trigger: "summarize", "reverse outline", "show me the structure", "beat sheet"*
+
+**compile** — Assemble all scenes into a single manuscript file. Formatted for submission (Shunn standard) or self-publishing. Exports to DOCX.
+
+*Trigger: "compile", "assemble manuscript", "I need the manuscript file", "export to Word"*
+
+**blurb** — Generate back-cover copy, Amazon description, query letter pitch, or marketing copy.
+
+*Trigger: "write a blurb", "book description", "pitch the story"*
+
+**cover** — Cover design brief, concept, and art direction. Produces a designer brief and AI image generation prompts.
+
+*Trigger: "cover concept", "what should the cover look like", "cover brief"*
+
+---
+
+## Typical Workflow
+
+### Starting fresh
+
+1. Open Claude Code in your writing directory
+2. "I want to start a new story" → new-project scaffolds everything
+3. "Let's brainstorm the opening" → brainstorm explores possibilities
+4. "Write the first scene" → new-scene creates scene-001.md
+
+### Daily writing
+
+1. Open Claude Code in the project directory
+2. Session starts automatically (hook)
+3. "Continue where we left off" or "write the scene where X happens"
+4. Claude pulls context from previous scenes, writes forward
+5. Exit → session ends automatically, git commit made
+
+### Out-of-order
+
+1. "I know exactly how the climax goes — let me write it now"
+2. Claude creates `scenes/drafts/climax-devi-confronts-ai.md`
+3. Keep writing in sequence
+4. "Promote the climax draft, it goes after scene 12"
+5. Claude moves it to scene-013.md, renumbers what follows
+
+### Getting unstuck
+
+1. "I'm stuck — I don't know what happens in act two"
+2. brainstorm explores possibilities, saves session
+3. Pick a direction, write the next scene
+4. If you realize a setup is missing: cycle back to plant it
+
+### Assembling
+
+1. "Show me all my draft scenes" → scenes lists drafts
+2. Decide which ones to promote and where
+3. "Reorder — scene 8 should come before scene 5"
+4. "Compile the manuscript" → single DOCX ready for submission
+
+---
+
+## Adding a New Project (Migrating Old Projects)
+
+If you have an existing project using the old commands-based system:
+
+1. Install the plugin (see above)
+2. Enable it for your writing directory in `.claude/settings.json`:
+   ```json
+   { "enabledPlugins": { "fiction-writer@fiction-writer-marketplace": true } }
+   ```
+3. Update the `PLUGIN_DIR` in `.claude/hooks/session-end.sh` to point to where the plugin is installed
+4. The project structure (scenes, codex, notes) is fully compatible — no file changes needed
+
+---
+
+## Series Writing
+
+1. Complete first book
+2. Copy `codex/` folder to new project directory
+3. Start new project ("new project — this is book 2 of the Devi series")
+4. Claude uses the copied codex as the world bible
+
+---
+
+## Design Principles
+
+**Human-readable storage** — All story content is markdown. No vendor lock-in. Git-tracked, readable diffs, portable.
+
+**Skills coordinate, not control** — Skills handle file operations and structure. The creative work is yours. Claude assists, doesn't direct.
+
+**Auto-detection over manual entry** — Codex entries, session tracking, git commits, scene numbering — all happen automatically so you stay in the writing flow.
+
+**Git-friendly** — Every project is a git repository. Session ends commit automatically. Full history of every scene change.
