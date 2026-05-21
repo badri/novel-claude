@@ -36,6 +36,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   DevRag MCP, Gemini CLI, the slash-command system, and `agents/` subagents;
   now accurately describes the skills-based architecture, hooks, scripts, and
   context strategy.
+- **`scripts/README.md` corrected for v2.0.0** — removed documentation for the
+  deleted `gemini-wrapper.sh` and `devrag-search.sh` scripts; updated
+  command/`$PLUGIN_DIR` references to skills and `${CLAUDE_PLUGIN_ROOT}`.
+- **`marketplace.json` version aligned to `2.0.0`** — was `1.1.0`, out of sync
+  with `plugin.json`; clears the plugin-validation warning.
 
 ### Changed
 - **Codex-detection workflow deduplicated** — the logic for detecting

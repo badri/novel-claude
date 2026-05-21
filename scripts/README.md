@@ -3,15 +3,14 @@
 This directory contains battle-tested bash/python scripts that handle deterministic operations reliably. These scripts eliminate the fumbling that occurs when Claude tries to interpret complex instructions for:
 
 - Time/date calculations
-- External CLI tool discovery
 - JSON manipulation
 - File operations with edge cases
 
 ## Philosophy
 
-**Commands should coordinate, scripts should execute.**
+**Skills should coordinate, scripts should execute.**
 
-- **Commands** (`.md` files) provide creative interpretation and user interaction
+- **Skills** (`SKILL.md` files) provide creative interpretation and user interaction
 - **Scripts** (`.sh` files) handle precise operations that must not fail
 
 ## Script Categories
@@ -37,58 +36,6 @@ scripts/session/calculate-stats.sh .
 
 ---
 
-### Summarization (`summarize/`)
-
-**`gemini-wrapper.sh`** - Gemini CLI discovery and execution
-- Finds `gemini-cli` in multiple installation locations
-- Handles npm global bin, nvm, homebrew, etc.
-- Clear error messages if not found
-- Builds appropriate prompts per task type
-- Captures stdout/stderr for debugging
-
-**Usage:**
-```bash
-# Summarize single scene
-scripts/summarize/gemini-wrapper.sh scene-summary scenes/scene-001.md
-
-# Reverse outline
-scripts/summarize/gemini-wrapper.sh reverse-outline "$(cat scenes/scene-*.md)"
-
-# Continuity check
-scripts/summarize/gemini-wrapper.sh continuity-check "$(cat scenes/scene-{010..015}.md)"
-```
-
-**Called by:** `agents/gemini-summarizer.md`
-
----
-
-### Search (`search/`)
-
-**`devrag-search.sh`** - DevRag semantic search wrapper
-- Finds `devrag` executable
-- Constructs search with filters (type, recency, limit)
-- Formats results with jq
-- Handles empty results gracefully
-
-**Usage:**
-```bash
-# Basic search
-scripts/search/devrag-search.sh "magic system"
-
-# Search specific type
-scripts/search/devrag-search.sh --type scenes "character development"
-
-# Recent only
-scripts/search/devrag-search.sh --recent 7 "ending decisions"
-
-# Combined filters
-scripts/search/devrag-search.sh --type sessions --recent 30 --limit 20 "plot discussion"
-```
-
-**Called by:** `commands/search.md`
-
----
-
 ### Utilities (`utils/`)
 
 **`word-count.sh`** - Accurate word counting
@@ -104,7 +51,7 @@ scripts/utils/word-count.sh .
 # Updates project.json wordCount field
 ```
 
-**Called by:** Various commands that modify scenes
+**Called by:** skills that modify scenes (e.g. `new-scene`)
 
 ---
 
@@ -122,7 +69,7 @@ scripts/utils/renumber-scenes.sh .
 # Updates project.json
 ```
 
-**Called by:** `/reorder` command, scene deletion operations
+**Called by:** the `reorder` skill, scene archive/promote operations
 
 ---
 
@@ -136,20 +83,17 @@ All scripts follow these principles:
 4. **Cleanup on exit** - Use traps to remove temp files
 5. **Helpful errors** - Stderr messages explain what went wrong and how to fix
 
-## Integration with Commands
+## Integration with Skills
 
-Commands use scripts via `$PLUGIN_DIR` variable:
+Skills reference scripts via the `${CLAUDE_PLUGIN_ROOT}` environment variable,
+which Claude Code sets automatically when a skill runs:
 
 ```bash
-# In a command.md file:
-$PLUGIN_DIR/scripts/session/calculate-stats.sh .
+${CLAUDE_PLUGIN_ROOT}/scripts/session/calculate-stats.sh .
 ```
 
-In hooks, use:
-```bash
-PLUGIN_DIR="${PLUGIN_DIR:-$HOME/.claude/plugins/novel-claude}"
-$PLUGIN_DIR/scripts/session/calculate-stats.sh .
-```
+Project hooks run scripts copied into the project's own `.claude/hooks/`
+directory (scaffolded from `hooks-template/`).
 
 ## Testing Scripts
 
@@ -160,14 +104,14 @@ Test scripts manually before relying on them:
 mkdir -p /tmp/test-project
 cd /tmp/test-project
 
-# Copy project structure
-cp -r path/to/novel-claude/scripts .
+# Copy the scripts directory from the plugin
+cp -r "${CLAUDE_PLUGIN_ROOT}/scripts" .
 
 # Test word count
 ./scripts/utils/word-count.sh .
 
 # Test session calculation
-# (requires active session and project.json)
+# (requires an active session and project.json)
 ```
 
 ## Adding New Scripts
@@ -182,20 +126,19 @@ When adding a new script:
 6. **Update this README** - Document purpose and usage
 7. **Update CHANGELOG** - Note what operation is now ironclad
 
-## Script vs Command Decision
+## Script vs Skill Decision
 
 **Use a script when:**
 - Operation involves date/time math
-- External CLI tool must be discovered/executed
 - JSON must be parsed or updated
 - File operations have edge cases (renaming, race conditions)
 - Calculation must be precise (word counts, statistics)
 
-**Use a command when:**
+**Use skill prose when:**
 - Creative interpretation needed
 - User interaction required
 - Context-dependent decisions
 - Natural language processing
 - AI-assisted operations
 
-When in doubt: **Script the deterministic, command the creative.**
+When in doubt: **Script the deterministic, let the skill handle the creative.**
