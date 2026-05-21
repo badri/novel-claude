@@ -14,12 +14,14 @@ use the `compile` skill instead.
 
 ## What the format produces
 
-- Courier New, 12pt, double-spaced
+- Times New Roman, 12pt, double-spaced
 - 1-inch margins, 0.5-inch first-line paragraph indents
 - Title page with contact info and rounded word count
-- Running headers on pages 2+: `Surname / Keywords / Page#`
+- Running headers on pages 2+: `PenNameSurname / Keywords / Page#`
 - Left-aligned text (ragged right)
-- Scene breaks as a centered `#`, `END` marker at the close
+- Each scene starts on a new page with a centered `CHAPTER N` heading
+- In-scene break markers (`***`, `# # #`, `---`, …) become a centered `#`
+- `END` marker at the close
 - Preserves markdown italics/bold; strips invisible Unicode characters
 
 ## Task
@@ -83,10 +85,11 @@ readers.
 
 ## Notes
 
-- **No chapter headings.** Per Shunn format, scenes flow continuously with `#`
-  breaks. Editors add chapter divisions later during production.
-- **Word-count rounding:** under 17,500 words round to nearest 100; at or above
-  17,500 (novella+) round to nearest 500.
+- **Chapter layout.** Each scene file becomes its own chapter — a centered
+  `CHAPTER N` heading on a fresh page. Scene-break markers *within* a scene's
+  text are converted to a centered `#`.
+- **Word-count rounding:** 17,500 words or fewer round to the nearest 100;
+  above 17,500 (novella+) round to the nearest 500.
 - **Scene discovery:** scenes must be named `scene-001.md`, `scene-002.md`, …
   in `scenes/`. Files in `scenes/drafts/` and `scenes/archive/` are skipped.
 
