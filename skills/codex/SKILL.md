@@ -116,11 +116,9 @@ Then append formatted entry to the appropriate file.
 
 ### Extract from Scenes
 
-- Ask which scene(s) to analyze
-- Read scene content
-- Identify new characters, locations, or world details
-- Suggest codex additions
-- User confirms what to add
+Detect codex-worthy elements in one or more scenes and offer to save them.
+Ask which scene(s) to analyze, read them, then follow the
+"Detecting Codex Elements from Content" workflow below.
 
 ### View
 
@@ -145,6 +143,92 @@ When user says "from our discussion" or provides minimal info:
 3. **Generate entry** from extracted context
 4. **Show preview** for user confirmation
 5. **Allow editing** before finalizing
+
+## Detecting Codex Elements from Content
+
+The shared workflow for spotting codex-worthy elements in a scene or in
+brainstorm discussion and offering to save them. The `new-scene`,
+`edit-scene`, and `brainstorm` skills invoke this workflow.
+
+### 1. Scan for elements
+
+In the content, look for:
+- **New characters** — proper names in narrative, dialogue attribution
+  (`"Hello," Yuki said`), explicit descriptions ("a woman named X"), the POV
+  character if not yet in the codex
+- **New locations** — named places with atmosphere ("Jade Dragon restaurant",
+  "Kings Valley")
+- **Worldbuilding** — organizations ("the Network", "the Order"), systems
+  ("quantum communicators", "blood magic"), rules ("vampires can't cross
+  running water"), unique tech/magic items
+- **Demonstrated skills** — abilities a character uses ("Martha picked the
+  lock" → lockpicking) that were not previously established
+- **Timeline events** and **lore** references
+
+### 2. Cross-reference before flagging
+
+Before flagging anything as new, search the codex:
+- `codex/characters.md` for character names
+- `codex/locations.md` for location names
+- `codex/worldbuilding.md` and `codex/lore.md` for concepts
+
+Only flag elements NOT already present.
+
+### 3. Filter
+
+Don't flag:
+- Generic, unnamed roles (guard, waiter, bartender)
+- Common unnamed places (a street, a building)
+- Throwaway mentions with no development
+
+Do flag:
+- Named characters with dialogue or description
+- Named locations with atmosphere/description
+- Organizations, systems, unique tech/magic
+- Skills demonstrated but never established
+
+### 4. Present all detections together
+
+Show everything in one batch, never one at a time:
+
+```
+✨ New elements detected:
+
+👤 **New Character**: Yuki (informant)
+   Not in codex. Add now? [y/n/later]
+
+📍 **New Location**: Jade Dragon restaurant (Tokyo)
+   Not in codex. Add now? [y/n/later]
+
+🌍 **Worldbuilding**: Network operations in Tokyo
+   Expand worldbuilding codex? [y/n/later]
+
+🔧 **Character Skill**: Martha — lockpicking
+   Not established before. Options:
+   a) Add to codex only
+   b) Add to codex + cycle back to plant the skill earlier
+   c) Skip
+```
+
+The user can also answer for all at once ("all yes", "all later").
+
+### 5. Process choices
+
+- **[y]** — extract details from the content, generate an entry using the
+  Character/Location templates above, show a preview, let the user confirm or
+  edit, then append to the right codex file.
+- **[n]** — skip (minor character, one-time location).
+- **[later]** — append to `notes/codex-todo.md` for the Review TODO action.
+
+### 6. Skill → cycle integration
+
+When a demonstrated skill was never established and the user picks **(b)**:
+- Add the skill to the character's codex entry
+- Trigger the `cycle` skill to plant the skill earlier — suggest a likely
+  scene, let the user confirm or choose another, then cycle back and add the
+  setup
+
+This makes the discovery → setup workflow seamless.
 
 ## Codex Philosophy
 
