@@ -130,14 +130,11 @@ Edit an existing scene with AI assistance or manual editing.
    - Re-run summarize if significant changes
    ```
 
-9. **Cycle integration**:
+9. **Detect codex elements**:
 
-   If edit adds new element (character, location, skill):
-   ```
-   Detected in edit:
-   👤 New character: Dr. Chen
-   Add to codex? [y/n/later]
-   ```
+   If the edit introduces a new character, location, or skill, offer to add
+   it — follow the codex skill's "Detecting Codex Elements from Content"
+   workflow.
 
 ## Edit Modes Detail
 
