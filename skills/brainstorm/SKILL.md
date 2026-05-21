@@ -70,45 +70,18 @@ After Scene: [number or "N/A"]
 [What to do with these ideas]
 ```
 
-6. **Detect codex-worthy elements**:
+6. **Codex elements** — two triggers:
 
-   During and after brainstorming, watch for:
-   - **New characters** mentioned (names, roles, traits)
-   - **New locations** developed (places, settings)
-   - **Worldbuilding** details (rules, systems, organizations)
-   - **Timeline events** (backstory, history)
-   - **Lore** (myths, legends, world history)
+   - **Inline** — if the user says "add to codex" / "save this to codex"
+     mid-session, act immediately: identify what to add from the recent
+     discussion, create the entry, and continue brainstorming.
+   - **End of session** — before saving the brainstorm, surface any
+     codex-worthy elements developed during the discussion.
 
-7. **Inline codex creation**:
+   For detection criteria and the add/skip/later flow, follow the codex
+   skill's "Detecting Codex Elements from Content" workflow.
 
-   If user says during brainstorm:
-   - "Add to codex"
-   - "Save this to codex"
-   - "Put this in the codex"
-
-   Immediately:
-   - Identify what to add (from recent discussion)
-   - Determine type (character/location/etc.)
-   - Create entry
-   - Continue brainstorming
-
-8. **End-of-session codex review**:
-
-   After brainstorm session ends, before saving:
-
-   ```
-   Session complete!
-
-   I noticed we developed:
-   👤 Devika Menon (character - red herring suspect)
-   📍 Forbidden Vault near Kings Valley (location)
-   🌍 "The Order" - secret organization (worldbuilding)
-
-   Add to codex?
-   [Select: all / pick individually / skip / later]
-   ```
-
-9. **Actionable output**:
+7. **Actionable output**:
    - If user picks a direction: offer to create scene or update codex
    - Suggest writing the next scene with the chosen direction
    - Offer to generate multiple scene openings based on brainstorm
@@ -123,10 +96,3 @@ Following Dean Wesley Smith's approach:
 - "What would the character actually do here?"
 - Avoid: "The hero must...", "Three-act structure requires...", "The plot needs..."
 - Embrace: "What if...", "The character might...", "This could go several ways..."
-
-## Codex Integration
-
-- Pull from codex automatically for relevant characters/locations
-- Detect and offer to save new elements (inline or end-of-session)
-- Link brainstorm sessions to codex entries
-- Link to related scenes or previous brainstorm sessions
