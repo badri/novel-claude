@@ -212,7 +212,8 @@ Show everything in one batch, never one at a time:
    c) Skip
 ```
 
-The user can also answer for all at once ("all yes", "all later").
+The user can answer each prompt individually, or all at once ("all yes",
+"all later").
 
 ### 5. Process choices
 
