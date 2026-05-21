@@ -92,7 +92,7 @@ Each codex file should have helpful structure:
 
 ## 5. Create Project-Specific CLAUDE.md
 
-Copy from `$PLUGIN_DIR/CLAUDE-PROJECT.md.template` and populate with project metadata:
+Copy from `${CLAUDE_PLUGIN_ROOT}/CLAUDE-PROJECT.md.template` and populate with project metadata:
 
 1. Read the template file
 2. Replace placeholders:
@@ -136,18 +136,16 @@ Date: [current date]
 [possible opening scenes]
 ```
 
-## 7. Locate Plugin Directory
+## 7. Plugin File References
 
-Find the plugin installation directory:
-```bash
-PLUGIN_DIR=$(dirname $(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null))
-```
-
-If this doesn't work, the plugin is likely at: the directory where this skill file exists.
+Several steps copy template files from the plugin. The plugin's install
+directory is available as the `${CLAUDE_PLUGIN_ROOT}` environment variable,
+which Claude Code sets automatically when this skill runs. Reference it
+directly — no path detection needed.
 
 ## 8. Create .gitignore
 
-Copy from `$PLUGIN_DIR/.gitignore.template`
+Copy from `${CLAUDE_PLUGIN_ROOT}/.gitignore.template`
 
 ## 9. Create .claude folder and copy configuration
 
@@ -156,8 +154,8 @@ Copy from `$PLUGIN_DIR/.gitignore.template`
 Execute these steps:
 
 1. Create `.claude/` folder and `.claude/hooks/` subfolder in the new project
-2. Copy settings.json template: `cp $PLUGIN_DIR/.claude-settings.json.template [project-name]/.claude/settings.json`
-3. Copy all hook scripts from `$PLUGIN_DIR/hooks-template/` to `[project-name]/.claude/hooks/`:
+2. Copy settings.json template: `cp ${CLAUDE_PLUGIN_ROOT}/.claude-settings.json.template [project-name]/.claude/settings.json`
+3. Copy all hook scripts from `${CLAUDE_PLUGIN_ROOT}/hooks-template/` to `[project-name]/.claude/hooks/`:
    - `session-start.sh` - Auto-starts session tracking
    - `session-end.sh` - Auto-ends session, logs stats, commits work
    - `log-interaction.sh` - Logs user interactions during session

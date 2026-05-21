@@ -24,6 +24,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     hooks invoke bash scripts directly, not slash commands.
   - `concept.md` and `compile-manuscript.md` were ported to skills (see Added).
 
+### Fixed
+- **Skill bodies cleaned of pre-skills idioms** — removed leftover slash-command
+  syntax from `new-scene`, `edit-scene`, and `scenes` (e.g. `/new-scene --draft`,
+  `/edit-scene 12`, and `--drafts`/`--archive`/`--all` flags); these skills are
+  now described as intent-driven.
+- **`new-project` plugin-path logic fixed** — replaced the broken `$0`/`readlink`
+  plugin-directory detection (meaningless inside a markdown skill) with the
+  harness-provided `${CLAUDE_PLUGIN_ROOT}` environment variable.
+
 ### Changed
 - **Complete documentation rewrite for v2.0.0 skills-based system**
   - `README.md` rewritten from scratch — removes all slash command references, Gemini CLI, DevRag; documents intent-driven skills workflow

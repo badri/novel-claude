@@ -12,7 +12,7 @@ Edit an existing scene with AI assistance or manual editing.
 1. **Identify scene to edit**:
    - Ask which scene number
    - Or: "current/latest scene"
-   - Or: user specifies in command: `/edit-scene 12`
+   - Or: the user names the scene directly (e.g. "edit scene 12")
 
 2. **Read the scene file**:
    - Load `scenes/scene-XXX.md`

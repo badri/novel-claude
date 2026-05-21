@@ -7,15 +7,13 @@ description: Use when the user wants to see what they've written, review the sce
 
 Browse, read, search, and manage all scenes in your project.
 
-## Usage
+## What this skill does
 
-- List all active scenes
-- List draft scenes (`--drafts`)
-- List archived scenes (`--archive`)
-- List all scenes (active + drafts + archive) (`--all`)
+- List active scenes (the default)
+- List draft scenes, archived scenes, or everything (active + drafts + archive)
 - Read specific scene(s)
 - Search scenes
-- Promote draft to active scenes
+- Promote a draft to an active scene
 - Archive a scene
 
 ## Task
@@ -35,11 +33,8 @@ Browse, read, search, and manage all scenes in your project.
 
 Display scene index with key information.
 
-**Default**: shows only active scenes
-**Flags**:
-- `--drafts` - Show only draft scenes
-- `--archive` - Show only archived scenes
-- `--all` - Show all (active + drafts + archive)
+**Default**: shows only active scenes. The user can instead ask for draft
+scenes only, archived scenes only, or all scenes (active + drafts + archive).
 
 **Active Scenes** (`scenes/`):
 ```markdown
@@ -113,7 +108,7 @@ Move an active scene to `scenes/archive/` (deleted but kept for reference).
 ## Tips
 
 - Use list frequently to see the big picture
-- Use `--drafts` to review experimental scenes
+- Ask for draft scenes to review experimental work
 - Use search to track elements through the story
 - Use promote when a draft scene is ready for the manuscript
 - Use archive for deleted scenes (keeps them for reference)

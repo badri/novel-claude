@@ -7,18 +7,21 @@ description: Use when the user wants to write the next scene, continue the story
 
 Create a new scene file and optionally generate scene content.
 
-## Usage
+## Scene types
 
-- `/new-scene` - Create active scene in `scenes/`
-- `/new-scene --draft` - Create draft scene in `scenes/drafts/` (experimental/out-of-order writing)
-- `/new-scene --draft "villain-backstory"` - Create named draft scene
+- **Active scene** (default) — added to `scenes/` as part of the manuscript.
+- **Draft scene** — added to `scenes/drafts/` for experimental or out-of-order
+  writing. Use when the user asks for a draft, an experimental scene, or wants
+  to write out of sequence (e.g. "draft the villain's backstory"). A draft can
+  take a descriptive name instead of a scene number.
 
 ## Task
 
-0. **Check for --draft flag**:
-   - If `--draft` flag present: Create in `scenes/drafts/` folder
-   - If `--draft` with name: Use custom name instead of scene number
-   - If no flag: Create active scene in `scenes/` (default behavior)
+0. **Determine scene type** (from the user's intent):
+   - If the user asked for a draft or an experimental/out-of-order scene:
+     create in `scenes/drafts/`. Use a descriptive name if they gave one,
+     otherwise `draft-NNN` numbering.
+   - Otherwise: create an active scene in `scenes/` (default).
 
 1. **Check project context**:
    - Verify we're in a fiction project folder (has project.json)
@@ -195,11 +198,11 @@ Template structure:
 
     **[later] - Add to TODO**:
     - Append to `notes/codex-todo.md`
-    - Process later with `/codex review-todo`
+    - Process later via the codex skill's review-todo action
 
     **For skills - [b] Add + cycle**:
     - Add skill to character's codex entry
-    - Trigger `/cycle` workflow to plant earlier
+    - Trigger the cycle skill to plant it earlier
     - Seamless integration
 
 11. **Auto-generated codex entries**:
