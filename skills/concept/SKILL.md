@@ -41,6 +41,8 @@ Lead a conversational, discovery-focused session. Ask across these areas
 
 Create `concept-YYYYMMDD-HHMMSS.md` in the current directory:
 
+Save this before asking anything else — nothing is lost if the user steps away.
+
 ```markdown
 # Story Concept - [Date]
 
@@ -84,10 +86,12 @@ Collect the two things project creation still needs:
 Genre and premise are already known from the brainstorm — summarize the
 premise yourself, don't re-ask.
 
-Then invoke the **new-project skill** to scaffold the project, passing the
-gathered metadata (name, genre, format, premise) plus the brainstorm content
-so it can pre-populate `CLAUDE.md`, `project.json` metadata, and the codex
-files.
+Now run the **new-project skill** to scaffold the project. You already hold
+the project name, genre, format, and premise from this session, plus the
+full brainstorm — carry that forward and supply it directly at new-project's
+metadata-collection step instead of re-asking the user. Use the brainstorm
+content to enrich the generated `CLAUDE.md`, `project.json` metadata, and the
+codex files. Git initialization is handled by the new-project skill.
 
 ### 7. Move the concept file into the project
 
