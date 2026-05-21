@@ -1,40 +1,50 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working in this repository.
 
 ## Development Guidelines
 
 - Commit to git after completing a bead with a detailed commit message.
-- When making plugin changes, always run "claude plugin validate ." in the top level directory.
-- See if @CHANGELOG.md needs to be updated before every change.
+- When making plugin changes, always run `claude plugin validate .` in the top-level directory.
+- Check whether `@CHANGELOG.md` needs updating before every change.
 
 ## Project Purpose
 
-This is a **discovery writing system** for fiction authors, designed as a Claude Code plugin. It supports "Writing Into the Dark" philosophy: no outlines, scene-by-scene organic writing, with AI-assisted tools for brainstorming, scene management, and worldbuilding.
+This is a **discovery writing system** for fiction authors, packaged as a Claude Code plugin (`fiction-writer`). It supports the "Writing Into the Dark" philosophy: no outlines, scene-by-scene organic writing, with AI assistance for brainstorming, scene management, and worldbuilding.
+
+The plugin is **skills-based**. Writers talk to Claude naturally — there are no slash commands. Claude recognizes intent and invokes the matching skill.
 
 ## Architecture
 
-### Multi-Model Strategy
+### Skills
 
-- **Claude (you)**: Creative work, brainstorming, scene generation, character development
-- **Gemini CLI**: Summarization and reverse outlining (large context window, token-efficient)
-- **DevRag MCP**: Semantic vector search across markdown files (per-project indexing)
+All user-facing functionality lives in `skills/<name>/SKILL.md`. Each skill is intent-driven: its YAML `description` frontmatter lists the triggering conditions, and the body is the workflow Claude follows. There are 20 skills:
+
+- **Project setup**: `new-project`, `concept` (pre-project brainstorming), `import`
+- **Writing**: `new-scene`, `edit-scene`, `brainstorm`, `chat`, `cycle` (plant setups backward)
+- **Scene management**: `scenes`, `reorder`, `search`
+- **Worldbuilding**: `codex`
+- **Session tracking**: `session-start`, `session-end`, `status`
+- **Publication**: `summarize`, `compile`, `shunn-format`, `blurb`, `cover`
+
+There is no slash-command system and no `agents/` subagents — both were removed in the v2.0.0 conversion. Skills that need cheap bulk work (`summarize`, `import`) dispatch a subagent with the `haiku` model via the Task tool.
 
 ### Project Structure Model
 
-Each writing project (created by `/new-project`) has:
+Each writing project (created by the `new-project` skill) has:
 
 ```
 project-name/
 ├── project.json              # Metadata, scene count, word count
-├── .devrag/                  # DevRag semantic search
-│   ├── .gitkeep              # Track folder in git
-│   ├── config.json           # DevRag configuration
-│   └── vectors.db            # Vector database (gitignored)
+├── CLAUDE.md                 # Story-specific context (auto-generated from template)
+├── .gitignore
+├── .claude/                  # Session hooks + settings (copied from templates)
+│   ├── settings.json
+│   └── hooks/
 ├── scenes/
-│   ├── scene-001.md          # Active scenes (numbered)
-│   ├── drafts/               # Experimental scenes (future feature)
-│   └── archive/              # Deleted scenes kept for reference (future)
+│   ├── scene-001.md          # Active scenes (numbered, zero-padded)
+│   ├── drafts/               # Experimental / out-of-order scenes
+│   └── archive/              # Deleted scenes kept for reference
 ├── codex/                    # World bible (copyable for series)
 │   ├── characters.md
 │   ├── locations.md
@@ -42,147 +52,93 @@ project-name/
 │   ├── worldbuilding.md
 │   └── lore.md
 ├── notes/
-│   ├── decisions.md          # Plot decisions log (future)
 │   ├── current-session.json  # Active session tracking
 │   ├── session-log.json      # Session history
-│   ├── cycles.md             # Setup planting log
+│   ├── cycles.md             # Setup-planting log
 │   └── reorders.md           # Scene reorganization history
-├── summaries/                # Reverse outlines (Gemini-generated)
+├── summaries/                # Reverse outlines
 ├── brainstorms/              # Saved brainstorm sessions
-└── manuscript/               # Compiled output (MD/DOCX/EPUB)
+└── manuscript/               # Compiled output (MD / DOCX)
 ```
 
-### Command System
+### Hooks
 
-All user-facing functionality is in `commands/*.md` files:
+Project hooks are configured in each project's `.claude/settings.json` and call bash scripts directly (not skills):
 
-**Core Workflow:**
-- `/new-project` - Initialize project structure
-- `/new-scene` - Create scene (auto-numbering, optional AI generation)
-- `/edit-scene` - AI-assisted editing with preview
-- `/brainstorm` - Interactive story development
-- `/summarize` - Generate reverse outlines (calls Gemini subagent)
-- `/cycle` - Plant setups backward (payoff → setup)
+- **SessionStart** → `session-start.sh` — starts session tracking
+- **SessionEnd** → `session-end.sh` — logs stats, commits work
+- **UserPromptSubmit** → `log-interaction.sh` — logs interactions
 
-**Scene Management:**
-- `/scenes` - List, read, search scenes
-- `/reorder` - Reorganize scene sequence
+The hook scripts are scaffolded into new projects from `hooks-template/`.
 
-**Worldbuilding:**
-- `/codex` - Add/update/search codex entries (auto-detection from scenes)
+### Plugin Files
 
-**Session Tracking:**
-- `/session start/end/status/log` - Track time, words, streaks
-- Auto-commits via hooks on session end
+- `skills/` — the 20 skills (auto-discovered by Claude Code)
+- `hooks-template/` — hook scripts copied into new projects
+- `scripts/` — deterministic helpers (session stats, word count, scene renumbering); skills coordinate, scripts execute
+- `generate_manuscript.py` — Shunn submission-format generator, used by the `shunn-format` skill
+- `*.template` files (`CLAUDE-PROJECT.md.template`, `.gitignore.template`, `.claude-settings.json.template`) — scaffolding templates; reference them via `${CLAUDE_PLUGIN_ROOT}`
+- `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` — plugin manifest and marketplace entry
 
-**Publication:**
-- `/compile` - Generate manuscript
-- `/blurb` - Marketing copy
-- `/cover` - Cover design concepts
+### Context Strategy
 
-### Hooks System
+Story content is stored as human-readable, git-tracked markdown — scenes are the source of truth, the codex is curated worldbuilding, summaries are reverse outlines. There is no vector database. Context is managed by:
 
-Configured in `.claude/settings.json`:
-
-- **SessionStart**: Runs `/session start` automatically
-- **SessionEnd**: Runs `/session-cleanup` (logs stats + git commit/push)
-
-### Context Management Philosophy
-
-**Human-Readable Storage (Git-Tracked):**
-- All story content in markdown
-- Scenes are source of truth
-- Codex is manually curated
-- Version controlled, no vendor lock-in
-
-**LLM-Efficient Retrieval (Derivative, Gitignored):**
-- DevRag indexes markdown → vector embeddings
-- `.devrag/vectors.db` per project (gitignored)
-- 40x fewer tokens, 260x faster than reading all files
-- Semantic search: "where did I mention the magic system?"
+- **Per-project `CLAUDE.md`** — story-specific parameters (POV, tense, style, tone)
+- **Codex** — persistent world knowledge across sessions
+- **Summaries** — reverse outlines that let Claude grasp the story without reading every scene
 
 ## Development Workflow
 
-### Active Work (Tracked in Beads)
+### Active Work (Beads)
 
-This project uses `bd` (beads) for issue tracking. Check status:
+This project uses `bd` (beads) for issue tracking:
 
 ```bash
-bd ready        # See unblocked work
-bd list         # All issues
-bd dep tree nc-7  # View dependency chain
+bd ready    # unblocked work
+bd list     # all issues
 ```
-
-Current priorities:
-- **nc-2**: Integrate DevRag (update `/new-project` to create `.devrag/config.json`)
-- **nc-3**: Implement drafts/archive workflow
-- **nc-4**: Add `notes/decisions.md` tracking
-- **nc-7**: Convert to Claude Code plugin (epic)
 
 ### Commit Practice
 
-Per user's `CLAUDE.md` instructions:
-- **Do a git commit with brief descriptive message after every bead is completed**
+Per the user's `CLAUDE.md`: do a git commit with a brief descriptive message after every bead is completed.
 
-### Testing Commands
+### Validation
 
-No automated tests. Manual validation:
-1. Run command in `commands/*.md`
-2. Verify file creation/modification
-3. Check `project.json` updates
-4. Ensure markdown format is correct
+No automated test suite. Validate changes by:
 
-### Working with Gemini Subagent
-
-The `@gemini-summarizer` in `agents/gemini-summarizer.md` wraps `gemini-cli`:
-- Use for `/summarize` command
-- Handles 1M+ token context windows
-- Preserves Claude tokens for creative work
-- Requires `gemini-cli` installed globally
+1. Running `claude plugin validate .` at the repo root
+2. Checking the affected `skills/<name>/SKILL.md` is well-formed (valid frontmatter, `description` starts with "Use when")
+3. Confirming markdown structure is correct
 
 ## Key Design Principles
 
 ### Discovery Writing First
 - No forced outlines or plot structures
-- Scene-by-scene workflow
-- Reverse outlining happens *after* writing
-- `/cycle` plants setups backward (write payoff first, add setup later)
+- Scene-by-scene workflow; reverse outlining happens *after* writing
+- `cycle` plants setups backward (write the payoff first, add the setup later)
 
 ### Minimal Rewriting
-- Clean first draft philosophy
-- Editing only for polish, not plot changes
-- Archive deleted scenes (don't lose work)
+- Clean first-draft philosophy; editing is for polish, not plot changes
+- Archive deleted scenes rather than losing work
 
-### Auto-Detection Over Manual Entry
-- `/new-scene` detects new characters/locations → offers codex save
-- `/brainstorm` detects elements → prompts to save
-- Natural language: `/codex add character Devika from our discussion`
+### Intent-Driven, Auto-Detecting
+- Skills are invoked by natural language, not commands
+- `new-scene` and `brainstorm` detect new characters/locations and offer codex entries
+- Session tracking, scene numbering, and git commits happen automatically
 
-### Multi-Session Continuity
-- Session tracking with streaks
-- Codex persists world knowledge
-- DevRag enables semantic search across sessions
-- Git commits preserve history
+## Documentation
 
-## Documentation Structure
-
-- **README.md**: Full system documentation, philosophy, all commands
-- **QUICK-START.md**: Condensed reference, common workflows
-- **CONTEXT-MANAGEMENT.md**: Hybrid architecture, DevRag setup, best practices
-- **IMPORTING-GUIDE.md**: How to import existing manuscripts
-
-## Future Planned Features
-
-Tracked in beads:
-- Drafts/archive workflow for out-of-order writing (nc-3)
-- `notes/decisions.md` for plot decision tracking (nc-4)
-- Plugin conversion for easy distribution (nc-7)
+- **README.md** — full system documentation, philosophy, all skills
+- **QUICK-START.md** — condensed reference, common workflows
+- **CONTEXT-MANAGEMENT.md** — how CLAUDE.md, the codex, and summaries manage context
+- **IMPORTING-GUIDE.md** — importing existing manuscripts
+- **CHANGELOG.md** — version history
 
 ## Important Constraints
 
-1. **Never edit the user's story content** without explicit request or preview/approval
-2. **Gemini for summarization only** - use `@gemini-summarizer` subagent, don't call Gemini directly
-3. **Preserve scene numbering** - when adding/deleting scenes, renumber subsequent scenes
-4. **Update project.json** - any scene changes must update metadata
-5. **Git-friendly** - all files are markdown or JSON, readable diffs
-6. **Per-project DevRag** - each project has own `.devrag/` folder with `config.json` and `vectors.db`
+1. **Never edit the user's story content** without an explicit request or preview/approval.
+2. **Preserve scene numbering** — when adding, deleting, or reordering scenes, renumber subsequent scenes.
+3. **Update `project.json`** — any scene change must update its metadata.
+4. **Git-friendly** — all files are markdown or JSON, producing readable diffs.
+5. **Skills coordinate, scripts execute** — keep deterministic operations in `scripts/`, not inline in skill prose.

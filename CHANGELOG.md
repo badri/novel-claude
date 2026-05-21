@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`new-project` plugin-path logic fixed** — replaced the broken `$0`/`readlink`
   plugin-directory detection (meaningless inside a markdown skill) with the
   harness-provided `${CLAUDE_PLUGIN_ROOT}` environment variable.
+- **Root `CLAUDE.md` rewritten for v2.0.0** — removed stale references to the
+  DevRag MCP, Gemini CLI, the slash-command system, and `agents/` subagents;
+  now accurately describes the skills-based architecture, hooks, scripts, and
+  context strategy.
 
 ### Changed
 - **Complete documentation rewrite for v2.0.0 skills-based system**
