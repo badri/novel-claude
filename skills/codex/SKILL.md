@@ -171,6 +171,7 @@ Before flagging anything as new, search the codex:
 - `codex/characters.md` for character names
 - `codex/locations.md` for location names
 - `codex/worldbuilding.md` and `codex/lore.md` for concepts
+- `codex/timeline.md` for timeline events
 
 Only flag elements NOT already present.
 
@@ -186,6 +187,7 @@ Do flag:
 - Named locations with atmosphere/description
 - Organizations, systems, unique tech/magic
 - Skills demonstrated but never established
+- Significant timeline events and lore references
 
 ### 4. Present all detections together
 
