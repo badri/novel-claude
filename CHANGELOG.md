@@ -38,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   context strategy.
 
 ### Changed
+- **Codex-detection workflow deduplicated** — the logic for detecting
+  codex-worthy elements (characters, locations, worldbuilding, skills) and
+  offering to save them now lives only in the `codex` skill, as the
+  "Detecting Codex Elements from Content" section. `new-scene`, `brainstorm`,
+  and `edit-scene` cross-reference it instead of each carrying their own copy;
+  `new-scene` drops from ~310 to ~150 lines.
 - **Complete documentation rewrite for v2.0.0 skills-based system**
   - `README.md` rewritten from scratch — removes all slash command references, Gemini CLI, DevRag; documents intent-driven skills workflow
   - `QUICK-START.md` rewritten as a concise natural language reference
