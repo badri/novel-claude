@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`concept` skill** — pre-project story brainstorming that runs outside a
+  project directory; explores a story idea, then delegates project scaffolding
+  to the `new-project` skill (idea → exploration → structure).
+- **`shunn-format` skill** — compiles scenes into a submission-ready manuscript
+  in William Shunn's modern manuscript format (.docx/.doc).
+
+### Removed
+- **`commands/` directory** — completes the v2.0.0 commands→skills conversion.
+  The plugin is now skills-only; no feature is reachable two ways.
+  - 14 command files that duplicated existing skills were deleted.
+  - `session.md` deleted — superseded by the `session-start`, `session-end`,
+    and `status` skills.
+  - `log-interaction.md` and `session-cleanup.md` deleted — dead code; session
+    hooks invoke bash scripts directly, not slash commands.
+  - `concept.md` and `compile-manuscript.md` were ported to skills (see Added).
+
 ### Changed
 - **Complete documentation rewrite for v2.0.0 skills-based system**
   - `README.md` rewritten from scratch — removes all slash command references, Gemini CLI, DevRag; documents intent-driven skills workflow
