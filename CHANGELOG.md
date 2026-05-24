@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to the `new-project` skill (idea → exploration → structure).
 - **`shunn-format` skill** — compiles scenes into a submission-ready manuscript
   in William Shunn's modern manuscript format (.docx/.doc).
+- **`depth-drill` skill** — Dean Wesley Smith-style depth feedback on a
+  finished scene. Observational only — names where witness syndrome,
+  opinion-tinting, sensory grounding, and character-specific perception are
+  active vs absent, with quoted examples. Never proposes replacement text
+  (that's `edit-scene`'s job). Designed as a learning drill the writer retires
+  once the pattern is internalized.
 
 ### Removed
 - **`commands/` directory** — completes the v2.0.0 commands→skills conversion.
