@@ -24,9 +24,71 @@ It can also be used for craft topics if the writer just wants to *discuss* (not 
 
 ## Configuration
 
-Default curriculum root: `~/course-distiller/`. Override by passing a path explicitly: "discuss heinlein's rules from /some/other/path".
+**Curriculum root** (where the source material lives): default `~/course-distiller/`. Override per-invocation: "discuss heinlein's rules from /some/other/path".
 
-If the default path doesn't exist or doesn't contain the requested course, ask the user where the material is and remember the answer for the session.
+**Writing root** (where discussions are saved): default `~/writing/`. These conversations are cross-project — about the writer's career, mindset, and craft thinking in general — not tied to any single book. Storing them inside one project's `notes/` would orphan them when the writer moves to the next project.
+
+Discussions save to `<writing-root>/study-discussions/discussion-YYYYMMDD-HHMM-[topic].md`. The skill creates this directory if it doesn't exist.
+
+**Project-specific exception:** if the discussion is clearly about a specific project (writer says "for this book, let's discuss series strategies" while in `~/writing/the-time-thief/`), save under that project's `notes/study-discussions/` instead and note the project in the file header. Default to cross-project unless the project tie is explicit.
+
+If the curriculum root doesn't exist or doesn't contain the requested course, ask the user where the material is and remember the answer for the session.
+
+## Topic → workshop mapping
+
+When the user names a topic without a specific workshop folder, use this mapping to pick the right source. (This is the "do you have instructions to point to relevant Dean workshops" answer — yes, here.)
+
+### Business of publishing
+| Topic / question | Workshop folder |
+|---|---|
+| Licensing rights / multiple uses of one idea / "magic bakery" | `august-magic-bakery-workshop` |
+| Writer's career rules / "should I rewrite?" / forward motion as profession | `july-heinlein-s-rules` |
+| Selling individual short stories / submission strategy | `insider-s-guide-to-selling-short-fiction` |
+| Book covers / cover design | `february-covers-101` |
+| Selling fiction in general / commercial mindset | `10-pop-up-selling-fun-for-fiction-writers` |
+| Living on short fiction income | `14-pop-up-making-a-living-with-short-fiction` |
+| Series strategy / planning a series | `55-pop-up-series-strategies` + `writing-series-classic-workshop` |
+| Standalone novel strategy | `56-pop-up-stand-alone-novel-strategies` |
+| Short-story career strategy (collections, magazines) | `57-pop-up-short-stories-strategies` |
+
+### Mindset / productivity
+| Topic / question | Workshop folder |
+|---|---|
+| Critical voice (the internal editor killing your work) | `november-killing-critical-voice` |
+| Why am I stuck / story problems / unsticking | `15-pop-up-you-re-stuck-now-what` |
+| Productivity / writing more | `productivity` (broad) or `prolific` (more on output) |
+| Writing speed / pulp speed / fast first drafts | `speed`, `february-reaching-pulp-speed`, `42-pop-up-learn-from-the-pulp-writers` |
+| Carving out writing time / scheduling around life | `carving-out-time-for-your-writing` |
+| Starting fresh / returning after a break | `starting-or-restarting-your-writing` |
+| Practice methodology / how to actually study | `practice`, `how-to-study-classic-workshop`, `feb-study-and-practice` |
+| Attitude / approach to the work | `attitude-in-writing-fiction` |
+| Reading as a writer / studying published work | `read-like-a-writer` |
+| Stamina across many books | `50-pop-up-stamina-and-strategies-to-write-a-lot` |
+| Big-picture career thinking | `11-pop-up-thinking-big-for-fiction-writers` |
+| The novel as journey / challenge framing | `the-great-novel-challenge` |
+| Mid-draft mindset / "as you write" | `13-pop-up-as-you-write` |
+
+### Craft (when the writer wants to *discuss*, not drill)
+If the writer asks to discuss a craft topic rather than run a drill, pull from the same curriculum:
+- Depth → `january-depth-in-writing`, `march-advanced-depth`, `plotting-with-depth-workshop`, `48-pop-up-how-to-create-automatic-depth`
+- POV → `classic-point-of-view`
+- Openings → `january-writing-into-the-dark-online-workshop` (the WITD primary)
+- Cliffhangers → `classic-cliffhangers-workshop`
+- Pacing → `classic-pacing-workshop`
+- Endings → `classic-writing-endings`
+- Voice → `character-voice-classic-workshop`, `classic-author-voice`, `attitude-in-writing-fiction`
+- Character → `classic-character-development`, `classic-character-and-dialogue`
+- Tags / dialogue mechanics → `classic-how-to-use-tags`
+- Information flow → `classic-information-flow`
+- Reader expectations → `reader-expectations-classic-workshop`
+- Subplots | secondary plot lines → `secondary-plot-lines-classic-workshop`
+- Suspense → `adding-suspense-classic-workshop`
+- Research | grounding fiction in real material → `classic-research-in-fiction-writing`
+- Novel structure → `classic-novel-structure`
+- Editing your own work → `editing-your-own-work-classic-workshop`
+- "Secrets" / catch-all craft → `classic-secrets-in-craft`
+
+If a topic doesn't match anything in this mapping, ask the user — don't guess. Better to surface "I don't see a workshop for X; should we discuss without a source, or do you want to point me at one?"
 
 ## Task
 
@@ -50,14 +112,14 @@ If the default path doesn't exist or doesn't contain the requested course, ask t
 
    **c. Course-correct** — "am I in alignment with this?" The writer describes how they're currently operating (re: time, mindset, business model). Compare against Dean's argument from the source. Name the gaps honestly. Reference [[course-correct-with-reasoning]] — explain *why*, not just what.
 
-5. **Save the discussion** to `notes/study-discussions/discussion-YYYYMMDD-HHMM-[topic].md`. Includes:
+5. **Save the discussion** to `<writing-root>/study-discussions/discussion-YYYYMMDD-HHMM-[topic].md` (default: `~/writing/study-discussions/`). Cross-project by default — see Configuration above for the project-specific exception. Includes:
    - Topic + source file
    - Mode (walkthrough / problem-solve / course-correct)
    - Key passages quoted
    - The writer's reactions / decisions
    - Any follow-ups the writer wants to track
 
-6. **Surface periodically.** At session-start (when the project's session-start hook fires), check `notes/study-discussions/` for the most recent discussion's `Follow-ups` section. If anything is open and dated > 30 days ago, mention it once. Don't nag.
+6. **Surface periodically.** At session-start, the project's session-start hook could check `<writing-root>/study-discussions/` for the most recent discussion's `Follow-ups` section. If anything is open and dated > 30 days ago, mention it once. Don't nag. (Hook integration is a future enhancement; for now, the writer surfaces follow-ups by running `study-discuss` again on the same topic.)
 
 ## Output format
 

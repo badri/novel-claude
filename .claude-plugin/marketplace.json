@@ -7,14 +7,14 @@
   },
   "metadata": {
     "description": "Discovery writing tools for fiction authors following the 'Writing Into the Dark' philosophy",
-    "version": "2.1.0"
+    "version": "2.1.1"
   },
   "plugins": [
     {
       "name": "fiction-writer",
       "source": "./",
       "description": "A complete discovery writing system for fiction authors. Write scenes, track worldbuilding, brainstorm with AI, and compile manuscripts—all following the 'Writing Into the Dark' philosophy.",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "author": {
         "name": "Lakshmi Narasimhan P",
         "url": "https://github.com/badri"

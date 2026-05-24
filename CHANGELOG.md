@@ -5,6 +5,22 @@ All notable changes to the Fiction Writer plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2026-05-24
+
+### Changed
+- **`study-discuss` storage location** moved from the per-project `notes/`
+  directory to a cross-project `<writing-root>/study-discussions/` (default
+  `~/writing/study-discussions/`). Career, mindset, and business
+  discussions aren't tied to a single book — storing them inside one
+  project orphans them when the writer moves on. Per-project storage is
+  still used when the discussion is explicitly about a specific project.
+
+### Added
+- **`study-discuss` topic → workshop mapping** baked into the skill body.
+  Maps common topics (business, mindset, craft-as-discussion) to the
+  right Dean / WMG workshop folder, so Claude knows which source to pull
+  when the writer names a topic without a specific course.
+
 ## [2.1.0] - 2026-05-24
 
 ### Added
