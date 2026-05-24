@@ -5,7 +5,7 @@ All notable changes to the Fiction Writer plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.1.0] - 2026-05-24
 
 ### Added
 - **`concept` skill** — pre-project story brainstorming that runs outside a
@@ -13,12 +13,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to the `new-project` skill (idea → exploration → structure).
 - **`shunn-format` skill** — compiles scenes into a submission-ready manuscript
   in William Shunn's modern manuscript format (.docx/.doc).
-- **`depth-drill` skill** — Dean Wesley Smith-style depth feedback on a
-  finished scene. Observational only — names where witness syndrome,
-  opinion-tinting, sensory grounding, and character-specific perception are
-  active vs absent, with quoted examples. Never proposes replacement text
-  (that's `edit-scene`'s job). Designed as a learning drill the writer retires
-  once the pattern is internalized.
+- **Drill skills (5)** — Dean Wesley Smith-style craft feedback on finished
+  scenes. All are **observational drills, not audits**: they name patterns
+  with quoted examples but never propose replacement text. Each is designed
+  to be retired by the writer once the pattern is internalized. Hard rules
+  enforce the drill-vs-audit distinction across the set.
+  - **`depth-drill`** — comprehensive: witness syndrome, opinion-tinting, fake
+    details, five senses, setting-through-character, Wilhelm's Law. Grounded
+    in `january-depth-in-writing` and the automatic-depth pop-up.
+  - **`fake-detail-drill`** — focused: scans for placeholder nouns ("barn",
+    "office", "car") that hand reader control over. Quotes them; doesn't
+    replace them.
+  - **`opening-drill`** — focused: five-senses inventory in the first 100
+    words, depth-before-action (400–500 word floor), re-anchoring at scene
+    re-entry. Grounded in the POV and practice workshops.
+  - **`cliffhanger-cut-drill`** — focused: Dent-zone length check, kicker
+    line identification, and the "petered-out tail" (sentences written past
+    the natural cut). Grounded in the cliffhangers workshop and Lester Dent
+    formula.
+  - **`pov-glitch-drill`** — focused: scans for the three documented glitch
+    patterns ("he thought", italicized thoughts, author-described settings)
+    plus unknowable info. Grounded in the POV workshop.
+- **`study-discuss` skill** — conversational skill for working through Dean /
+  WMG workshop material outside the writing flow. Pulls distilled course
+  material into structured walkthrough, problem-solve, or course-correct
+  conversations. Designed for the business-of-publishing and
+  mindset/productivity buckets that don't belong in writing-time tooling.
+  Default curriculum root `~/course-distiller/`; configurable per session.
 
 ### Removed
 - **`commands/` directory** — completes the v2.0.0 commands→skills conversion.
