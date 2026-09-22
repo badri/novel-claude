@@ -12,7 +12,7 @@ Fiction projects accumulate fast. 20 scenes, a codex, brainstorm sessions, notes
 
 **Selective loading** — Skills load only what's needed for the task. Writing the next scene? Claude reads the last 2-3 scenes for continuity, not the whole manuscript. Updating a character? Claude reads `codex/characters.md`, not all 30 scenes.
 
-**Session continuity** — `notes/current-session.json` tracks the active session. `notes/session-log.json` tracks history, streaks, and word counts across sessions.
+**Continuity across sessions** — `ORDER.md` is the one-line reverse outline kept current by the writing; a project's `NEXT-SESSION.md` or `notes/` carry hand-offs. Git history carries pace.
 
 **Story-specific CLAUDE.md** — Each project gets a `CLAUDE.md` with story metadata: POV, tense, voice, genre, characters, world rules. Claude reads this at the start of every session, so story context persists even when conversation history is compacted.
 

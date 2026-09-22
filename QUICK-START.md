@@ -34,9 +34,9 @@ Open Claude Code in your project directory and just talk:
 | Plant a setup you missed | "cycle back — I need to plant the backup drive earlier" |
 | Update worldbuilding | "add Vikram to the codex" |
 | Check progress | "how am I doing?" |
-| End the day | "that's it for today" |
+| Book-wide repetition | "tic audit" |
 
-Sessions start and end automatically via hooks. Git commits happen on exit.
+Every placed scene is committed to git. Pace is computed from git history.
 
 ## Out-of-Order Writing
 
@@ -77,13 +77,15 @@ your-story/
 ├── codex/               # characters, locations, worldbuilding
 ├── brainstorms/         # brainstorm sessions
 ├── summaries/           # deep reverse outlines
-├── notes/               # session tracking, cycle and reorder logs
+├── notes/               # cycle and reorder logs, drills
 └── manuscript/          # compiled output
 ```
 
 ## When You're Ready to Publish
 
 1. "show me my draft scenes" — review and promote any remaining drafts
-2. "compile the manuscript" — assembles everything in `ORDER.md` reading order into a DOCX
-3. "write a blurb" — back-cover copy
-4. "cover concept" — art direction brief
+2. "tic audit" — the book-wide repetition count; sweep what you agree with
+3. "compile the manuscript" — assembles everything in `ORDER.md` reading order
+4. "write a blurb" — the 100-word sales copy, keywords, categories
+5. "cover brief" — one concept in Dean's hierarchy
+6. "publish" — EPUB, print files, and paste-ready KDP / D2D / Notion Press sheets; you do the clicks

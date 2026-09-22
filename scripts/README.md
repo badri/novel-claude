@@ -15,28 +15,41 @@ This directory contains battle-tested bash/python scripts that handle determinis
 
 ## Script Categories
 
-### Session Management (`session/`)
+### Utilities (`utils/`)
 
-**`calculate-stats.sh`** - Session time/word/streak calculations
-- Uses Python for reliable cross-platform date math
-- Handles timezone differences (macOS vs Linux)
-- Calculates streaks with proper date arithmetic
-- Updates `session-log.json` atomically
-- Deletes `current-session.json` after successful logging
+**`pace.sh`** - Words per day from git history
+- Prose-only word count of `scenes/scene-*.md` now vs. the last commit before
+  N days ago (default windows 7 and 30), against the Pulp 1 pace (2,740/day)
+- Read-only; replaces the retired session tracking
 
 **Usage:**
 ```bash
-scripts/session/calculate-stats.sh .
-# Outputs session summary JSON
-# Updates notes/session-log.json
-# Deletes notes/current-session.json
+scripts/utils/pace.sh . 7 30
 ```
 
-**Called by:** `hooks-template/session-end.sh`
+**Called by:** the `status` skill
 
 ---
 
-### Utilities (`utils/`)
+**`prose-lint.py`** - Regex tells and the n-gram tic audit
+- Narration only (dialogue, metadata, Notes, annotation tags excluded);
+  prose is the text between a scene's two `---` rules
+- Default report: rate rules per 10k words against a budget (simile of
+  manner, padding, adverb speech tags, said-bookisms), flag rules, long
+  sentences, em-dash density, weather openers, bowtie candidates
+- `--ngrams`: every 3–5 word phrase repeated 10+ times across 8+ scenes,
+  function-word-only phrases dropped (`--all` keeps them)
+- `--rule <name>` triage queue, `--scene <NNN>` one scene, `--selftest`
+
+**Usage:**
+```bash
+scripts/utils/prose-lint.py --ngrams          # from the project root
+scripts/utils/prose-lint.py --rule simile_of_manner
+```
+
+**Called by:** the `tic-audit`, `compile`, and `edit-scene` skills
+
+---
 
 **`word-count.sh`** - Accurate word counting
 - Counts words in all active scenes (not drafts/archive)
@@ -112,7 +125,7 @@ Skills reference scripts via the `${CLAUDE_PLUGIN_ROOT}` environment variable,
 which Claude Code sets automatically when a skill runs:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/session/calculate-stats.sh .
+${CLAUDE_PLUGIN_ROOT}/scripts/utils/order-check.sh .
 ```
 
 Under omp that variable is **not** set — use the plugin's absolute path
@@ -122,8 +135,6 @@ instead (`~/nc/scripts/...`):
 ~/nc/scripts/utils/order-check.sh .
 ```
 
-Project hooks run scripts copied into the project's own `.claude/hooks/`
-directory (scaffolded from `hooks-template/`).
 
 ## Testing Scripts
 
@@ -140,15 +151,15 @@ cp -r "${CLAUDE_PLUGIN_ROOT}/scripts" .
 # Test word count
 ./scripts/utils/word-count.sh .
 
-# Test session calculation
-# (requires an active session and project.json)
+# Self-checks
+./scripts/utils/prose-lint.py --selftest
 ```
 
 ## Adding New Scripts
 
 When adding a new script:
 
-1. **Name clearly** - `verb-noun.sh` pattern (e.g., `calculate-stats.sh`)
+1. **Name clearly** - `verb-noun.sh` pattern (e.g., `order-check.sh`)
 2. **Document at top** - Usage, description, called by
 3. **Validate inputs** - Check args, files exist
 4. **Handle errors** - Exit codes, stderr messages

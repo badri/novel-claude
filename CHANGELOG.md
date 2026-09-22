@@ -5,6 +5,82 @@ All notable changes to the Fiction Writer plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-09-22
+
+Audit against the writer's goals (`~/writing/CLAUDE.md`, the 2026-04-29 game
+plan, Dean's Personal Sales Help feedback). Everything the goals file calls a
+standing rule now has a tool; everything that produced numbers nobody read is
+gone.
+
+### Added
+- **`tic-audit` skill + `scripts/utils/prose-lint.py --ngrams`.** The
+  book-wide repetition count the goals file marks REQUIRED after any
+  multi-scene pass: every 3–5 word phrase repeated 10+ times across 8+ scenes
+  (function-word-only phrases dropped; `--all` keeps them), plus the regex
+  tells that used to live in `~/writing/prose_lint.py` (simile of manner,
+  padding, said-bookisms, adverb tags, weather openers, bowtie candidates).
+  Narration only; prose is the text between a scene's two `---` rules.
+  Reports, never fixes — sweeps go through `edit-scene` and are logged as
+  `**Tic sweep <date>:**` in the scene's Notes. `compile` runs the count as a
+  non-blocking report; `edit-scene` calls for it after any multi-scene pass.
+- **`scripts/utils/pace.sh`** — words per day from git history (prose only),
+  over 7- and 30-day windows, against the Pulp 1 pace. Replaces session
+  tracking; used by `status`.
+- **`publish`: the short-story path** — KDP single + D2D, ebook only, floor
+  price; collections every five to seven shorts.
+- **House-style pass as a standing step** in `new-scene` (new step 7b) and
+  `edit-scene` (step 7): the three-second tests from the writing root's
+  *Craft & House Style* — bowtie, simile of manner, staged/timed interruption,
+  the five habits, bare-pronoun openings, padding — and an explicit
+  instruction to read that section before drafting. `new-scene` now commits
+  each scene when it is placed.
+- `new-project` asks for the **one craft focus** (Dean's index card) and the
+  project template carries it under *Current Status*.
+
+### Changed
+- **`blurb`** rewritten to Dean Wesley Smith's sales shape: one ~100-word
+  blurb (setup → turn → stakes → genre line) used on every store and the back
+  cover, three alternative opening lines, tagline, 7 KDP keywords, categories,
+  BISAC codes, the ≤100-character Notion Press keyword line, comps. The
+  150–200-word and 300+-word formats are gone (Dean cut *Partners in Crime*
+  from 189 to 102 words: "passive, too much plot, too long"). Respects the
+  book's own spoiler rule.
+- **`cover`** rewritten to Dean's cover verdict: author name huge at the top,
+  genre image, title smaller at the bottom, tagline under it, optional
+  credential line; thumbnail test; one concept, not three to five; two rounds
+  maximum then license a premade. Ebook spec 1600×2560; print covers are
+  built by `publish` from the Notion Press template.
+- **`status`** — one screen: manuscript counts, pace from git, order-check
+  findings, which publication assets exist, one recommended next action. No
+  streaks, no progress bars, no session history.
+- **`cycle`** previews the insertion and waits for approval (it is an untagged
+  edit), or takes an `<add>` tag through the tagged flow.
+- `depth-drill` no longer references `craft-reference` or
+  `depth-drill-advanced` (neither exists); advanced-depth discussion goes to
+  `study-discuss`.
+- `CLAUDE.md`, `README.md`, `QUICK-START.md`, `scripts/README.md` list
+  `publish`, `tic-audit`, the drills and `study-discuss`; skill count is 26.
+
+### Fixed
+- **`order-check.sh` false positives that would have made `compile` refuse
+  a finished book.** (1) Prose is now the text between a scene's two `---`
+  rules, so tag-pass commentary sitting after the second rule (before
+  `**Notes**:`) is no longer reported as a live annotation. (2) IDs listed
+  under `## Cut` no longer require a file on disk — a cut scene's ID is
+  retired whether or not the file was kept.
+
+### Removed
+- **Session tracking**: `session-start` and `session-end` skills,
+  `hooks-template/`, `.claude-settings.json.template`,
+  `scripts/session/calculate-stats.sh`, and the plugin repo's own
+  `.claude/` hooks. The log it produced was junk (one project showed 63,297
+  minutes over six sessions at 84 words/hour) and the goals file's own
+  decision is to stop measuring. Pace now comes from git. Projects created
+  before 2.3.0 keep working; their `notes/session-log.json` is simply
+  ignored.
+- `TESTING.md` (stale: DevRag, `/session`, an upgrade tool that no longer
+  exists). Validation is the three steps in `CLAUDE.md`.
+
 ## [2.2.0] - 2026-09-16
 
 ### Added

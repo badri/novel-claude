@@ -128,12 +128,27 @@ approval, then write.
    — say which tags were applied and what changed at the level of *approach*,
    not implementation details.
 
-7. **House-style pass** (prose register):
-   - Short declarative sentences; concrete nouns, active verbs
-   - No "and…and…and" chains; em-dashes rationed
-   - Minimal interiority; no bowtie summaries at scene end
-   - Ration the "did X the way a Y does Z" simile-of-manner
-   - No bare-pronoun scene/section openings
+7. **House-style pass** — the *Craft & House Style* section of the writing
+   root's `CLAUDE.md` governs; read it before rewriting. The three-second
+   tests, on narration only:
+   - **Bowtie** — does the last paragraph restate what the scene showed?
+     End one beat earlier, on the peak.
+   - **Simile of manner** — "did X the way a Y does Z" / "like a…": render
+     the action. One load-bearing comparison per scene at most, named in Notes.
+   - **Staged or timed interruption** — margins, unresolved, off the beat.
+   - **The five habits** — hinge-sentence, aphoristic tail, withheld-subject
+     rhythm, appositive stack, composed image. If a clause exists for
+     cadence, cut it.
+   - **Register floor** — one idea per sentence, most under ~20 words;
+     concrete nouns, active verbs; no "and…and…and"; em-dashes rationed;
+     no padding verbs; no bare-pronoun scene or section opening.
+   - **Tic ceiling** — a repeated phrase is one per scene and doing work.
+     A scene's closer owns its words: if an earlier paragraph spends the
+     phrase the ending needs, the earlier one goes.
+
+   **After any multi-scene pass** (a register sweep, a batch of tag rewrites
+   across several files), run the `tic-audit` skill and report the count —
+   repetition is invisible inside one scene and only shows at book scale.
 
 8. **Check `ORDER.md`**:
    - Did the edit change what the scene *is*? The one-line reverse outline for

@@ -119,7 +119,7 @@ If a topic doesn't match anything in this mapping, ask the user — don't guess.
    - The writer's reactions / decisions
    - Any follow-ups the writer wants to track
 
-6. **Surface periodically.** At session-start, the project's session-start hook could check `<writing-root>/study-discussions/` for the most recent discussion's `Follow-ups` section. If anything is open and dated > 30 days ago, mention it once. Don't nag. (Hook integration is a future enhancement; for now, the writer surfaces follow-ups by running `study-discuss` again on the same topic.)
+6. **Follow-ups** live in the saved discussion. The writer surfaces them by running `study-discuss` again on the same topic; nothing auto-fires.
 
 ## Output format
 
@@ -188,7 +188,7 @@ Mode: course-correct
 2. **Course-correction must explain reasoning.** Per [[course-correct-with-reasoning]] — "Dean says X, here's why he says it, here's how it applies to you, your call." Never just "Dean disagrees with you."
 3. **No drilling.** This skill never scans the writer's prose. It only discusses their craft / business / mindset.
 4. **Discussion saves, doesn't decide.** The skill produces a record of the conversation. The writer chooses what (if anything) to act on. Don't open beads, don't modify project.json, don't auto-update plans.
-5. **Periodic check-ins are gentle.** Surfacing old follow-ups happens at most once per session-start, with a single line. The writer ignores or engages — never both nagged.
+5. **No nagging.** Old follow-ups surface only when the writer reopens the topic.
 
 ## What this skill is NOT
 
@@ -201,7 +201,6 @@ Mode: course-correct
 
 - **Drill skills** (`depth-drill`, `opening-drill`, etc.) — application of craft to the page. Different purpose.
 - **`brainstorm`** — story-level problem-solving. Use when the question is "what happens in scene 13?" not "what does Dean say about productivity?"
-- **`session-start`** — surfaces old discussion follow-ups (when implemented).
 
 ## Source grounding
 

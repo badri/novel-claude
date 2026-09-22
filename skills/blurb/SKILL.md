@@ -1,94 +1,65 @@
 ---
 name: blurb
-description: Use when the user needs back-cover copy, a book description, a query letter pitch, or marketing copy for the story. Trigger on: "write a blurb", "book description", "back cover copy", "pitch the story", "Amazon description", "marketing copy".
+description: Use when the user needs sales copy for a finished story — the back-cover blurb, the KDP/D2D/Notion Press description, keywords, categories, or a tagline. Trigger on: "write a blurb", "sales copy", "book description", "back cover copy", "Amazon description", "keywords for KDP", "tagline".
 ---
 
-# Generate Story Blurb
+# Sales copy
 
-Create compelling back cover copy and story descriptions for marketing your story.
+One blurb, about **100 words**, used everywhere: back cover, KDP, D2D, Notion
+Press. Dean Wesley Smith's structure, learned the hard way on *Partners in
+Crime* (his verdict on the first draft: "half good, half bad — passive, too
+much plot, too long"; the fix cut 189 words to 102).
+
+## The shape
+
+1. **Setup** — what the protagonist has and expects. Two or three sentences,
+   present tense, active voice, the actor named.
+2. **The turn** — one short sentence. *"But the island has other plans."*
+3. **The stakes** — what is coming, without saying what it is. Tease that a
+   secret exists; never explain it.
+4. **One genre line** — *"A taut psychological mystery about…"* This is
+   where the subgenre lives, not in the story.
+
+Nothing else. No symptom paragraph, no backstory paragraph, no second
+character's arc, no twist hint. If a sentence describes plot the reader will
+watch happen, cut it.
 
 ## Task
 
-1. **Gather context**:
-   - Read project.json for genre and premise
-   - Read latest reverse outline or summaries
-   - Check codex for main characters and conflicts
-   - Ask user: What makes this story unique/compelling?
+1. **Read** `project.json` (premise, genre), `ORDER.md` (the first ten
+   reading positions are what the blurb may draw on), and the project
+   `CLAUDE.md` **Story Rules** — a book's spoiler rule outranks the blurb.
+   The Divya blurb could not hint at clones; the categories carried the SF
+   signal instead. Ask the author what the book's *one* secret is only if the
+   Story Rules don't say.
+2. **Draft the blurb** (~100 words). Then write **three alternative opening
+   sentences** — the first line is the only part worth A/B-ing.
+3. **Write the metadata** in the same file:
+   - **Tagline** (under ten words) for the cover, under the title.
+   - **7 KDP keyword phrases** — reader search terms, not adjectives
+     ("Indian crime thriller", "police procedural India", not "gripping").
+   - **3 KDP categories** and **3 BISAC codes** (e.g. `FIC031080 Thrillers /
+     Technological`). The categories are where a genre signal the blurb must
+     hide can go.
+   - **Notion Press line**: five keywords in **≤100 characters** (the field
+     silently truncates).
+   - **Comps**: two or three "for readers of" titles.
+4. **Save** to `manuscript/blurb-[date].md`. This is the file the `publish`
+   skill pastes from.
+5. **Read it back against the checklist** before showing it:
+   - Under 110 words? Present tense? Actor named in every sentence?
+   - Does any sentence explain the secret or the ending? Cut it.
+   - Does the setup make the reader love what the turn takes away?
+   - Would Dean call any of it passive?
 
-2. **Blurb types** (generate multiple):
+Show the blurb, the three openings, and the metadata. Offer one revision
+round; then it ships. Polishing a blurb is critical voice with a marketing
+hat.
 
-   **Short hook** (1-2 sentences):
-   - For social media, email subject lines
-   - Pure intrigue and stakes
+## Not this skill
 
-   **Short blurb** (50-75 words):
-   - For Amazon description first paragraph
-   - Hook + protagonist + problem + stakes
-   - Genre-appropriate tone
-
-   **Full blurb** (150-200 words):
-   - Complete back cover copy
-   - Character + situation + conflict + stakes + question
-   - Emotional pull
-   - Genre promise
-
-   **Long description** (300+ words):
-   - For website, press releases
-   - More detail, multiple characters
-   - Subplot hints
-
-3. **Genre-specific formulas**:
-
-   **Thriller/Mystery**:
-   - Inciting incident
-   - What's at stake
-   - Race against time
-   - Twist hint
-
-   **Romance**:
-   - Who are they
-   - What's keeping them apart
-   - Why this matters
-   - Emotional stakes
-
-   **Science Fiction/Fantasy**:
-   - World/concept hook
-   - Protagonist and their challenge
-   - What's unique about this world
-   - High stakes
-
-   **Literary**:
-   - Character depth
-   - Thematic question
-   - Emotional journey
-   - Voice/prose style hint
-
-4. **Generate multiple options**:
-   - Create 3-4 different versions of each blurb type
-   - Different angles, tones, hooks
-   - Test different opening lines
-   - User can mix and match
-
-5. **Save blurbs**:
-
-Create `manuscript/blurbs-[date].md` with all blurb options, keywords, and comp titles.
-
-6. **Blurb writing principles**:
-   - No spoilers (stop before midpoint)
-   - Focus on main character and central conflict
-   - Raise story questions, don't answer them
-   - Genre-appropriate tone and voice
-   - Active voice, present tense usually
-   - Emotional stakes over plot details
-   - End with tension/question
-
-7. **Test and refine**:
-   - Ask user which version resonates
-   - Offer to combine best elements
-   - Check for clichés or overused phrases
-
-8. **Output**:
-   - Present all blurb options
-   - Highlight recommended version for each type
-   - Save to manuscript folder
-   - Offer to refine based on feedback
+- **Author bio** — third person, lives on the author site's About page, reused
+  verbatim on every book. Don't write a new one per book.
+- **Long descriptions, press releases, query letters** — not part of a
+  wide-from-day-one indie release. The store page gets the same 100 words.
+- **The blurb after publication** — Heinlein's Rule 5. Leave it on the market.

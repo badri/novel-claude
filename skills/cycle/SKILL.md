@@ -67,10 +67,14 @@ In discovery writing, you often write a moment (Martha grabs the shotgun from he
    - Different versions (subtle vs. prominent)
    - How to make it feel natural, not forced
 
-6. **Update the scene file**:
-   - Use Edit tool to insert the new content
+6. **Show the insertion and wait for approval** — a cycle is an untagged
+   edit to finished prose, so it gets the same preview as `edit-scene`:
+   the paragraph before and after, the change marked. Write only on accept.
+   Alternatively the author drops an `<add>` tag at the spot and says
+   "rewrite NNN"; then it's the tagged flow and needs no preview.
    - Maintain the scene's flow and voice
    - Ensure it doesn't feel like a retrofit
+   - Run the house-style three-second tests on the inserted text
 
 7. **Track the cycle**:
 

@@ -120,9 +120,12 @@ Template structure:
 - `draft` — in `scenes/drafts/`, experimental / not yet placed
 
 5. **Draft the scene**:
+   - **First read the *Craft & House Style* section of the writing root's
+     `CLAUDE.md`** (the parent directory of the project). It holds the prose
+     register, the five banned habits, the no-bowtie rule, the
+     simile-of-manner ban and the lived-in-interruption rule, and it
+     outranks anything in this skill or in a per-scene Craft note.
    - Maintain continuity with the scene `ORDER.md` puts before it
-   - Write in the house register (see the project's `CLAUDE.md` and the
-     writing root's `CLAUDE.md`)
    - Don't pre-plot; follow the character's natural choices
    - Generate multiple options if the user asks
 
@@ -175,6 +178,27 @@ Template structure:
    Record the grounding in the scene's **Notes**. If the scene is deliberately
    spare, say so in Notes instead of skipping the check.
 
+7b. **House-style pass — the three-second tests** (same standing step; fix
+    in place, narration only, dialogue is exempt):
+
+   - **Bowtie?** *Does the last paragraph tell the reader something the scene
+     already showed?* Cut it and end one beat earlier, on the peak.
+   - **Simile of manner?** Any *"did X the way a Y does Z"* / *"like a…"*
+     manner-clause: render the concrete action instead. At most one
+     load-bearing comparison per scene, named in Notes.
+   - **Staged or timed interruption?** Real life intrudes in the margins of a
+     beat about something else, unresolved, at an undramatic moment. Never
+     played out in full; never landing on the climax as a button.
+   - **The five habits?** Read each sentence aloud: *would he have written
+     it, or is it performing?* Break long hinge-sentences (one idea, full
+     stop); cut aphoristic tails; say what the thing is instead of a
+     withheld-subject rhythm; subject-verb-fact instead of appositive
+     stacks; a plain noun instead of a composed image.
+   - **Bare-pronoun opening?** Name the subject or open on the concrete thing
+     in the first line of the scene and after every section break.
+   - **Padding?** *began to / started to / for a moment / a little / somehow
+     / seemed to / made himself* — one verb beats a verb plus helper.
+
 8. **Update `project.json`** (active scenes only):
    - **Active scene** (created in `scenes/`):
      - Increment `sceneCount` (placed active scenes)
@@ -192,14 +216,18 @@ Template structure:
    is on disk but absent from `ORDER.md`, `order-check.sh` reports it — it
    won't be in the manuscript even though it's in the count.
 
-9. **Detect codex elements** (after the scene is written):
+9. **Commit.** One scene, one commit, message `scene NNN: <the ORDER.md line>`.
+   Every scene lands in git the moment it is placed; there is no session-end
+   step that does it for you.
+
+10. **Detect codex elements** (after the scene is written):
 
    Scan for codex-worthy elements (characters, locations, worldbuilding,
    demonstrated skills) and offer to add them — follow the codex skill's
    "Detecting Codex Elements from Content" workflow. The codex grows by
    accretion from what the writing established; never pre-build it.
 
-10. **Output**:
+11. **Output**:
     - Path to the new scene file
     - Word count
     - Where it was placed in `ORDER.md` (or that it's under Unplaced)

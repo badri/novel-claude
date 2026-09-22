@@ -47,6 +47,13 @@ defines** — never in filename order.
    author's direction and stripping them loses it. Do not compile around the
    scene. Fix the scene, then compile.
 
+3b. **Run the tic audit as a report** (never blocking) — the `tic-audit`
+   skill's n-gram count (`scripts/utils/prose-lint.py --ngrams` from the
+   project root). Show the top of the list to the author before assembling.
+   A phrase that recurs 10+ times across 8+ scenes is invisible at reading
+   scale and only a whole-book count finds it. The author decides whether
+   to sweep first or compile now.
+
 4. **Check project metadata**: `project.json` for title, author, genre; total
    placed scenes; total words from the placed scenes only (drafts excluded).
 
@@ -158,7 +165,7 @@ THE END
     - Scene count and word count
     - The reading order used (positions + IDs), so the author can eyeball it
     - Any warnings from `order-check.sh` that remain unresolved
-    - Next steps (blurb, cover, shunn-format)
+    - Next steps (blurb, cover, publish)
 
 ## Prerequisites
 

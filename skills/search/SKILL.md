@@ -18,7 +18,7 @@ Search across scenes, codex, and notes using keyword and pattern matching.
    - `codex/` — worldbuilding entries
    - `brainstorms/` — brainstorm sessions
    - `summaries/` — deep reverse outlines
-   - `notes/` — session notes (excluding current-session.json)
+   - `notes/` — cycles, reorders, drills, chats
    - `ORDER.md` — reading order + one-line reverse outline
 
    Run grep with `-i` (case insensitive) and `-l` (file names) first to find matching files, then read the relevant sections.

@@ -54,8 +54,6 @@ After creation, tell user:
 ├── manuscript/            # Compiled versions
 │   └── .gitkeep
 └── notes/                 # General story notes, ideas, research
-    ├── session-interactions/  # Session conversation logs (auto-created)
-    │   └── .gitkeep
     └── .gitkeep
 ```
 
@@ -169,56 +167,37 @@ which Claude Code sets automatically when this skill runs. Reference it
 directly — no path detection needed.
 
 Under omp that variable is not set: use `~/nc/` instead — `~/nc/ORDER.md.template`,
-`~/nc/CLAUDE-PROJECT.md.template`, `~/nc/.gitignore.template`,
-`~/nc/.claude-settings.json.template`, `~/nc/hooks-template/`.
+`~/nc/CLAUDE-PROJECT.md.template`, `~/nc/.gitignore.template`.
 
-## 9. Create .gitignore
+## 9. Create .gitignore and initialise git
 
-Copy from `${CLAUDE_PLUGIN_ROOT}/.gitignore.template`
+Copy from `${CLAUDE_PLUGIN_ROOT}/.gitignore.template`, then `git init`, stage
+everything, and make the first commit (`new project: [project-name]`).
 
-## 10. Create .claude folder and copy configuration
+Each project is its own repository. There are no session hooks: every scene
+is committed by `new-scene` the moment it is placed, and pace comes from git
+history (`status`).
 
-**CRITICAL**: This step enables automatic session tracking. Do not skip!
-
-Execute these steps:
-
-1. Create `.claude/` folder and `.claude/hooks/` subfolder in the new project
-2. Copy settings.json template: `cp ${CLAUDE_PLUGIN_ROOT}/.claude-settings.json.template [project-name]/.claude/settings.json`
-3. Copy all hook scripts from `${CLAUDE_PLUGIN_ROOT}/hooks-template/` to `[project-name]/.claude/hooks/`:
-   - `session-start.sh` - Auto-starts session tracking
-   - `session-end.sh` - Auto-ends session, logs stats, commits work
-   - `log-interaction.sh` - Logs user interactions during session
-4. Make all hook scripts executable: `chmod +x [project-name]/.claude/hooks/*.sh`
-
-**Verification**: After copying, verify these files exist and are correct:
-- `[project-name]/.claude/settings.json` (should contain SessionStart, SessionEnd, UserPromptSubmit hooks)
-- `[project-name]/.claude/hooks/session-start.sh` (should be executable)
-- `[project-name]/.claude/hooks/session-end.sh` (should be executable)
-- `[project-name]/.claude/hooks/log-interaction.sh` (should be executable)
-
-This configuration ensures:
-- **SessionStart hook**: Automatically creates session tracking on Claude start
-- **SessionEnd hook**: Automatically ends session, logs stats, and commits work to git
-- **UserPromptSubmit hook**: Logs all user interactions during the session
-
-**If this step is skipped, sessions will not auto-start/end and interactions won't be logged!**
-
-## 11. Output Summary
+## 10. Output Summary
 
 After creation, tell the user:
 - ✓ Project created at: `[path]`
 - ✓ `ORDER.md` created — reading order + one-line reverse outline. **Scene filenames are permanent IDs; reordering means editing this list, never renaming files.**
 - ✓ CLAUDE.md created with story parameters (fill in POV, style, themes as you develop the story)
-- ✓ Session tracking and interaction logging enabled (automatic)
+- ✓ Git initialised with a first commit
 - **Next steps**:
   - `cd [project-name]` to enter project
   - **Optional**: Edit `CLAUDE.md` to add POV, tense, writing style preferences
   - Run `claude` to start
   - Start brainstorming or jump into writing with a new scene
-- Available skills: new-scene, brainstorm, summarize, compile
+- Available skills: new-scene, brainstorm, summarize, compile, status
 - The codex folder is copyable for series continuity
 
 **Important**:
 - Use absolute paths when creating files
-- Initialize git repo in project folder
 - Create .gitkeep files so empty folders are tracked
+- **One craft focus per book** (Dean's practice method): ask the writer for
+  the one word on the index card — openings, cliffhangers, pacing, or
+  structure — and put it in the project `CLAUDE.md` under *Current Status*.
+  Story is secondary during the practice session. Don't make the book sound
+  important.

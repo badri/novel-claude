@@ -14,6 +14,19 @@ The post-writing pipeline, from a finished manuscript to three live storefronts.
 - **Pricing for the first 10 books is reach.** Price at or near each platform's floor, report what it earns per copy, and let the author pick the final figure.
 - **The human does:** every payment, every terms/agreement checkbox, every **Submit/Publish** click, and any upload the site only accepts from a real click (see Notion Press). Fill forms, save drafts, stop.
 
+## Short stories — the ebook-only path
+
+A Personal Sales Help story or any standalone short goes out as a **KDP
+single + D2D**, ebook only, priced at each platform's floor ($0.99 on KDP
+at 35%; free where a store allows it). No print, no Notion Press, no ISBN
+beyond D2D's free one. Steps 1–3 below, then stop. Same 100-word blurb
+shape, same cover hierarchy, same "Amazon unchecked in D2D".
+
+Every five to seven shorts, build a **collection** as a normal book (all
+steps): a new door to the bakery, and the print edition the singles never
+get. Track which shorts are in which collection in the author site's book
+list.
+
 ## Order of work
 
 1. **Publication master** — `manuscript/<book>-publication.md`: front matter (title page, copyright), numbered chapters from `ORDER.md` (use `compile`), THE END, back matter (Author's Note, newsletter line). No annotation tags, no `scene-NNN` IDs, no Notes. Scene breaks as `<p class="scenebreak">&#42; &#42; &#42;</p>` so they survive Kindle; the print build converts them.

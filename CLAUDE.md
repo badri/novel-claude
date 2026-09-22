@@ -24,9 +24,10 @@ All user-facing functionality lives in `skills/<name>/SKILL.md`. Each skill is i
 - **Writing**: `new-scene`, `edit-scene`, `brainstorm`, `chat`, `cycle` (plant setups backward)
 - **Scene management**: `scenes`, `reorder`, `search`
 - **Worldbuilding**: `codex`
-- **Session tracking**: `session-start`, `session-end`, `status`
-- **Publication**: `summarize`, `compile`, `shunn-format`, `blurb`, `cover`
+- **Progress**: `status` (pace from git history)
+- **Publication**: `summarize`, `compile`, `shunn-format`, `blurb`, `cover`, `publish` (ebook/print builders + KDP, D2D, Notion Press upload sheets)
 - **Craft drills** (observational, never rewrite): `depth-drill`, `opening-drill`, `fake-detail-drill`, `pov-glitch-drill`, `cliffhanger-cut-drill`
+- **Book-scale audit**: `tic-audit` (n-gram repetition count + regex tells over the whole corpus; report, never auto-fix)
 - **Business/mindset**: `study-discuss`
 
 There is no slash-command system and no `agents/` subagents — both were removed in the v2.0.0 conversion. Skills that need cheap bulk work (`summarize`, `import`) dispatch a subagent with the `haiku` model via the Task tool.
@@ -57,9 +58,6 @@ project-name/
 ├── ORDER.md                  # READING order + one-line reverse outline (source of truth)
 ├── CLAUDE.md                 # Story-specific context (auto-generated from template)
 ├── .gitignore
-├── .claude/                  # Session hooks + settings (copied from templates)
-│   ├── settings.json
-│   └── hooks/
 ├── scenes/
 │   ├── scene-001.md          # Stable IDs, creation order — never renamed
 │   ├── drafts/               # Out-of-order scenes waiting on placement
@@ -71,8 +69,6 @@ project-name/
 │   ├── worldbuilding.md
 │   └── lore.md
 ├── notes/
-│   ├── current-session.json  # Active session tracking
-│   ├── session-log.json      # Session history
 │   ├── cycles.md             # Setup-planting log
 │   └── reorders.md           # Reading-order change log (positions, not files)
 ├── summaries/                # Deep reverse outlines
@@ -80,23 +76,17 @@ project-name/
 └── manuscript/               # Compiled output (MD / DOCX)
 ```
 
-### Hooks
+### No hooks, no sessions (v2.3.0)
 
-Project hooks are configured in each project's `.claude/settings.json` and call bash scripts directly (not skills):
-
-- **SessionStart** → `session-start.sh` — starts session tracking
-- **SessionEnd** → `session-end.sh` — logs stats, commits work
-- **UserPromptSubmit** → `log-interaction.sh` — logs interactions
-
-The hook scripts are scaffolded into new projects from `hooks-template/`.
+Session tracking (hooks, `session-start`/`session-end`, `notes/session-log.json`) was removed: it produced junk numbers and nobody read them. `new-scene` commits each scene when it is placed, and `status` derives words per day from git history via `scripts/utils/pace.sh`.
 
 ### Plugin Files
 
 - `skills/` — the 26 skills (auto-discovered by Claude Code)
-- `hooks-template/` — hook scripts copied into new projects
-- `scripts/` — deterministic helpers (session stats, word count, `order-check.sh`); skills coordinate, scripts execute. `renumber-scenes.sh` is retired and exits 1.
+- `scripts/utils/` — deterministic helpers: `word-count.sh`, `order-check.sh` (consistency), `pace.sh` (words/day from git), `prose-lint.py` (regex tells + `--ngrams` tic audit); skills coordinate, scripts execute. `renumber-scenes.sh` is retired and exits 1.
+- `skills/publish/scripts/` — `build-epub.py`, `build-print.py`, `build-cover.py` and their assets
 - `generate_manuscript.py` — Shunn submission-format generator, used by the `shunn-format` skill; it reads scenes in **filename order**, so out-of-order projects must be staged in `ORDER.md` order first
-- `*.template` files (`CLAUDE-PROJECT.md.template`, `ORDER.md.template`, `.gitignore.template`, `.claude-settings.json.template`) — scaffolding templates; reference them via `${CLAUDE_PLUGIN_ROOT}` (Claude Code) or `~/nc/` (omp)
+- `*.template` files (`CLAUDE-PROJECT.md.template`, `ORDER.md.template`, `.gitignore.template`) — scaffolding templates; reference them via `${CLAUDE_PLUGIN_ROOT}` (Claude Code) or `~/nc/` (omp)
 - `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` — plugin manifest and marketplace entry
 
 ### Context Strategy
@@ -144,7 +134,7 @@ No automated test suite. Validate changes by:
 ### Intent-Driven, Auto-Detecting
 - Skills are invoked by natural language, not commands
 - `new-scene` and `brainstorm` detect new characters/locations and offer codex entries
-- Session tracking, scene numbering, and git commits happen automatically
+- Scene IDs, `ORDER.md` lines, and per-scene git commits happen automatically
 
 ## Documentation
 

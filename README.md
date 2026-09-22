@@ -42,7 +42,7 @@ Just talk to Claude:
 > "show me what I've written so far"
 > "I know how the climax ends — let me write it now"
 
-Claude handles the file management, numbering, codex updates, and session tracking behind the scenes.
+Claude handles the file management, numbering, codex updates, and per-scene git commits behind the scenes.
 
 ## Project Structure
 
@@ -64,8 +64,6 @@ project-name/
 │   ├── worldbuilding.md
 │   └── lore.md
 ├── notes/
-│   ├── current-session.json  # Active session tracking
-│   ├── session-log.json      # Session history
 │   ├── cycles.md             # Setup/payoff log
 │   └── reorders.md           # Reading-order change log
 ├── brainstorms/              # Saved brainstorm sessions
@@ -184,15 +182,15 @@ Promoting a draft assigns the **next unused stable ID** and adds an `ORDER.md` e
 
 ---
 
-### Session Tracking
+### Progress
 
-**session-start** — Begin a writing session. Records start time and word count baseline. Hooks run this automatically when you open a project.
+**status** — Project snapshot: placed scenes and words, words per day over the last 7 and 30 days computed from git history against the Pulp 1 pace, consistency check, and which publication assets exist. No sessions, no streaks.
 
-**session-end** — End the session. Calculates time, words written, updates streak. Commits work to git. Hooks run this automatically on exit.
+*Trigger: "how am I doing", "project status", "word count", "what's my pace"*
 
-**status** — Project snapshot: total words, scene count, session stats, streak.
+**tic-audit** — The book-wide repetition count: every 3–5 word phrase repeated 10+ times across 8+ scenes, plus the regex tells (simile of manner, padding, said-bookisms, bowtie candidates). Reports; never fixes without you. Run it after any multi-scene pass; `compile` runs it as a report.
 
-*Trigger: "how am I doing", "project status", "word count", "how far am I"*
+*Trigger: "tic audit", "what am I overusing", "repetition scan", "prose lint"*
 
 ---
 
@@ -206,13 +204,27 @@ Promoting a draft assigns the **next unused stable ID** and adds an `ORDER.md` e
 
 *Trigger: "compile", "assemble manuscript", "I need the manuscript file", "export to Word"*
 
-**blurb** — Generate back-cover copy, Amazon description, query letter pitch, or marketing copy.
+**blurb** — One ~100-word blurb in Dean Wesley Smith's sales shape (setup → turn → stakes → genre line), used everywhere, plus tagline, KDP keywords, categories, BISAC codes and the Notion Press keyword line. Respects the book's own spoiler rule.
 
-*Trigger: "write a blurb", "book description", "pitch the story"*
+*Trigger: "write a blurb", "sales copy", "book description", "keywords for KDP"*
 
-**cover** — Cover design brief, concept, and art direction. Produces a designer brief and AI image generation prompts.
+**cover** — One cover brief with Dean's hierarchy (author name huge at top, genre image, title smaller at bottom, tagline), one concept, one image prompt. Print covers are built by `publish`.
 
 *Trigger: "cover concept", "what should the cover look like", "cover brief"*
+
+**publish** — From finished manuscript to live storefronts: publication master, EPUB (epubcheck-clean), KDP and D2D upload sheets, Notion Press print interior and cover from the site's own template. Short stories take the ebook-only path. The human does every payment and every Submit click.
+
+*Trigger: "publish", "get this ready for KDP", "D2D upload", "Notion Press", "paperback"*
+
+### Craft Drills
+
+**depth-drill**, **opening-drill**, **fake-detail-drill**, **pov-glitch-drill**, **cliffhanger-cut-drill** — Dean-over-the-shoulder observations on a finished scene. Quote what the prose is doing; never rewrite, never score, never auto-fire. Each saves to `notes/<drill>-drills/`.
+
+*Trigger: "depth drill on scene 12", "check my opening", "find placeholders", "pov glitch check", "where should I end this scene"*
+
+**study-discuss** — Work through a Dean Wesley Smith workshop (business, mindset, or craft) from the distilled `~/course-distiller/` material. Walkthrough, problem-solving, or course-correct modes. Saves to `~/writing/study-discussions/`.
+
+*Trigger: "discuss heinlein's rules", "what does Dean say about X", "course correct on Y"*
 
 ---
 
@@ -228,10 +240,9 @@ Promoting a draft assigns the **next unused stable ID** and adds an `ORDER.md` e
 ### Daily writing
 
 1. Open Claude Code in the project directory
-2. Session starts automatically (hook)
-3. "Continue where we left off" or "write the scene where X happens"
-4. Claude pulls context from previous scenes, writes forward
-5. Exit → session ends automatically, git commit made
+2. "Continue where we left off" or "write the scene where X happens"
+3. Claude pulls context from the scenes `ORDER.md` places before it, drafts, runs the depth and house-style checks, places the scene, commits
+4. "How am I doing?" → words per day from git, against Pulp 1
 
 ### Out-of-order
 
@@ -253,7 +264,8 @@ Promoting a draft assigns the **next unused stable ID** and adds an `ORDER.md` e
 1. "Show me all my draft scenes" → scenes lists drafts and unplaced scenes
 2. Decide which ones to promote and where
 3. "Reorder — scene 8 should come before scene 5" → Claude edits `ORDER.md` and shows you the new list
-4. "Compile the manuscript" → assembled in that order, ready for submission
+4. "Compile the manuscript" → assembled in that order (with a repetition report first)
+5. "Write a blurb" → "cover brief" → "publish" → upload sheets ready to paste
 
 ---
 
@@ -266,7 +278,6 @@ If you have an existing project using the old commands-based system:
    ```json
    { "enabledPlugins": { "fiction-writer@fiction-writer-marketplace": true } }
    ```
-3. Update the `PLUGIN_DIR` in `.claude/hooks/session-end.sh` to point to where the plugin is installed
 4. The project structure (scenes, codex, notes) is fully compatible — no file changes needed
 
 ---
@@ -286,6 +297,6 @@ If you have an existing project using the old commands-based system:
 
 **Skills coordinate, not control** — Skills handle file operations and structure. The creative work is yours. Claude assists, doesn't direct.
 
-**Auto-detection over manual entry** — Codex entries, session tracking, git commits, scene numbering — all happen automatically so you stay in the writing flow.
+**Auto-detection over manual entry** — Codex entries, git commits, scene IDs and `ORDER.md` lines — all happen automatically so you stay in the writing flow.
 
-**Git-friendly** — Every project is a git repository. Session ends commit automatically. Full history of every scene change.
+**Git-friendly** — Every project is a git repository. Every placed scene is a commit. Full history of every scene change, and pace comes from that history.

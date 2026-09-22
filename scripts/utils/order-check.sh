@@ -5,13 +5,16 @@
 # silently corrupt a compile:
 #   1. scene files on disk that ORDER.md never mentions (they vanish from the
 #      manuscript without a word)
-#   2. [scene-NNN] entries in ORDER.md with no file on disk
+#   2. [scene-NNN] entries in ORDER.md with no file on disk (the ## Cut
+#      section is exempt: a cut scene's ID is retired whether or not the
+#      file was kept)
 #   3. un-consumed annotation tags still sitting in scene *prose*
 #      (<brief> <cut> <change> <keep> <add> <flow> <q>)
 #
-# Tags quoted inside a scene's Notes block are the author's record of a
-# finished pass, not live annotations — those are reported separately as
-# informational and do not fail the check.
+# Prose is the text between the scene's two --- rules (metadata above the
+# first, Notes and tag-pass commentary below the second). Tags quoted in that
+# tail are the author's record of a finished pass, not live annotations —
+# those are reported separately as informational and do not fail the check.
 #
 # Usage: order-check.sh [project-dir]
 # Exit:  0 = clean, 1 = something needs attention
@@ -90,7 +93,7 @@ while read -r id; do
     pos=$(grep -n "\[$id\]" ORDER.md | head -n 1 | cut -d: -f1)
     MISSING+=("$id  (ORDER.md line $pos)")
   fi
-done < <(grep -o '\[scene-[0-9][0-9]*\]' ORDER.md | sed 's/[][]//g' | sort -u)
+done < <(awk '/^## Cut/ { exit } { print }' ORDER.md | grep -o '\[scene-[0-9][0-9]*\]' | sed 's/[][]//g' | sort -u)
 
 if [[ ${#MISSING[@]} -gt 0 ]]; then
   PROBLEMS=1
@@ -119,17 +122,19 @@ NOTES_COUNT=0
 
 if [[ ${#FILES[@]} -gt 0 ]]; then
   PROSE_HITS=$(awk '
-    FNR == 1 { innotes = 0 }
+    FNR == 1 { rules = 0; innotes = 0 }
+    /^---[[:space:]]*$/ { rules++; next }
     /^\*\*Notes/ { innotes = 1 }
-    !innotes && /<(brief|cut|change|keep|add|flow|q)>/ {
+    (rules == 1 && !innotes) && /<(brief|cut|change|keep|add|flow|q)>/ {
       print FILENAME ":" FNR ":" substr($0, 1, 120)
     }
   ' "${FILES[@]}")
 
   NOTES_COUNT=$(awk '
-    FNR == 1 { innotes = 0 }
+    FNR == 1 { rules = 0; innotes = 0 }
+    /^---[[:space:]]*$/ { rules++; next }
     /^\*\*Notes/ { innotes = 1 }
-    innotes && /<(brief|cut|change|keep|add|flow|q)>/ { print FILENAME }
+    (rules != 1 || innotes) && /<(brief|cut|change|keep|add|flow|q)>/ { print FILENAME }
   ' "${FILES[@]}" | sort -u | wc -l | tr -d ' ')
 fi
 

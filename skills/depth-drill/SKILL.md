@@ -24,7 +24,7 @@ The frame is Dean standing over the writer's shoulder. He points at lines. He sa
 2. **Name examples from the scene.** Quote the exact line. Cite paragraph or line number. Generic feedback ("your depth needs work") is worse than no feedback.
 3. **Show contrast.** For every check, surface at least one place where the technique IS active in the scene, alongside one place where it isn't. The writer learns from the comparison, not from a list of misses.
 4. **End with a self-retirement signal.** If the feedback feels obvious to the writer, the lesson is internalized — tell them so and recommend they stop running the drill until the next time it doesn't.
-5. **Never auto-fire.** This skill is only invoked when the writer asks. It does not run as part of `new-scene`, `edit-scene`, `session-end`, or any other workflow.
+5. **Never auto-fire.** This skill is only invoked when the writer asks. It does not run as part of `new-scene`, `edit-scene`, `compile`, or any other workflow.
 
 ## Task
 
@@ -141,7 +141,7 @@ Explicit list — Claude must refuse these even if asked:
 ## Relation to other skills
 
 - **`edit-scene`** is for changing prose. Depth-drill is for learning to see. The two are mutually exclusive — never offered together.
-- **`craft-reference`** (when it exists) is for recall of Dean's depth material on request. Depth-drill is the *application* of those principles to the writer's own prose, for learning.
+- **`study-discuss`** is for recall and discussion of Dean's depth material on request. Depth-drill is the *application* of those principles to the writer's own prose, for learning.
 - **`new-scene`** writes new scenes and runs a **depth self-check** as a
   standing step before declaring a scene done. That's the *lens* applied
   inline while drafting — it is **not** an invocation of this skill. This
@@ -154,6 +154,4 @@ Explicit list — Claude must refuse these even if asked:
 Concepts drawn from:
 - `january-depth-in-writing` (witness syndrome, fake details, opinion-tinting, five senses, setting through character, Wilhelm's Law)
 - `48-pop-up-how-to-create-automatic-depth` (sense overwhelm and removal, static setting)
-- `march-advanced-depth` (lake metaphor, character voice through opinion) — reserved for v2 of this drill once the writer has worked through that material
-
-If the writer has internalized the foundational checks and wants advanced depth feedback, that's a different version of this drill (`depth-drill-advanced`), not yet built.
+- `march-advanced-depth` (lake metaphor, character voice through opinion) — discuss via `study-discuss`; not drilled here
