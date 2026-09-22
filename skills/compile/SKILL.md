@@ -5,31 +5,90 @@ description: Use when the user wants to assemble the complete manuscript into a 
 
 # Compile Manuscript
 
-Compile all scenes into a complete manuscript in markdown format, with optional export to DOCX and EPUB.
+Assemble the scenes into a complete manuscript **in the order `ORDER.md`
+defines** — never in filename order.
 
 ## Task
 
-1. **Check project status**:
-   - Read project.json for metadata
-   - Count total scenes in scenes/ folder
-   - Calculate total word count
+1. **Read `ORDER.md` first.** It is the source of truth for reading order. The
+   `## Reading order` list is the manuscript; anything under
+   `## Unplaced / drafts` or `## Cut` is **not** included.
 
-2. **Ask user for compilation options**:
-   - **Include**: All scenes, or specific range?
-   - **Format**: Markdown only, or also DOCX/EPUB?
-   - **Front matter**: Title page, dedication, copyright?
-   - **Chapter breaks**: Auto-detect or manual markers?
-   - **Scene separators**: `***`, `# # #`, or custom?
+2. **Verify the project is consistent** — run:
 
-3. **Confirm before writing files**:
+   ```bash
+   ${CLAUDE_PLUGIN_ROOT}/scripts/utils/order-check.sh .
+   ```
+   (Claude Code — under omp it's `~/nc/scripts/utils/order-check.sh .`)
 
-   Before writing any files, confirm:
-   "This will write [project-name]-manuscript.md to manuscript/. [Format: MD/DOCX]. Proceed? (y/n)"
-   Only proceed if confirmed.
+   It reports:
+   - scene files under `scenes/` that are missing from `ORDER.md`
+   - `[scene-NNN]` references in `ORDER.md` with no file on disk
+   - surviving annotation tags anywhere under `scenes/`
 
-4. **Compile markdown manuscript**:
+   **Exit 1 means something needs attention** — surface it to the user and
+   decide together. A file on disk that isn't in `ORDER.md` and isn't a
+   draft/archive is *unplaced*: it will be silently left out, so say so before
+   compiling.
 
-Create `manuscript/[project-name]-manuscript.md`:
+3. **Refuse to compile if any annotation tag survives.** Tags are
+   editor-to-AI instructions (`<brief>`, `<cut>`, `<change>`, `<keep>`,
+   `<add>`, `<flow>`, `<q>`); a scene on the reading list that still contains
+   one was never actually rewritten. **List the file and the tags, and stop.**
+
+   ```
+   ✗ Ordered 012 contains 2 un-consumed tags: <cut>, <q>
+   ✗ Ordered 019 contains 1 un-consumed tag: <change>
+   Compile stopped — these scenes contain editor annotations, not finished prose.
+   Run edit-scene ("rewrite 012") to consume them, then compile again.
+   ```
+
+   Do not strip the tags and compile anyway — the annotations carry the
+   author's direction and stripping them loses it. Do not compile around the
+   scene. Fix the scene, then compile.
+
+4. **Check project metadata**: `project.json` for title, author, genre; total
+   placed scenes; total words from the placed scenes only (drafts excluded).
+
+5. **Ask for compilation options**:
+   - **Range**: the whole reading order, or a slice of positions?
+   - **Format**: markdown only, or also DOCX/EPUB?
+   - **Front matter**: title page, dedication, copyright?
+   - **Chapter treatment** (see below)
+   - **Scene separators**: `***`, `# # #`, or custom
+
+6. **Confirm before writing files**:
+
+   ```
+   This will write manuscript/[project-name]-manuscript.md in ORDER.md reading
+   order ([N] scenes, [N] words). [Format: MD/DOCX]. Proceed? (y/n)
+   ```
+
+7. **Compile in reading order** — walk the `## Reading order` list top to
+   bottom, and for each entry:
+
+   - **Chapter number = reading position.** Position 1 is `Chapter 1`,
+     position 2 is `Chapter 2`, and so on, regardless of the scene's stable
+     ID. A scene list of `001, 004, 002` compiles as chapters 1, 2, 3.
+   - **Emit the stable ID as an HTML comment immediately before each
+     section**, so the reading order and the IDs never lose contact:
+
+     ```markdown
+     <!-- scene-001 -->
+
+     # Chapter 1
+
+     [prose]
+
+     ***
+     ```
+
+   - Strip the scene's metadata block (the `# Scene NNN` heading, `**POV**`,
+     `**Location**`, `**Time**`, `**Status**`) and the `**Notes**` section —
+     prose only.
+   - Keep in-scene break markers as the chosen separator.
+
+8. **Write the manuscript**:
 
 ```markdown
 # [Project Title]
@@ -45,25 +104,27 @@ Word Count: [total words]
 
 ---
 
-[Scene 001 content]
+<!-- scene-001 -->
+
+# Chapter 1
+
+[scene prose]
 
 ***
 
-[Scene 002 content]
+<!-- scene-004 -->
 
-***
+# Chapter 2
 
-[Scene 003 content]
-
-...
+[scene prose]
 
 ---
 
 ## About This Manuscript
 
 - Compiled: [date/time]
-- Total Scenes: [number]
-- Total Words: [count]
+- Scenes: [number] (in ORDER.md reading order)
+- Words: [count]
 - Project: [project name]
 - Format: [short story/novella/novel]
 
@@ -72,49 +133,33 @@ Word Count: [total words]
 THE END
 ```
 
-5. **Clean up for publication**:
-   - Remove scene metadata (POV, Location, Time headers)
-   - Remove scene numbers
-   - Remove draft notes
-   - Keep only the prose
-   - Format dialogue and paragraphs properly
-   - Ensure consistent spacing
+9. **Clean up for publication**:
+   - Prose only — no metadata blocks, no notes, no scene numbers in the text
+   - **No annotation tags** (step 3 already guaranteed this; verify once more
+     on the assembled output with a grep for the seven tag names)
+   - Consistent spacing, proper dialogue formatting
 
-6. **Chapter detection** (optional):
-   - Look for scene markers or natural chapter breaks
-   - User can mark scenes with `# Chapter X` in scene files
-   - Or auto-group scenes (e.g., every 5 scenes = chapter)
+10. **Export options** (if requested):
 
-7. **Export options**:
+    **DOCX** — `pandoc manuscript.md -o manuscript.docx` (12pt,
+    double-spaced, 1-inch margins).
 
-   **DOCX Export** (if requested):
-   - Use `pandoc` to convert markdown to DOCX
-   - Command: `pandoc manuscript.md -o manuscript.docx`
-   - Standard manuscript formatting:
-     - 12pt font
-     - Double-spaced
-     - 1-inch margins
-     - Times New Roman or Courier
+    **EPUB** — `pandoc manuscript.md -o manuscript.epub`.
 
-   **EPUB Export** (if requested):
-   - Use `pandoc` to convert to EPUB
-   - Include metadata for e-readers
+    For a **submission-format** manuscript (Shunn), use the `shunn-format`
+    skill instead — and note its generator reads filenames, so hand it an
+    ORDER.md-ordered markdown file rather than the raw `scenes/` folder.
 
-8. **Generate compilation report**:
+11. **Generate a compilation report** — `manuscript/compilation-report-[date].md`
+    with the reading order, positions, IDs, and word counts.
 
-Create `manuscript/compilation-report-[date].md` with statistics and scene breakdown.
-
-9. **Output to user**:
-   - Show file paths for all generated files
-   - Display word count and stats
-   - Confirm formats created
-   - Suggest next steps (blurb, cover, etc.)
+12. **Output**:
+    - File paths created
+    - Scene count and word count
+    - The reading order used (positions + IDs), so the author can eyeball it
+    - Any warnings from `order-check.sh` that remain unresolved
+    - Next steps (blurb, cover, shunn-format)
 
 ## Prerequisites
 
-For DOCX/EPUB export, check if pandoc is installed:
-```bash
-which pandoc
-```
-
-If not installed, provide instructions or markdown-only option.
+For DOCX/EPUB export: `which pandoc`. If absent, offer markdown-only.

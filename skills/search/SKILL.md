@@ -14,11 +14,12 @@ Search across scenes, codex, and notes using keyword and pattern matching.
 2. **Search across project directories**:
 
    Use the Grep tool to search these locations:
-   - `scenes/` — scene files
+   - `scenes/` — scene files (including `drafts/` and `archive/`)
    - `codex/` — worldbuilding entries
    - `brainstorms/` — brainstorm sessions
-   - `summaries/` — reverse outlines
+   - `summaries/` — deep reverse outlines
    - `notes/` — session notes (excluding current-session.json)
+   - `ORDER.md` — reading order + one-line reverse outline
 
    Run grep with `-i` (case insensitive) and `-l` (file names) first to find matching files, then read the relevant sections.
 
@@ -27,15 +28,21 @@ Search across scenes, codex, and notes using keyword and pattern matching.
    🔍 Search: "[query]"
 
    📝 Scenes (N matches):
-   - scene-003.md: "...matching context..."
-   - scene-012.md: "...matching context..."
+   - scene-003.md (reads at position 6): "...matching context..."
+   - scene-012.md (unplaced): "...matching context..."
 
    📚 Codex (N matches):
    - characters.md: "...matching context..."
 
    💭 Notes/Brainstorms (N matches):
    - brainstorms/magic-rules.md: "...matching context..."
+
+   📄 ORDER.md (N matches):
+   - position 6: [scene-003] — "...matching line..."
    ```
+
+   Report scenes by **stable ID plus reading position** (from `ORDER.md`), or
+   "unplaced" — the filename alone doesn't say where a scene reads.
 
 4. **If no results**: "Nothing found for '[query]'. Try a broader term?"
 

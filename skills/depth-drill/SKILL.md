@@ -76,6 +76,8 @@ Per the practice workshop and the depth foundation: all five senses should appea
 - Tally which senses are present in the opening 100 words. Which are missing.
 - Note any post-whitespace re-entry that doesn't re-anchor (no sense, no opinion).
 
+**⚠ But do not read this check as "ground every emotion in the body."** Rendering feeling as body sensation *every* time is the machine tell, not depth. The 2026 StoryScope study (61,608 AI stories) found AI somatizes emotion ~81% of the time vs ~38% for humans, and flatly names the feeling only ~8% vs humans' ~29% — tight chest, burning fingers, "the breath they didn't know they were holding." The depth lens pushed toward the always-ground pole, and that pole *is* the AI default. So when you report this check, note where the scene grounds **and** where it lets a minor emotion land as plain statement ("He was afraid." — full stop, next sentence). The human signature is the **variance**, not the technique. A scene that somatizes everything is not deeper than one that somatizes nothing; both are monotone.
+
 ### 5. Setting through character (not narration)
 Is setting filtered through the character's selective attention — what *this* character notices in *this* state — or is it author-narrated description from outside?
 
@@ -140,7 +142,12 @@ Explicit list — Claude must refuse these even if asked:
 
 - **`edit-scene`** is for changing prose. Depth-drill is for learning to see. The two are mutually exclusive — never offered together.
 - **`craft-reference`** (when it exists) is for recall of Dean's depth material on request. Depth-drill is the *application* of those principles to the writer's own prose, for learning.
-- **`new-scene`** writes new scenes. Depth-drill is what the writer might run *occasionally* after a scene, when they want to check what their depth instinct is doing. Not after every scene.
+- **`new-scene`** writes new scenes and runs a **depth self-check** as a
+  standing step before declaring a scene done. That's the *lens* applied
+  inline while drafting — it is **not** an invocation of this skill. This
+  drill still never auto-fires: it runs only when the writer asks, on a
+  finished scene, and it never rewrites. If the writer wants the scene changed
+  after a drill, that's `edit-scene`.
 
 ## Source grounding
 

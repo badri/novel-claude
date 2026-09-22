@@ -32,6 +32,8 @@ After creation, tell user:
 ```
 [project-name]/
 ├── project.json           # Metadata and story tracking
+├── ORDER.md               # READING order + one-line reverse outline (source of truth)
+├── CLAUDE.md              # Story-specific context
 ├── .gitignore             # Git exclusions
 ├── scenes/                # Individual scene files (scene-001.md, scene-002.md, etc.)
 │   ├── .gitkeep
@@ -56,6 +58,10 @@ After creation, tell user:
     │   └── .gitkeep
     └── .gitkeep
 ```
+
+**`scenes/scene-NNN.md` filenames are stable IDs assigned in creation order**
+— never renamed or renumbered. **Reading order lives in `ORDER.md`**, and
+compile follows that file, not filename order. Reorder = edit that list.
 
 ## 3. Initialize project.json
 
@@ -110,9 +116,28 @@ This file provides story-specific context to Claude Code and serves as a referen
 - Story rules and constraints
 - Character focus
 
+It **points at `ORDER.md`** for reading order and scene IDs, and at the
+parent writing root's `CLAUDE.md` for house style and craft rules. It stays
+story-only — process rules don't belong in it.
+
 Writers can fill in additional sections (POV, style, themes) immediately or as the story develops during discovery writing.
 
-## 6. Create Initial Brainstorm File
+## 6. Create ORDER.md
+
+The **source of truth for reading order and the always-current one-line
+reverse outline**. Copy `${CLAUDE_PLUGIN_ROOT}/ORDER.md.template` (under omp:
+`~/nc/ORDER.md.template`) to `[project-name]/ORDER.md` and replace
+`{PROJECT_NAME}`.
+
+Leave the `## Reading order` list empty (or with a single placeholder line)
+until the first scene exists; the `new-scene` skill adds each entry as scenes
+are written. Also create empty `## Unplaced / drafts` and `## Cut` sections —
+the template already has them.
+
+Tell the user what this file is, in one line: **scene filenames are permanent
+IDs; this file says what order they read in, and compiling follows it.**
+
+## 7. Create Initial Brainstorm File
 
 In `brainstorms/initial-brainstorm.md`, create template:
 ```markdown
@@ -136,18 +161,22 @@ Date: [current date]
 [possible opening scenes]
 ```
 
-## 7. Plugin File References
+## 8. Plugin File References
 
 Several steps copy template files from the plugin. The plugin's install
 directory is available as the `${CLAUDE_PLUGIN_ROOT}` environment variable,
 which Claude Code sets automatically when this skill runs. Reference it
 directly — no path detection needed.
 
-## 8. Create .gitignore
+Under omp that variable is not set: use `~/nc/` instead — `~/nc/ORDER.md.template`,
+`~/nc/CLAUDE-PROJECT.md.template`, `~/nc/.gitignore.template`,
+`~/nc/.claude-settings.json.template`, `~/nc/hooks-template/`.
+
+## 9. Create .gitignore
 
 Copy from `${CLAUDE_PLUGIN_ROOT}/.gitignore.template`
 
-## 9. Create .claude folder and copy configuration
+## 10. Create .claude folder and copy configuration
 
 **CRITICAL**: This step enables automatic session tracking. Do not skip!
 
@@ -174,10 +203,11 @@ This configuration ensures:
 
 **If this step is skipped, sessions will not auto-start/end and interactions won't be logged!**
 
-## 10. Output Summary
+## 11. Output Summary
 
 After creation, tell the user:
 - ✓ Project created at: `[path]`
+- ✓ `ORDER.md` created — reading order + one-line reverse outline. **Scene filenames are permanent IDs; reordering means editing this list, never renaming files.**
 - ✓ CLAUDE.md created with story parameters (fill in POV, style, themes as you develop the story)
 - ✓ Session tracking and interaction logging enabled (automatic)
 - **Next steps**:

@@ -15,8 +15,15 @@ In discovery writing, you often write a moment (Martha grabs the shotgun from he
 
 1. **Identify the need**:
    - Ask user: What needs to be planted/set up?
-   - Where does it pay off? (which scene number)
-   - Where should the setup go? (earlier scene number, or "help me find the right spot")
+   - Where does it pay off? (which scene — by stable ID; check `ORDER.md` for
+     where that scene actually reads)
+   - Where should the setup go? (an earlier scene, or "help me find the right
+     spot")
+
+   **Read `ORDER.md` first.** "Earlier" means earlier in *reading order*, not
+   a lower stable ID — an out-of-order project's `scene-008` may read after
+   `scene-022`. Resolve payoff and target through the reading list before
+   touching anything.
 
 2. **Find the best insertion point**:
    - If user knows the scene: read that scene
@@ -87,7 +94,13 @@ In discovery writing, you often write a moment (Martha grabs the shotgun from he
    - Mark it as needing re-summarization
    - Note: "Scene X modified - added [detail]"
 
-9. **Continuity check**:
+9. **Refresh the `ORDER.md` line if the cycle changed what the scene is**:
+   - A planted object or established skill often means the one-line reverse
+     outline is now incomplete. Propose the updated line and apply on
+     approval. The scene's **position** never changes — a cycle adds content,
+     it never reorders.
+
+10. **Continuity check**:
    - Ensure the cycle doesn't conflict with anything else
    - Check related scenes for consistency
    - Update codex if needed (character skills, object inventory, etc.)
@@ -96,7 +109,8 @@ In discovery writing, you often write a moment (Martha grabs the shotgun from he
 
 If user has several cycles to make:
 - List them all first
-- Prioritize by scene order (do earlier scenes first)
+- Prioritize by **reading order** (`ORDER.md`) — do setups that read earliest
+  first
 - Check for conflicts between cycles
 - Process one at a time
 

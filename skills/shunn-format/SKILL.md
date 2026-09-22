@@ -54,15 +54,41 @@ mkdir -p manuscript
 
 The plugin ships `generate_manuscript.py`, which implements the full Shunn
 specification (title page, headers, scene-break concatenation, markdown
-conversion, Unicode cleaning, word-count rounding):
+conversion, Unicode cleaning, word-count rounding). It lives at the plugin
+root — `${CLAUDE_PLUGIN_ROOT}/generate_manuscript.py` (Claude Code) or
+`~/nc/generate_manuscript.py` (omp):
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/generate_manuscript.py" . "manuscript/[projectName]-manuscript.docx"
 ```
 
 Run it from the project directory (`.` is the project root). It reads
-`project.json` and all `scenes/scene-*.md` files in order — scenes in
-`drafts/` or `archive/` are excluded.
+`project.json` and all `scenes/scene-*.md` files, **sorted by filename** —
+scenes in `drafts/` or `archive/` are excluded.
+
+**⚠ The generator is filename-ordered, not `ORDER.md`-ordered.** In a
+pantser project the two almost never agree: the Nth scene written is not the
+Nth scene read, so running it against the project root produces **the wrong
+chapter sequence**. Check first — compare the `## Reading order` list in
+`ORDER.md` against the sorted filenames. If they differ, stage an ordered
+copy:
+
+1. `mkdir -p manuscript/.shunn-staging/scenes` and copy `project.json` into
+   `manuscript/.shunn-staging/`
+2. Walk `ORDER.md`'s `## Reading order` top to bottom, and for each entry copy
+   the scene file into the staging `scenes/` directory **named by its reading
+   position** — position 1 → `scene-001.md`, position 2 → `scene-002.md`, and
+   so on. Now filename order *is* reading order, so the generator's sort
+   produces the right book.
+3. Run the generator against the staging directory:
+   `python3 "${CLAUDE_PLUGIN_ROOT}/generate_manuscript.py" manuscript/.shunn-staging "manuscript/[projectName]-manuscript.docx"`
+4. Delete `manuscript/.shunn-staging/` when done.
+
+Never rename the real scene files to fix this. If the reading order looks
+wrong in the output, fix `ORDER.md` and re-stage.
+
+Original scene files are never modified by this step — the staging copy is
+throwaway.
 
 ### 5. Convert to .doc (macOS)
 
@@ -92,6 +118,8 @@ readers.
   above 17,500 (novella+) round to the nearest 500.
 - **Scene discovery:** scenes must be named `scene-001.md`, `scene-002.md`, …
   in `scenes/`. Files in `scenes/drafts/` and `scenes/archive/` are skipped.
+  Discovery is **alphabetical by filename** — that's why an out-of-order
+  project must be staged in `ORDER.md` order first (step 4).
 
 ## Troubleshooting
 

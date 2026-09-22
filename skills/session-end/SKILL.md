@@ -19,6 +19,12 @@ Close the writing session, log stats, and commit work.
    - Scenes written: current scene count - startSceneCount
    - Words/hour: (wordsWritten / duration) * 60
 
+   Counts come from `project.json` (`wordCount` / `sceneCount`), which track
+   the scenes **placed in `ORDER.md`** — drafts don't move the numbers until
+   they're promoted. Closing a session never renames, moves, or renumbers a
+   scene file; if the day's work included placement changes, those live in
+   `ORDER.md`.
+
 3. **Show summary and confirm**:
    ```
    Session summary:

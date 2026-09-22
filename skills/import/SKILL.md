@@ -90,6 +90,12 @@ Only proceed if confirmed.
    - Extract scenes
    - Write to `scenes/scene-001.md`, `scene-002.md`, etc.
 
+   **Stable IDs.** IDs are assigned in the order the scenes come out of the
+   draft — that's creation order for an import, and they are **never renamed
+   or renumbered** afterwards. Next ID = highest used NNN + 1, scanning
+   `scenes/`, `scenes/drafts/`, `scenes/archive/`, and any `[scene-NNN]` in
+   `ORDER.md`. Retired IDs are never reused.
+
    **Scene file format**:
    ```markdown
    # Scene 001
@@ -97,6 +103,7 @@ Only proceed if confirmed.
    **POV**: [Auto-detect or use user's guidance]
    **Location**: [TBD - extract later]
    **Time**: [TBD - extract later]
+   **Status**: imported
 
    ---
 
@@ -111,7 +118,19 @@ Only proceed if confirmed.
    - Source: original-draft.md
    ```
 
-5. **Summarize scenes using Task tool (haiku)**:
+5. **Create `ORDER.md`**:
+
+   Copy `${CLAUDE_PLUGIN_ROOT}/ORDER.md.template` to the project root (under
+   omp: `~/nc/ORDER.md.template`) and fill in `## Reading order` with one line
+   per scene **in the draft's own order** — an import arrives in reading
+   order, so the list mirrors the source and the reading positions are 1..N.
+   Reverse-outline each line from the summaries generated in step 6.
+
+   `ORDER.md` is the source of truth for reading order from this moment on:
+   scenes are reached by editing this list, never by renaming files.
+   Any chunk that didn't split cleanly goes under `## Unplaced / drafts`.
+
+6. **Summarize scenes using Task tool (haiku)**:
 
    For each scene file created, use the Task tool with model haiku to summarize:
    - Key events
@@ -125,7 +144,7 @@ Only proceed if confirmed.
 
    **Result**: You have summaries without loading full scenes into main context!
 
-6. **Create project.json**:
+7. **Create project.json**:
    ```json
    {
      "projectName": "...",
@@ -144,7 +163,7 @@ Only proceed if confirmed.
    }
    ```
 
-7. **Create import report**:
+8. **Create import report**:
 
    `notes/import-report.md` with summary of scenes created, word count, and next steps.
 
@@ -158,6 +177,7 @@ After import completes, tell user:
 **Created**:
 - [N] scenes in scenes/
 - [N] summaries in summaries/
+- ORDER.md with the reading order (mirrors the source draft)
 - Minimal codex in codex/
 - Project tracking in project.json
 
@@ -166,8 +186,10 @@ After import completes, tell user:
 1. Review the scene splits: scenes list
 2. Check a few scenes to verify splits are good
 3. If any scene splits look wrong: manually edit scene files
-4. Continue writing: new scene
-5. Gradually expand codex as you write: codex
+4. Check the reading order is right: open ORDER.md (edit that list to reorder —
+   never rename files)
+5. Continue writing: new scene
+6. Gradually expand codex as you write: codex
 ```
 
 ## Handling Different Source Formats
@@ -188,7 +210,10 @@ After import completes, tell user:
 - Then process as markdown
 
 ### Multiple files
-If user has chapters in separate files, process each file and number sequentially across all files.
+If the user has chapters in separate files, process them in manuscript order
+and assign stable IDs in that same order (`scene-001`, `scene-002`, …). That
+order is also the initial `## Reading order` in `ORDER.md` — the list, not the
+filenames, is what compile reads from then on.
 
 ## Scene Detection Intelligence
 

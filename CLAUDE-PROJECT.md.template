@@ -16,6 +16,7 @@ This file provides story-specific context to Claude Code when working on this fi
 | **Tense** | _(e.g., past, present)_ |
 | **Protagonist** | _(name and brief description)_ |
 | **Target Audience** | _(e.g., adult, YA, literary, commercial)_ |
+| **Reading order** | **`ORDER.md`** — the source of truth for what order scenes read in |
 
 ---
 
@@ -43,6 +44,16 @@ _(e.g., "reliable narrator", "unreliable narrator with paranoid tendencies", "cl
 
 ### Timeline Structure
 _(e.g., "linear chronological", "non-linear with flashbacks", "dual timeline past/present", "in medias res opening")_
+
+### Scene Order & IDs
+- `scenes/scene-NNN.md` filenames are **stable IDs** assigned in creation order. They are **never renamed or renumbered** — the 9th scene written stays `scene-009` wherever it reads.
+- **`ORDER.md` (project root) is the source of truth for reading order** and doubles as the always-current one-line reverse outline. Read it before any writing or structure work.
+- **Reorder = edit the list in `ORDER.md`.** Never rename files. `compile` follows that list, not filename order.
+- A scene cut from the manuscript keeps its file (in `scenes/archive/`) and its **ID is retired** — never reused.
+- New scenes get the next unused ID and an `ORDER.md` line at their reading position (or under `## Unplaced / drafts`).
+
+### House Style & Craft Rules
+Process rules are **not** in this file. They live in the parent writing root's `CLAUDE.md` — prose register, the annotate→rewrite tag flow, the depth self-check standing step, the scene-ordering rules, and the "no reordering of finished work" discipline. This file stays story-only.
 
 ---
 
@@ -178,6 +189,8 @@ _(Important plot/character decisions made - see notes/decisions.md for full log)
 - **Style guidelines are suggestions, not mandates** - Feel free to experiment
 - **Leave sections blank if unknown** - You don't need to know everything upfront
 - **Reference codex/ for detailed worldbuilding** - This file is high-level only
+- **Read `ORDER.md` for reading order** - It, not the filenames, says what order the book reads in
+- **Craft and process rules live in the parent writing root's `CLAUDE.md`** - This file stays story-only
 - **Check notes/decisions.md for plot decisions** - This file is structural/stylistic
 
 When in doubt about the story's direction, refer back to the **Story Concept** and **Themes** sections - those are your north star.

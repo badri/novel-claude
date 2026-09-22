@@ -51,11 +51,12 @@ Each writing project gets:
 ```
 project-name/
 ├── project.json              # Metadata, scene count, word count
+├── ORDER.md                  # READING order + one-line reverse outline (source of truth)
 ├── CLAUDE.md                 # Story-specific context (auto-generated)
 ├── scenes/
-│   ├── scene-001.md          # Numbered, active scenes
+│   ├── scene-001.md          # Stable IDs, creation order — never renamed
 │   ├── scene-002.md
-│   └── drafts/               # Out-of-order scenes (no sequence yet)
+│   └── drafts/               # Out-of-order scenes (no placement yet)
 ├── codex/                    # World bible
 │   ├── characters.md
 │   ├── locations.md
@@ -65,11 +66,16 @@ project-name/
 ├── notes/
 │   ├── current-session.json  # Active session tracking
 │   ├── session-log.json      # Session history
-│   └── cycles.md             # Setup/payoff log
+│   ├── cycles.md             # Setup/payoff log
+│   └── reorders.md           # Reading-order change log
 ├── brainstorms/              # Saved brainstorm sessions
-├── summaries/                # Reverse outlines
+├── summaries/                # Deep reverse outlines
 └── manuscript/               # Compiled output
 ```
+
+**Scene IDs are permanent; reading order is `ORDER.md`.** `scene-009` is the
+9th scene written, not the 9th scene read. To change the order, edit the list
+in `ORDER.md` — the files never move or get renamed.
 
 ## Skills Reference
 
@@ -87,15 +93,40 @@ project-name/
 
 ### Writing
 
-**new-scene** — Write the next scene, or a draft scene out of order. Claude auto-numbers, pulls context from previous scenes, and offers to detect new characters/locations for the codex.
+**new-scene** — Write the next scene, or a draft scene out of order. Claude picks the next unused stable ID, pulls context from the scene `ORDER.md` places before it, drafts, and adds the scene's line to `ORDER.md` at the reading position you name. Runs the depth self-check before calling the scene done. Offers to detect new characters/locations for the codex.
 
-For out-of-order writing: tell Claude you want to write a future scene or a scene you're not sure where it fits — it goes into `scenes/drafts/` with a descriptive name instead of a number.
+For out-of-order writing: tell Claude you want to write a future scene or one you can't place yet — it goes into `scenes/drafts/` with a descriptive name and stays out of the manuscript until promoted.
 
 *Trigger: "let's write", "next scene", "continue", "write the scene where X", "I want to write the climax now"*
 
-**edit-scene** — Fix, improve, or rework an existing scene. Claude shows a preview before changing anything.
+**edit-scene** — Rewrite an existing scene **to your annotations**. Drop tags on the prose — `<brief>`, `<cut>`, `<change>`, `<keep>`, `<add>`, `<flow>`, `<q>` — say "rewrite 012", and Claude rewrites to them and strips them. Untagged requests in plain language get a preview before anything changes. The scene never moves: editing doesn't touch reading order.
 
-*Trigger: "fix scene 3", "this scene feels off", "scene 4 needs work"*
+*Trigger: "fix scene 3", "this scene feels off", "rewrite 012", "scene 4 needs work"*
+
+#### The edit flow — annotate → rewrite
+
+**You direct; Claude drafts.** This keeps the prose in your voice and stops register drift from snowballing across scenes.
+
+- **Fresh scene:** you write a freeform skeleton — beats, register, what to keep in mind, **no tags**. The whole file is the brief; Claude drafts the scene from it.
+- **Editing existing prose:** you drop tags on the prose and say "rewrite 012". Claude rewrites to the tags, strips them (consumed), and updates the scene's Notes.
+
+| Tag | Meaning |
+|---|---|
+| `<brief> … </brief>` | A brief for a stretch of the scene — register / keep / change / flow |
+| `<cut> … </cut>` | Remove this (wrap the prose) |
+| `<change> … </change>` | Revise — wrap the target and put the instruction inside |
+| `<keep> … </keep>` | Lock this; don't touch it in the rewrite |
+| `<add> … </add>` | Insert this at this point |
+| `<flow> … </flow>` | A beat/flow note, where it applies |
+| `<q> … </q>` | A question for Claude |
+
+Tags never appear in fiction prose, so they're unambiguous and greppable. **One editor per file at a time.** A tag that survives into a compile is a bug — `compile` refuses to assemble until it's consumed.
+
+#### Standing step — the depth self-check
+
+Before any new scene is called done, Claude reads it back and fixes the gaps: five senses early through the POV character, opinion-tinted description, no witness syndrome, no placeholder nouns, character-specific perception, and recognition instead of re-narration when returning to established material. It also **varies the somatization** — grounding the load-bearing beats but letting minor emotions land as plain statement, because bodying *every* emotion is the machine default, not depth. The grounding gets recorded in the scene's Notes.
+
+The `depth-drill` skill is different: it's an observational drill you run on request on a finished scene, it never rewrites, and it never auto-fires. `opening-drill`, `pov-glitch-drill`, `fake-detail-drill`, and `cliffhanger-cut-drill` work the same way.
 
 **brainstorm** — Work through story problems, explore what happens next, develop a character, or get unstuck. Saves the session to `brainstorms/` for reference.
 
@@ -109,7 +140,11 @@ For out-of-order writing: tell Claude you want to write a future scene or a scen
 
 ### Out-of-Order Writing
 
-The system supports DWS's "unstuck in time" approach — writing any scene whenever the energy is there, assembling later.
+The system supports DWS's "unstuck in time" approach — writing any scene whenever the energy is there, assembling later. **Numbering is decoupled from reading order.**
+
+- **`scenes/scene-NNN.md` filenames are stable IDs** assigned in creation order — the number is just "the Nth scene I wrote." They are never renamed or renumbered, so you can write in any order and never churn git history or break a reference.
+- **`ORDER.md` says what order the scenes read in**, and doubles as the one-line reverse outline you keep current as you write.
+- **To reorder, edit that list.** Chapter numbers follow reading positions, so reordering costs one line in one file.
 
 **Draft scenes** live in `scenes/drafts/` with descriptive names instead of numbers. They don't count toward the manuscript until promoted. Use them to:
 - Write a future scene while it's vivid
@@ -117,7 +152,9 @@ The system supports DWS's "unstuck in time" approach — writing any scene whene
 - Write the climax before you've earned it in sequence
 - Explore a subplot that may or may not fit
 
-**cycle** — Plant setups backward. Write the payoff first (scene 18: Devi grabs the backup drive), then cycle back to plant the setup earlier (scene 7: Devi stashes a backup drive). Logs all cycles in `notes/cycles.md`.
+Promoting a draft assigns the **next unused stable ID** and adds an `ORDER.md` entry at the reading position you name — nothing else is renumbered.
+
+**cycle** — Plant setups backward. Write the payoff first (scene 18: Devi grabs the backup drive), then cycle back to plant the setup earlier (scene 7: Devi stashes a backup drive). "Earlier" means earlier in *reading order*. Logs all cycles in `notes/cycles.md`.
 
 *Trigger: "write the ending first", "I know how this ends", "plant the setup for X", "cycle back"*
 
@@ -125,15 +162,15 @@ The system supports DWS's "unstuck in time" approach — writing any scene whene
 
 ### Managing Scenes
 
-**scenes** — See what you've written. Lists all scenes with title, word count, POV, location. Can show draft scenes separately. Can promote a draft into the main sequence.
+**scenes** — See what you've written, **in reading order**. Lists every placed scene with its reading position, stable ID, POV, word count, and `ORDER.md` one-line outline — then unplaced/drafts, then archive. Can promote a draft (to the next stable ID, with an `ORDER.md` entry) or cut a scene (file kept, ID retired).
 
 *Trigger: "what scenes do I have", "show me my scenes", "what have I written", "promote the climax draft"*
 
-**reorder** — Restructure the scene sequence when you discover a better order. Preview before executing. Logs all reorders.
+**reorder** — Change the reading order. Claude shows the proposed new `ORDER.md` list before applying it, logs the change to `notes/reorders.md`, and **never renames, moves, or edits a scene file**. Chapter numbers shift; filenames and stable IDs don't.
 
 *Trigger: "move scene 5 before scene 3", "reorder", "scene 7 should come first", "swap scenes 4 and 6"*
 
-**search** — Find anything across scenes, codex, notes, and brainstorms using natural language.
+**search** — Find anything across scenes, `ORDER.md`, codex, notes, and brainstorms using natural language. Hits are reported by stable ID and reading position.
 
 *Trigger: "find X", "where did I mention", "which scene has", "did I write about"*
 
@@ -161,11 +198,11 @@ The system supports DWS's "unstuck in time" approach — writing any scene whene
 
 ### Publication
 
-**summarize** — Reverse outline: what you've written, what each scene does structurally, the shape of the story so far.
+**summarize** — A deep reverse outline: what you've written, what each scene does structurally, the shape of the story so far. `ORDER.md` is the lightweight one-line outline kept current by the writing; this is the beat-by-beat version you ask for. Offers to refresh any `ORDER.md` lines that drifted.
 
 *Trigger: "summarize", "reverse outline", "show me the structure", "beat sheet"*
 
-**compile** — Assemble all scenes into a single manuscript file. Formatted for submission (Shunn standard) or self-publishing. Exports to DOCX.
+**compile** — Assemble the manuscript **in `ORDER.md` reading order**, numbered by reading position, with each section tagged by its stable ID. Refuses to compile if any annotation tag survives in a scene, and warns when the files on disk and `ORDER.md` disagree. Exports to DOCX/EPUB.
 
 *Trigger: "compile", "assemble manuscript", "I need the manuscript file", "export to Word"*
 
@@ -200,9 +237,9 @@ The system supports DWS's "unstuck in time" approach — writing any scene whene
 
 1. "I know exactly how the climax goes — let me write it now"
 2. Claude creates `scenes/drafts/climax-devi-confronts-ai.md`
-3. Keep writing in sequence
+3. Keep writing in sequence — new scenes take the next stable ID and get their own `ORDER.md` line
 4. "Promote the climax draft, it goes after scene 12"
-5. Claude moves it to scene-013.md, renumbers what follows
+5. Claude moves it to the next unused stable ID and inserts its line in `ORDER.md` after the scene reading at position 12 — nothing else renumbers
 
 ### Getting unstuck
 
@@ -213,10 +250,10 @@ The system supports DWS's "unstuck in time" approach — writing any scene whene
 
 ### Assembling
 
-1. "Show me all my draft scenes" → scenes lists drafts
+1. "Show me all my draft scenes" → scenes lists drafts and unplaced scenes
 2. Decide which ones to promote and where
-3. "Reorder — scene 8 should come before scene 5"
-4. "Compile the manuscript" → single DOCX ready for submission
+3. "Reorder — scene 8 should come before scene 5" → Claude edits `ORDER.md` and shows you the new list
+4. "Compile the manuscript" → assembled in that order, ready for submission
 
 ---
 

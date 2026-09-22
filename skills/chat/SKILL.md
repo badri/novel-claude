@@ -1,6 +1,6 @@
 ---
 name: chat
-description: Use for open-ended story discussion — characters, themes, world, decisions — that doesn't fit a specific action. General creative conversation about the project when the user isn't ready to write yet.
+description: Use when the user wants open-ended story discussion — characters, themes, world, decisions — that doesn't fit a specific action. General creative conversation about the project, for when the user isn't ready to write yet. Trigger on: "can we talk about", "what do you think about", "I want to think through", or any general creative conversation about the project.
 ---
 
 # Chat with Your Story
@@ -11,7 +11,10 @@ Have a conversation about your story, characters, plot, or writing decisions wit
 
 1. **Load full context**:
    - Read project.json
-   - Load recent scenes (last 3-5 or user-specified)
+   - **Read `ORDER.md`** — reading order + the one-line reverse outline for
+     every placed scene. Cheap, and it's how you know what the story looks
+     like as a book rather than as files.
+   - Load the scenes that read last in `ORDER.md` (or user-specified ones)
    - Load all summaries
    - Load all codex files
    - Load recent brainstorms
@@ -54,9 +57,10 @@ Have a conversation about your story, characters, plot, or writing decisions wit
    - "What questions am I asking?"
 
 3. **Context-aware responses**:
-   - Reference specific scenes by number
+   - Reference scenes by **stable ID and reading position** ("`scene-019`,
+     which reads at position 17")
    - Quote from codex when relevant
-   - Point to summaries for evidence
+   - Point to summaries and `ORDER.md` lines for evidence
    - Cite brainstorm sessions
    - Maintain consistency with established facts
 

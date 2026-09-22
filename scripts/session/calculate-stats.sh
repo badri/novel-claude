@@ -30,7 +30,7 @@ fi
 python3 <<'PYTHON_SCRIPT'
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 try:
@@ -87,7 +87,7 @@ try:
         # Calculate current streak (consecutive days)
         for i, date_str in enumerate(session_dates):
             session_date = datetime.fromisoformat(date_str).date()
-            expected_date = today - datetime.timedelta(days=i)
+            expected_date = today - timedelta(days=i)
 
             if session_date == expected_date:
                 current_streak = i + 2  # +1 for today, +1 for 0-indexing

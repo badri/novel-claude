@@ -11,10 +11,13 @@ Display current status and statistics for the writing project.
 
 1. **Read project data**:
    - Load project.json
-   - Count files in scenes/ folder
+   - **Read `ORDER.md`** — it defines the manuscript. Count and sum the scenes
+     listed under `## Reading order` (those are the active/placed scenes and
+     the source of the word count). Count `## Unplaced / drafts` and `## Cut`
+     separately.
+   - Count files in `scenes/drafts/` (drafts not listed in `ORDER.md`)
    - Count files in summaries/ folder
    - Count files in brainstorms/ folder
-   - Calculate total word count from all scenes
    - Check for active writing session (notes/current-session.json)
    - Load session log (notes/session-log.json) if exists
 
@@ -39,17 +42,27 @@ Display current status and statistics for the writing project.
 
 ## Writing Progress
 
-- **Scenes Written**: [number]
-- **Current Scene**: [latest scene number]
-- **Total Words**: [count]
-- **Estimated Pages**: [count / 250] pages
+- **Scenes Placed** (in `ORDER.md` reading order): [number]
+- **Drafts**: [number] ([number] not yet placed)
+- **Current Scene**: [highest stable ID created, from project.json]
+- **Total Words** (placed scenes only): [count]
+- **Draft Words**: [count] — not part of the manuscript, reported separately
+- **Estimated Pages**: [placed words / 250] pages
 - **Target**: [if set, or "Discovery writing (no target)"]
+
+## Reading Order
+
+- **Ordered Scenes**: [number] in `ORDER.md`
+- **Unplaced / Drafts**: [number]
+- **Cut**: [number] (IDs retired, files kept)
+- **Lightweight Reverse Outline**: `ORDER.md` (kept current by the writing)
+- **Deep Reverse Outline**: [Yes/No — check `summaries/`]
 
 ## Reverse Outline
 
-- **Scenes Summarized**: [number] of [total]
-- **Last Summarized**: Scene [number]
-- **Full Reverse Outline**: [Yes/No]
+- **Scenes Summarized**: [number] of [placed total]
+- **Last Summarized**: [stable ID or reading position]
+- **Stale `ORDER.md` lines**: [number, if any] — offer to refresh via `summarize`
 
 ## Worldbuilding
 
@@ -122,7 +135,15 @@ Reverse Outline: [==============>     ] 12/15 scenes summarized
 4. **Health check**:
 
 Flag potential issues:
+- Scenes on disk that aren't in `ORDER.md` (unplaced — they won't compile)
+- `[scene-NNN]` in `ORDER.md` with no file on disk
+- Surviving annotation tags in any scene (`<brief>`, `<cut>`, `<change>`,
+  `<keep>`, `<add>`, `<flow>`, `<q>`) — these block compile
+
+  Run `${CLAUDE_PLUGIN_ROOT}/scripts/utils/order-check.sh .` (Claude Code) or
+  `~/nc/scripts/utils/order-check.sh .` (omp) and surface its findings.
 - Scenes without summaries (if > 5)
+- Unplaced drafts sitting for a long time
 - Long time since last activity
 - Missing codex entries for characters
 - Scenes not compiled yet

@@ -11,8 +11,12 @@ Interactive brainstorming session for story development, next scenes, or solving
 
 1. **Check context**:
    - Are we in a project folder? Read project.json
-   - What's the current scene number?
-   - Read the last 2-3 scenes for continuity
+   - **Read `ORDER.md`** — the reading order and the current one-line reverse
+     outline. "What happens next" means next in *reading order*, not the next
+     file number, in an out-of-order project.
+   - What's the current scene (highest stable ID created)?
+   - Read the scene that reads last in `ORDER.md`, plus its predecessor, for
+     continuity
    - Check latest summaries
 
 2. **Determine brainstorm type** (ask user or infer):
@@ -44,7 +48,7 @@ Interactive brainstorming session for story development, next scenes, or solving
 # Brainstorm: [Topic]
 
 Date: [timestamp]
-After Scene: [number or "N/A"]
+After: [scene-NNN, reading position N — or "N/A"]
 
 ## Context
 [Brief summary of where we are in the story]

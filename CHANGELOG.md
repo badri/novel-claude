@@ -5,6 +5,86 @@ All notable changes to the Fiction Writer plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-09-16
+
+### Added
+- **Stable scene IDs + `ORDER.md` reading order.** `scenes/scene-NNN.md`
+  filenames are now **permanent IDs assigned in creation order** ("the Nth
+  scene I wrote") and are never renamed or renumbered. Reading order lives in
+  **`ORDER.md`** at the project root, which doubles as the always-current
+  one-line-per-scene reverse outline. This makes out-of-order writing cheap:
+  moving a scene costs one line in one file, with no git churn and no broken
+  `[scene-NNN]` references. A cut scene's ID is retired and never reused.
+  - New **`ORDER.md.template`**, scaffolded by `new-project` and populated by
+    `new-scene` (placement at the reading position the writer names, else
+    under `## Unplaced / drafts`).
+  - `compile` assembles strictly in `ORDER.md` order; **chapter number =
+    reading position**, and each section carries a `<!-- scene-NNN -->`
+    comment so position and ID stay in contact.
+  - `CLAUDE-PROJECT.md.template` now points at `ORDER.md` (reading order) and
+    at the parent writing root's `CLAUDE.md` (house style/craft rules) and
+    stays story-only.
+- **Annotate → rewrite editing flow** (`edit-scene`). The writer drops
+  open/close tags on existing prose — `<brief>`, `<cut>`, `<change>`,
+  `<keep>`, `<add>`, `<flow>`, `<q>` — says "rewrite NNN", and the rewrite
+  consumes them: applied, then stripped, then the scene's Notes updated.
+  Wrap-the-target rule for notes about specific text; one editor per file.
+  A fresh scene can instead be handed over as a **freeform skeleton with no
+  tags** — the whole file is the brief. Untagged requests keep the
+  preview-before-change path.
+- **Depth self-check as a standing step** for every new scene: five senses
+  early through the POV, opinion-tinting, no witness syndrome, no placeholder
+  nouns, character-specific perception, recognition instead of re-narration —
+  with grounding recorded in the scene's Notes. Includes the
+  **somatization-variance** caveat: bodying every emotion is the machine
+  default (~81% for AI vs ~38% for humans), so minor emotions land as plain
+  statement. `depth-drill` (the skill) remains observational, never
+  auto-fires, and never rewrites.
+- **`scripts/utils/order-check.sh`** — read-only consistency check: scene
+  files absent from `ORDER.md`, `[scene-NNN]` references with no file, and
+  un-consumed annotation tags in scene *prose* (tag mentions inside Notes
+  blocks are reported separately as informational). Exits 0 clean, 1
+  otherwise. Bash + grep/sed/awk only, no `jq`.
+
+### Changed
+- **`reorder` no longer touches files.** Reorder = edit the list in
+  `ORDER.md`. The skill previews the whole proposed list before applying,
+  logs position changes (not rename maps) to `notes/reorders.md`, and checks
+  project consistency with `order-check.sh`. Explicitly never renames,
+  renumbers, moves, or edits a scene file.
+- **`scenes`** lists in `ORDER.md` reading order — reading position, stable
+  ID, POV, word count, and the one-line outline — then unplaced/drafts, then
+  archive. Promoting a draft assigns the next unused stable ID and adds an
+  `ORDER.md` entry; cutting a scene keeps the file and retires the ID.
+- **`compile`** refuses to assemble a manuscript if any annotation tag
+  survives in a scene (listing the files and tags rather than stripping them
+  or compiling around them), and warns when the files on disk and `ORDER.md`
+  disagree.
+- **`summarize`** is now explicitly the *deep* reverse outline on demand;
+  `ORDER.md` is the lightweight always-current one. It offers to refresh
+  `ORDER.md` lines that have drifted.
+- **`status`** reports placed scenes and their word count from `ORDER.md`,
+  with drafts reported separately.
+- **`import`** assigns stable IDs in draft order and generates `ORDER.md`
+  whose reading order mirrors the source.
+- **`shunn-format`** documents that `generate_manuscript.py` reads scenes in
+  **filename order**, and stages an `ORDER.md`-ordered copy for out-of-order
+  projects rather than producing the wrong chapter sequence.
+- Docs updated throughout (`CLAUDE.md`, `README.md`, `QUICK-START.md`,
+  `CONTEXT-MANAGEMENT.md`, `IMPORTING-GUIDE.md`, `scripts/README.md`) —
+  including the plugin's skill inventory, which had drifted since 2.1.0.
+
+### Fixed
+- **`scripts/session/calculate-stats.sh` crashed from the second session
+  onward** (`datetime.timedelta` was called without importing `timedelta`), so
+  `notes/session-log.json` never gained more than one entry and the streak
+  was never computed. Session end now logs every session.
+
+### Removed
+- **`scripts/utils/renumber-scenes.sh` is retired.** The file is kept so that
+  any stale caller fails loudly: it prints a retirement message and `exit 1`,
+  changing nothing. Scene renumbering is no longer part of the system.
+
 ## [2.1.1] - 2026-05-24
 
 ### Changed

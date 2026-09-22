@@ -55,21 +55,44 @@ scripts/utils/word-count.sh .
 
 ---
 
-**`renumber-scenes.sh`** - Safe scene renumbering
-- Renumbers all scenes sequentially (001, 002, 003...)
-- Uses temp directory to avoid clobbering
-- Logs all renames
-- Updates project.json scene count
-- Calls word-count.sh after renumber
+**`order-check.sh`** - Reading-order consistency check (read-only)
+- Reports scene files in `scenes/` that `ORDER.md` never mentions (they would
+  silently vanish from a compile)
+- Reports `[scene-NNN]` entries in `ORDER.md` with no file on disk
+- Reports un-consumed annotation tags (`<brief> <cut> <change> <keep> <add>
+  <flow> <q>`) still in scene **prose**; tag mentions inside a scene's Notes
+  block are the author's record of a finished pass and are reported separately
+  as informational
+- Exits 0 when clean, 1 when anything needs attention
+- Bash + grep/sed/awk only — no `jq` dependency
+
+**Usage:**
+```bash
+scripts/utils/order-check.sh ~/writing/my-novel
+# Prints the findings and the reading-order/unplaced counts
+```
+
+**Called by:** the `compile`, `reorder`, and `status` skills
+
+---
+
+**`renumber-scenes.sh`** - **RETIRED.** Kept only to fail loudly.
+- Scene filenames are **stable IDs assigned in creation order** and are never
+  renamed or renumbered
+- Reading order lives in `ORDER.md`; reordering means editing that list
+- The script now prints a retirement message and `exit 1` — nothing is changed,
+  so any stale caller fails visibly instead of scrambling a project
+- Replacement for the old use case: edit `ORDER.md` (`reorder` skill), then
+  verify with `order-check.sh`
 
 **Usage:**
 ```bash
 scripts/utils/renumber-scenes.sh .
-# Renumbers all scenes in scenes/ directory
-# Updates project.json
+# ERROR: renumber-scenes.sh is retired.
+# ... exit 1
 ```
 
-**Called by:** the `reorder` skill, scene archive/promote operations
+**Called by:** nothing.
 
 ---
 
@@ -90,6 +113,13 @@ which Claude Code sets automatically when a skill runs:
 
 ```bash
 ${CLAUDE_PLUGIN_ROOT}/scripts/session/calculate-stats.sh .
+```
+
+Under omp that variable is **not** set — use the plugin's absolute path
+instead (`~/nc/scripts/...`):
+
+```bash
+~/nc/scripts/utils/order-check.sh .
 ```
 
 Project hooks run scripts copied into the project's own `.claude/hooks/`

@@ -18,7 +18,7 @@ The plugin is **skills-based**. Writers talk to Claude naturally — there are n
 
 ### Skills
 
-All user-facing functionality lives in `skills/<name>/SKILL.md`. Each skill is intent-driven: its YAML `description` frontmatter lists the triggering conditions, and the body is the workflow Claude follows. There are 20 skills:
+All user-facing functionality lives in `skills/<name>/SKILL.md`. Each skill is intent-driven: its YAML `description` frontmatter lists the triggering conditions, and the body is the workflow Claude follows. There are 26 skills:
 
 - **Project setup**: `new-project`, `concept` (pre-project brainstorming), `import`
 - **Writing**: `new-scene`, `edit-scene`, `brainstorm`, `chat`, `cycle` (plant setups backward)
@@ -26,8 +26,26 @@ All user-facing functionality lives in `skills/<name>/SKILL.md`. Each skill is i
 - **Worldbuilding**: `codex`
 - **Session tracking**: `session-start`, `session-end`, `status`
 - **Publication**: `summarize`, `compile`, `shunn-format`, `blurb`, `cover`
+- **Craft drills** (observational, never rewrite): `depth-drill`, `opening-drill`, `fake-detail-drill`, `pov-glitch-drill`, `cliffhanger-cut-drill`
+- **Business/mindset**: `study-discuss`
 
 There is no slash-command system and no `agents/` subagents — both were removed in the v2.0.0 conversion. Skills that need cheap bulk work (`summarize`, `import`) dispatch a subagent with the `haiku` model via the Task tool.
+
+### Scene Ordering Model (v2.2.0)
+
+The system separates **identity** from **reading order**:
+
+- `scenes/scene-NNN.md` filenames are **stable IDs assigned in creation order** ("the Nth scene I wrote"). They are **never renamed or renumbered** — not by `reorder`, not by archive/promote, not by anything. A cut scene's ID is retired and never reused.
+- **`ORDER.md` (project root) is the source of truth for reading order** and doubles as the always-current one-line reverse outline.
+- **`reorder` edits the list in `ORDER.md` and touches nothing else.** Chapter numbers are reading positions, and `compile` walks `ORDER.md`, emitting a `<!-- scene-NNN -->` comment before each section so reading position and stable ID stay in contact.
+- New scenes take the next unused ID, then get an `ORDER.md` line at their reading position (or under `## Unplaced / drafts`).
+- Drafts live in `scenes/drafts/` under descriptive names; promoting one assigns the next unused stable ID and adds an `ORDER.md` entry.
+
+This is what makes out-of-order writing cheap: moving a scene costs one line in one file, with no git churn and no broken `[scene-NNN]` references in the codex or notes.
+
+### Annotation Flow (v2.2.0)
+
+Editing an existing scene is **author-directed**: the author drops open/close tags on the prose (`<brief>`, `<cut>`, `<change>`, `<keep>`, `<add>`, `<flow>`, `<q>`), says "rewrite NNN", and the AI rewrites to the tags and **strips them** (consumed). A fresh scene can instead be handed over as a freeform skeleton with no tags — the whole file is the brief. Untagged edit requests still get a preview before anything is written.
 
 ### Project Structure Model
 
@@ -36,15 +54,16 @@ Each writing project (created by the `new-project` skill) has:
 ```
 project-name/
 ├── project.json              # Metadata, scene count, word count
+├── ORDER.md                  # READING order + one-line reverse outline (source of truth)
 ├── CLAUDE.md                 # Story-specific context (auto-generated from template)
 ├── .gitignore
 ├── .claude/                  # Session hooks + settings (copied from templates)
 │   ├── settings.json
 │   └── hooks/
 ├── scenes/
-│   ├── scene-001.md          # Active scenes (numbered, zero-padded)
-│   ├── drafts/               # Experimental / out-of-order scenes
-│   └── archive/              # Deleted scenes kept for reference
+│   ├── scene-001.md          # Stable IDs, creation order — never renamed
+│   ├── drafts/               # Out-of-order scenes waiting on placement
+│   └── archive/              # Cut scenes, kept for reference (IDs retired)
 ├── codex/                    # World bible (copyable for series)
 │   ├── characters.md
 │   ├── locations.md
@@ -55,8 +74,8 @@ project-name/
 │   ├── current-session.json  # Active session tracking
 │   ├── session-log.json      # Session history
 │   ├── cycles.md             # Setup-planting log
-│   └── reorders.md           # Scene reorganization history
-├── summaries/                # Reverse outlines
+│   └── reorders.md           # Reading-order change log (positions, not files)
+├── summaries/                # Deep reverse outlines
 ├── brainstorms/              # Saved brainstorm sessions
 └── manuscript/               # Compiled output (MD / DOCX)
 ```
@@ -73,11 +92,11 @@ The hook scripts are scaffolded into new projects from `hooks-template/`.
 
 ### Plugin Files
 
-- `skills/` — the 20 skills (auto-discovered by Claude Code)
+- `skills/` — the 26 skills (auto-discovered by Claude Code)
 - `hooks-template/` — hook scripts copied into new projects
-- `scripts/` — deterministic helpers (session stats, word count, scene renumbering); skills coordinate, scripts execute
-- `generate_manuscript.py` — Shunn submission-format generator, used by the `shunn-format` skill
-- `*.template` files (`CLAUDE-PROJECT.md.template`, `.gitignore.template`, `.claude-settings.json.template`) — scaffolding templates; reference them via `${CLAUDE_PLUGIN_ROOT}`
+- `scripts/` — deterministic helpers (session stats, word count, `order-check.sh`); skills coordinate, scripts execute. `renumber-scenes.sh` is retired and exits 1.
+- `generate_manuscript.py` — Shunn submission-format generator, used by the `shunn-format` skill; it reads scenes in **filename order**, so out-of-order projects must be staged in `ORDER.md` order first
+- `*.template` files (`CLAUDE-PROJECT.md.template`, `ORDER.md.template`, `.gitignore.template`, `.claude-settings.json.template`) — scaffolding templates; reference them via `${CLAUDE_PLUGIN_ROOT}` (Claude Code) or `~/nc/` (omp)
 - `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` — plugin manifest and marketplace entry
 
 ### Context Strategy
@@ -137,8 +156,10 @@ No automated test suite. Validate changes by:
 
 ## Important Constraints
 
-1. **Never edit the user's story content** without an explicit request or preview/approval.
-2. **Preserve scene numbering** — when adding, deleting, or reordering scenes, renumber subsequent scenes.
-3. **Update `project.json`** — any scene change must update its metadata.
-4. **Git-friendly** — all files are markdown or JSON, producing readable diffs.
-5. **Skills coordinate, scripts execute** — keep deterministic operations in `scripts/`, not inline in skill prose.
+1. **Never edit the user's story content** without an explicit request or preview/approval. Tagged rewrites are the request; untagged changes get a preview first.
+2. **Never rename or renumber a scene file.** `scene-NNN` is a stable ID assigned in creation order. Reading order lives in `ORDER.md` and is changed by editing that list — never by touching files. A cut scene's ID stays retired.
+3. **`ORDER.md` is the source of truth for reading order** and the always-current one-line reverse outline. Keep each scene's line true when a scene is written, moved, or edited; `compile` follows the list, not filenames.
+4. **Update `project.json`** — any scene change must update its metadata (`sceneCount` = placed scenes, `wordCount` = placed scenes only, `currentScene` = last stable ID created).
+5. **No annotation tag may survive into compiled output.** Tags are consumed by the rewrite that acts on them; `compile` refuses to assemble a manuscript containing one.
+6. **Git-friendly** — all files are markdown or JSON, producing readable diffs.
+7. **Skills coordinate, scripts execute** — keep deterministic operations in `scripts/`, not inline in skill prose.

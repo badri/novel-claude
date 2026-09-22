@@ -1,0 +1,30 @@
+# Reading Order & Reverse Outline — {PROJECT_NAME}
+
+**How this works (pantser, out-of-order writing):**
+
+- `scenes/scene-NNN.md` filenames are **stable IDs** assigned in *creation order* — the number is just "the Nth scene I wrote." **They are NEVER renamed or renumbered.** No git churn, write in any order.
+- **This file defines the READING (manuscript) order.** Reorder = edit this list, not the files.
+- Each line is a one-sentence reverse outline. Keep it current: when a scene is written or moved, update the line here.
+- **Compile follows THIS order, not filename order.**
+
+---
+
+## Reading order
+
+> _Optional: notes on placement decisions that are easy to get wrong (locks, "this must precede that" constraints, block groupings). Author-overridable by editing this list._
+
+1. **[scene-001]** — one-sentence reverse outline of what happens (~word count)
+
+---
+
+## Unplaced / drafts
+
+_Scenes written but not yet slotted into the reading order. Draft files live in `scenes/drafts/` under a descriptive name; numbered IDs waiting on placement are listed here too._
+
+- **[scene-NNN]** — one-sentence reverse outline (~word count)
+
+---
+
+## Cut
+
+_Scenes removed from the manuscript. The file is preserved in `scenes/archive/` (or `scenes/cut/`), the stable ID is **retired and never reused**, and the reason is recorded here._

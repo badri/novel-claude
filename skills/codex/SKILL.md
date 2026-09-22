@@ -94,6 +94,12 @@ Then append formatted entry to the appropriate file.
 - Update using Edit tool
 - Preserve formatting
 
+**Scene references are stable IDs.** When an entry cites a scene — "First
+Appearance: `scene-014`" — that's the permanent `scene-NNN` ID, never a
+reading position or a chapter number. Reading order changes (edit `ORDER.md`)
+without ever touching a codex reference; if you wrote a position in an entry,
+fix it to the ID.
+
 ### Delete Entry
 
 - Read the codex file

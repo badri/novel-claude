@@ -21,9 +21,14 @@ Tell Claude you want to import an existing manuscript:
 Claude will:
 1. Ask for the file path (MD, TXT, or DOCX)
 2. Read the manuscript and split it into scenes intelligently
-3. Number the scenes sequentially
-4. Ask you for brief character and location information to seed the codex
-5. Create a `CLAUDE.md` with the story metadata
+3. Assign **stable scene IDs** in the order the scenes come out of your draft
+4. Create `ORDER.md` listing those scenes in reading order (which, for an import, is your draft's order) with a one-line outline per scene
+5. Ask you for brief character and location information to seed the codex
+6. Create a `CLAUDE.md` with the story metadata
+
+Scene IDs are assigned once and **never renamed or renumbered**. If you later
+decide a scene reads somewhere else, edit the list in `ORDER.md` — that's the
+reading order from then on, and compile follows it.
 
 ## Before You Import
 
@@ -40,6 +45,7 @@ Claude will:
 
 ```
 your-story/
+├── ORDER.md            # reading order + one-line outline per scene
 ├── scenes/
 │   ├── scene-001.md    # each detected scene as its own file
 │   ├── scene-002.md
@@ -52,10 +58,11 @@ your-story/
 
 ## After Importing
 
-1. **Verify the scene splits** — "show me my scenes" to review. Some splits may be off; edit manually if needed.
-2. **Fill in the codex** — "add Vikram to the codex — he's the surveillance officer" — or let Claude detect as you continue writing.
-3. **Get a reverse outline** — "summarize what I've written" — useful for reorienting before continuing.
-4. **Continue writing** — pick up where you left off: "write the next scene"
+1. **Verify the scene splits** — "show me my scenes" to review. Reads are listed in `ORDER.md` order with the word count and POV. Some splits may be off; edit manually if needed.
+2. **Check the reading order** — open `ORDER.md`. If the draft's order isn't the reading order you want, edit that list (never rename files).
+3. **Fill in the codex** — "add Vikram to the codex — he's the surveillance officer" — or let Claude detect as you continue writing.
+4. **Get a reverse outline** — "summarize what I've written" — useful for reorienting before continuing.
+5. **Continue writing** — pick up where you left off: "write the next scene"
 
 ## Large Manuscripts
 
