@@ -1,0 +1,85 @@
+/* Kindle-safe EPUB stylesheet (every book).
+   The cause of the grey wash: pandoc's default epub.css sets
+       html { color: #1a1a1a; background-color: #fdfdfd; }
+   On e-ink, #fdfdfd is not white — the panel renders it as a faint grey,
+   and #1a1a1a renders as soft charcoal rather than black.
+   Fix: specify NEITHER. Let the device and the reader's theme decide,
+   which also keeps dark mode and sepia working correctly. */
+
+html {
+  line-height: 1.35;
+  hyphens: auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  widows: 2;
+  orphans: 2;
+}
+
+/* Fiction paragraphs: first one flush, the rest indented, no vertical gaps. */
+p {
+  margin: 0;
+  text-indent: 1.2em;
+  text-align: justify;
+}
+
+p:first-of-type,
+h1 + p,
+h2 + p,
+hr + p {
+  text-indent: 0;
+}
+
+/* Chapter numbers. */
+h1 {
+  font-size: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  margin: 2em 0 1.5em 0;
+  page-break-before: always;
+  break-before: page;
+}
+
+h2 {
+  font-size: 1.15em;
+  font-weight: normal;
+  text-align: center;
+  margin: 1.6em 0 1em 0;
+}
+
+/* Scene breaks.
+   Rendered as a real paragraph of asterisks, NOT via CSS generated content.
+   Kindle's support for :after { content } is unreliable across its renderers,
+   and a break that fails to render welds two scenes together invisibly. */
+p.scenebreak {
+  text-align: center;
+  text-indent: 0;
+  margin: 1.2em 0;
+  letter-spacing: 0.3em;
+}
+
+p.scenebreak + p {
+  text-indent: 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid;
+  width: 25%;
+  margin: 1.2em auto;
+}
+
+blockquote {
+  margin: 1em 1.5em;
+  font-style: italic;
+}
+
+em { font-style: italic; }
+strong { font-weight: bold; }
+
+img {
+  max-width: 100%;
+  height: auto;
+}
