@@ -5,6 +5,14 @@ All notable changes to the Fiction Writer plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.1] - 2026-09-24
+
+### Added
+- **`publish`: KDP paperback for every market except India.** Notion Press stays the India-only print edition; one interior PDF serves both. New `scripts/kdp-cover-template.py` draws KDP's cover geometry (0.125 in bleed, spine 0.0025 in/page cream) in Notion Press's template colours, so `build-cover.py` builds the KDP cover unchanged. Upload-sheet fields, ISBN choice, category re-mapping to the *Books ›* tree, Expanded Distribution off, and KDP's 50%/60% print royalty bands.
+
+### Fixed
+- **`publish`: KDP ebook cover gotchas** — the "Upload a cover you already have" radio must be selected (it can sit on Cover Creator with the JPG shown as uploaded, and Publish fails with nothing highlighted); export the JPG with 72 dpi set; re-tick the two "answers are accurate" boxes after any new upload.
+
 ## [2.3.0] - 2026-09-22
 
 Audit against the writer's goals (`~/writing/CLAUDE.md`, the 2026-04-29 game
